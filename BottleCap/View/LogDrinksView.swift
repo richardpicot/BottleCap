@@ -13,6 +13,7 @@ struct LogDrinksView: View {
     var updateTotalDrinks: () -> Void
     @State private var numberOfDrinksString: String = ""  // User input stored as a String
     @State private var date: Date = Date()
+    @State private var triggerHapticFeedback = false
     @FocusState private var drinksFocus: Bool
     
     @ObservedObject var healthKitManager = HealthKitManager()
@@ -20,24 +21,27 @@ struct LogDrinksView: View {
     var body: some View {
         NavigationView {
             Form {
-                // Number of Drinks
                 Section {
                     HStack {
                         Text("Drinks")
+                            .bold()
                         Spacer()
-                        TextField("", text: $numberOfDrinksString)
+                        TextField("Required", text: $numberOfDrinksString)
                             .focused($drinksFocus)
                             .keyboardType(.numberPad)
                             .multilineTextAlignment(.trailing)
                             .frame(maxWidth: .infinity, alignment: .trailing)
+
                     }
                 }
                 
                 Section {
-                    DatePicker("Date", selection: $date)
+                    DatePicker("Date", selection: $date, in: ...Date(), displayedComponents: .date)
                         .datePickerStyle(GraphicalDatePickerStyle())
+                        .padding(.all, -8)
                 }
             }
+            .scrollDismissesKeyboard(.immediately)
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
                     Button("Cancel") {
@@ -51,6 +55,7 @@ struct LogDrinksView: View {
                                 updateTotalDrinks()
                             }
                         }
+                        
                         isPresented = false
                     }
                     .disabled(numberOfDrinksString.isEmpty)

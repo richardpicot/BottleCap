@@ -22,14 +22,12 @@ struct WelcomeView: View {
     
     var body: some View {
         NavigationView {
-            ZStack {
-                Color.backgroundPrimary.ignoresSafeArea()
-                
+            
                 VStack {
                     Spacer()
                     
                     RoundedRectangle(cornerRadius: 25.0)
-                        .fill(Color.backgroundTertiary)
+                        .fill(Color.backgroundSecondary)
                         .frame(width: 128, height: 128)
                         .scaleEffect(showRectangle ? 1 : 0.2)
                         .opacity(showRectangle ? 1 : 0)
@@ -49,6 +47,7 @@ struct WelcomeView: View {
                             .offset(y: showBody ? 0 : 10)
                     }
                     .foregroundColor(Color.inkPrimary)
+                    .background(.background)
                     .padding()
                     
                     Spacer()
@@ -78,8 +77,8 @@ struct WelcomeView: View {
                 .onAppear {
                     startAnimations()
                 }
-            }
         }
+        .fontDesign(.rounded)
         .alert("Permission Denied", isPresented: $showSettingsAlert) {
             Button("Go to Settings") {
                 if let settingsURL = URL(string: UIApplication.openSettingsURLString) {

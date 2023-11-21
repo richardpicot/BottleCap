@@ -9,6 +9,7 @@ import SwiftUI
 
 struct ContentView: View {
     @State private var totalDrinks: Double = 0
+    @State private var triggerHapticFeedback = false
     @State private var showWelcomeView: Bool = false
     @State private var showLogDrinksView = false
     @State private var showSettingsView = false
@@ -19,6 +20,8 @@ struct ContentView: View {
     
     @ObservedObject var appSettings = AppSettings.shared
     @ObservedObject var healthKitManager = HealthKitManager()
+    
+    @Environment(\.colorScheme) var colorScheme
     
     private var drinksRemaining: Double {
         return max(0, appSettings.drinkLimit - totalDrinks)
@@ -65,8 +68,8 @@ struct ContentView: View {
                 
                 // COUNT
                 Text("\(totalDrinks, specifier: "%.0f")")
-                    .font(.system(size: 80))
-                    .fontWeight(.semibold)
+                    .font(.system(size: 96))
+                    .fontWeight(.medium)
                     .foregroundStyle(.inkPrimary)
                     .animation(.default, value: animationTrigger)
                     .contentTransition(.numericText(value: totalDrinks))
@@ -76,19 +79,21 @@ struct ContentView: View {
                 
                 
                 VStack {
-                    Text(totalDrinks == 1 ? "Drink this week" : "Drinks this week")
+                    Text(totalDrinks == 1 ? "Drink this week." : "Drinks this week.")
                     
                     if drinksRemaining > 0 {
-                        Text("\(formattedDrinksRemaining) more until you reach your limit")
+                        Text("\(formattedDrinksRemaining) more until you reach your limit.")
                     } else if
                         totalDrinks == appSettings.drinkLimit {
-                        Text("You've reached your limit")
+                        Text("You've reached your limit.")
                     } else {
-                        Text("You're \(formattedDrinksOverLimit) over your weekly limit")
+                        Text("You're \(formattedDrinksOverLimit) over your weekly limit.")
                     }
                 }
-                .font(.body)
+                .font(.title3)
+                .fontWeight(.semibold)
                 .foregroundStyle(.inkPrimary)
+                .opacity(colorScheme == .dark ? 0.8 : 0.9)
                 .multilineTextAlignment(.center)
                 
                 Spacer()
@@ -111,51 +116,53 @@ struct ContentView: View {
                             .presentationDetents([.medium, .large])
                     }
                     .frame(minWidth: 44, minHeight: 44)
-                    .background(.backgroundTertiary)
-                    .clipShape(Circle())
+                    .background(
+                        .ultraThinMaterial
+                    ).clipShape(Circle())
                     
                     Spacer()
                     
-                    // Log drink button
-                    Button {
-                        // empty action
+                    Menu {
+                        Button(action: {
+                            showLogDrinksView = true
+                        }) {
+                            Label("Log Multiple Drinks...", systemImage: "calendar.badge.plus")
+                        }
+                        
+                        Button(action: {
+                            healthKitManager.addAlcoholData(numberOfDrinks: 1, date: Date()) {
+                                updateTotalDrinks()
+                                triggerHapticFeedback.toggle()
+                            }
+                        }) {
+                            Label("Log Drink", systemImage: "plus.circle")
+                        }
                     } label: {
                         Image(systemName: "plus")
                             .font((.system(size: 28)))
-                            .foregroundStyle(.inkPrimaryFixed)
-                    }
-                    .simultaneousGesture(LongPressGesture().onChanged { _ in
-                        print("Tap started")
-                        isPressed = true
-                    })
-                    .simultaneousGesture(LongPressGesture().onEnded { _ in
-                        print("Long press")
-                        isPressed = false
-                        showLogDrinksView = true
-                    })
-                    .simultaneousGesture(TapGesture().onEnded {
-                        print("Button tap logged")
-                        isPressed = false
-                        healthKitManager.addAlcoholData(numberOfDrinks: 1, date: Date()) {
-                            updateTotalDrinks()
-                        }
-                    })
-                    .frame(minWidth: 72, minHeight: 72)
-                    .background(Color.white)
-                    .clipShape(Circle())
-                    .shadow(color: Color.black.opacity(0.06), radius: 20, x: 0, y: 10)
-                    .shadow(color: .inkPrimary.opacity(0.05), radius: 20, x: 0, y: 10)
-                    .scaleEffect(isPressed ? 0.85 : 1)
-                    .animation(.spring(response: 0.5, dampingFraction: 0.8, blendDuration: 0), value: isPressed)
-                    .sheet(isPresented: $showLogDrinksView) {
-                        LogDrinksView(isPresented: $showLogDrinksView) {
-                            healthKitManager.readAlcoholData(startWeekDay: appSettings.weekStartDay) { (newTotal) in
-                                DispatchQueue.main.async {
-                                    self.totalDrinks = newTotal
+                            .foregroundStyle(.white)
+                            .frame(minWidth: 72, minHeight: 72)
+                            .background(.accentPrimary)
+                            .clipShape(Circle())
+                            .sheet(isPresented: $showLogDrinksView) {
+                                LogDrinksView(isPresented: $showLogDrinksView) {
+                                    healthKitManager.readAlcoholData(startWeekDay: appSettings.weekStartDay) { (newTotal) in
+                                        DispatchQueue.main.async {
+                                            self.totalDrinks = newTotal
+                                        }
+                                    }
                                 }
                             }
-                        }
+                        
+                        
                     }
+                    .sensoryFeedback(trigger: triggerHapticFeedback) { oldValue, newValue in
+                        totalDrinks >= appSettings.drinkLimit ? .warning : .success
+                    }
+                    .shadow(color: Color.black.opacity(0.15), radius: 20, x: 0, y: 6)
+                    .shadow(color: .accentPrimary.opacity(0.15), radius: 20, x: 0, y: 6)
+                    .scaleEffect(isPressed ? 0.85 : 1)
+                    .animation(.spring(response: 0.5, dampingFraction: 0.8, blendDuration: 0), value: isPressed)
                     
                     Spacer()
                     
@@ -173,8 +180,10 @@ struct ContentView: View {
                             .presentationDetents([.medium, .large])
                     }
                     .frame(minWidth: 44, minHeight: 44)
-                    .background(.backgroundTertiary)
-                    .clipShape(Circle())
+                    .background(
+                        .ultraThinMaterial
+                    ).clipShape(Circle())
+                    
                     
                     Spacer()
                     
@@ -185,12 +194,12 @@ struct ContentView: View {
                 updateTotalDrinks()
                 
                 // Check HealthKit authorization
-                 healthKitManager.checkHealthKitAuthorization { isAuthorized in
-                     if !isAuthorized {
-                         // Show WelcomeView if HealthKit is not authorized
-                         self.showWelcomeView = true
-                     }
-                 }
+                healthKitManager.checkHealthKitAuthorization { isAuthorized in
+                    if !isAuthorized {
+                        // Show WelcomeView if HealthKit is not authorized
+                        self.showWelcomeView = true
+                    }
+                }
                 
                 NotificationCenter.default.addObserver(forName: UIApplication.willEnterForegroundNotification, object: nil, queue: .main) { _ in
                     updateTotalDrinks()
@@ -200,9 +209,9 @@ struct ContentView: View {
             }
         }
         .sheet(isPresented: $showWelcomeView) {
-               // Display WelcomeView in sheet
+            // Display WelcomeView in sheet
             WelcomeView(healthKitManager: healthKitManager, isPresented: $showWelcomeView)
-           }
+        }
         
         .onChange(of: appSettings.weekStartDay, initial: true) { oldState, newState in
             if oldState != newState {

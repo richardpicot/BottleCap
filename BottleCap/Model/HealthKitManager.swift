@@ -100,7 +100,9 @@ class HealthKitManager: ObservableObject {
         healthStore.save(sample) { (success, error) in
             if success {
                 print("Successfully saved data")
-                completion?()
+                DispatchQueue.main.async {
+                    completion?()
+                }
             } else {
                 if let error = error {
                     print("Error Saving Data: \(error)")
