@@ -135,7 +135,7 @@ struct ContentView: View {
                                 triggerHapticFeedback.toggle()
                             }
                         }) {
-                            Label("Log Drink", systemImage: "plus.circle")
+                            Label("Log a Drink", systemImage: "plus.circle")
                         }
                     } label: {
                         Image(systemName: "plus")
@@ -218,7 +218,6 @@ struct ContentView: View {
                 updateTotalDrinks()
             }
         }
-        .fontDesign(.rounded)
     }
 }
 

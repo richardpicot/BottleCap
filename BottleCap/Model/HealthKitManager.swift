@@ -56,17 +56,15 @@ class HealthKitManager: ObservableObject {
         let calendar = Calendar.current
         let now = Date()
         
-        // Using guard statement to get the closest past day of the week
         guard let closestPastWeekday = calendar.date(toNearestOrLastWeekday: startWeekDay, matching: now) else {
             completion(0)
             return
         }
-        
-        // Adjusting the closestPastWeekday to include drinks from that day
-        guard let startOfWeek = calendar.date(byAdding: .day, value: -1, to: closestPastWeekday) else {
-            completion(0)
-            return
-        }
+    
+        // Ensure the start of the week is at the beginning of the day
+           let startOfWeek = calendar.startOfDay(for: closestPastWeekday)
+           
+           print("Updated startOfWeek: \(startOfWeek), closestPastWeekday: \(closestPastWeekday)")
         
         // Create a predicate based on the adjusted start of the week
         let predicate = HKQuery.predicateForSamples(withStart: startOfWeek, end: now, options: .strictStartDate)
@@ -84,6 +82,8 @@ class HealthKitManager: ObservableObject {
             }
             completion(totalDrinks)
         }
+        
+        print("Calculated startOfWeek: \(startOfWeek), closestPastWeekday: \(closestPastWeekday)")
         
         // Execute the query
         healthStore.execute(query)

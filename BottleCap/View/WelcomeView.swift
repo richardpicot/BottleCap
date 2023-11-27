@@ -78,7 +78,6 @@ struct WelcomeView: View {
                     startAnimations()
                 }
         }
-        .fontDesign(.rounded)
         .alert("Permission Denied", isPresented: $showSettingsAlert) {
             Button("Go to Settings") {
                 if let settingsURL = URL(string: UIApplication.openSettingsURLString) {

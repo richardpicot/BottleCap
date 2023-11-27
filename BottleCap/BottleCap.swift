@@ -11,7 +11,7 @@ import HealthKit
 @main
 struct BottleCap: App {
     @StateObject var healthKitManager = HealthKitManager()
-    @State private var navigateToDrinkCountView = false // Control navigatiorn
+    @State private var navigateToDrinkCountView = false
     
     var body: some Scene {
         WindowGroup {
@@ -29,6 +29,7 @@ struct BottleCap: App {
                     navigateToDrinkCountView = authorized
                 }
             }
+            .fontDesign(.rounded)
         }
     }
 }
