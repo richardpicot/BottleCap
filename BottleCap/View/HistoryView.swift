@@ -22,12 +22,13 @@ struct HistoryView: View {
                         .grayscale(1)
                         .opacity(0.6)
                     
-                    VStack {
+                    VStack(spacing: 12) {
                         Text("No Drinks Logged")
                             .font(.title2)
                             .fontWeight(.bold)
                             .foregroundStyle(.primary)
                         Text("Drinks you log will appear here.\nTap the plus to get started.")
+                            .font(.body)
                             .foregroundColor(.secondary)
                     }
                 }

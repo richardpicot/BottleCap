@@ -11,26 +11,13 @@ import HealthKit
 @main
 struct BottleCap: App {
     @StateObject var healthKitManager = HealthKitManager()
-    @State private var navigateToDrinkCountView = false
     
     var body: some Scene {
         WindowGroup {
-            // Choose the appropriate view based on HealthKit authorization
-            NavigationView {
-                if navigateToDrinkCountView {
-                    ContentView()
-                } else {
-                    WelcomeView(healthKitManager: healthKitManager, isPresented: $navigateToDrinkCountView)
-                }
-            }
-            .environmentObject(healthKitManager)
-            .onAppear {
-                healthKitManager.checkHealthKitAuthorization { authorized in
-                    navigateToDrinkCountView = authorized
-                }
-            }
-            .fontDesign(.rounded)
-        }
+                   ContentView()
+                       .environmentObject(healthKitManager)
+                       .fontDesign(.rounded)
+               }
     }
 }
 

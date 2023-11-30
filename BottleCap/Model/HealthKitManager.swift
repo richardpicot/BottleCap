@@ -12,24 +12,37 @@ class HealthKitManager: ObservableObject {
 
     @Published var isHealthDataAvailable: Bool = false
     
+    enum HealthKitAuthorizationStatus {
+        case authorized
+        case notDetermined
+        case denied
+    }
+    
     // Checks the authorization status of HealthKit
-    func checkHealthKitAuthorization(completion: @escaping (Bool) -> Void) {
-        
+    func checkHealthKitAuthorization(completion: @escaping (HealthKitAuthorizationStatus) -> Void) {
         let drinkType = HKObjectType.quantityType(forIdentifier: .numberOfAlcoholicBeverages)!
-        
-        healthStore.getRequestStatusForAuthorization(toShare: [drinkType], read: [drinkType]) { status, error in
-            DispatchQueue.main.async {
-                switch status {
-                case .unnecessary:  // Already authorized
-                    completion(true)
-                case .shouldRequest:  // Need to request
-                    completion(false)
-                default:  // Any other case, considered as not authorized
-                    completion(false)
-                }
+
+        // Check the current authorization status
+        let status = healthStore.authorizationStatus(for: drinkType)
+
+        DispatchQueue.main.async {
+            switch status {
+            case .notDetermined:
+                // User has not yet made a choice regarding whether this app can access HealthKit data
+                completion(.notDetermined)
+            case .sharingDenied:
+                // User has explicitly denied this app access to HealthKit data
+                completion(.denied)
+            case .sharingAuthorized:
+                // User has authorized this app to access HealthKit data
+                completion(.authorized)
+            @unknown default:
+                // Handle any future cases
+                completion(.denied)
             }
         }
     }
+
 
     
     // Requests permissions for HealthKit

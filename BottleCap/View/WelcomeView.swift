@@ -13,53 +13,50 @@ struct WelcomeView: View {
     var healthKitManager: HealthKitManager
     @Binding var isPresented: Bool // Binding variable to control the presentation of WelcomeView
     
-    @State private var showRectangle = false
     @State private var showTitle = false
     @State private var showBody = false
     @State private var showButton = false
-    @State private var showSettingsAlert = false
-
+    
     
     var body: some View {
         NavigationView {
-            
+            ZStack {
+                VStack(alignment: .center, spacing: 16) {
+                    Text("Allow access to Health")
+                        .font(.largeTitle.bold())
+                        .foregroundStyle(.primary)
+                        .multilineTextAlignment(.center)
+                        .opacity(showTitle ? 1 : 0)
+                    
+                    Text("Bottle Cap securely syncs drinks with Health. It means you're always in control of your data and can delete it any time.")
+                        .font(.title3)
+                        .multilineTextAlignment(.center)
+                        .opacity(showBody ? 1 : 0.2)
+                        .offset(y: showBody ? 0 : 8)
+                    
+                    Spacer()
+                    
+                    Image("HealthIllustration")
+                        .resizable()
+                        .scaledToFit()
+                        .frame(maxWidth: UIScreen.main.bounds.width * 0.8)
+                }
+                .padding(32)
+                
+                
                 VStack {
                     Spacer()
-                    
-                    RoundedRectangle(cornerRadius: 25.0)
-                        .fill(Color.backgroundSecondary)
-                        .frame(width: 128, height: 128)
-                        .scaleEffect(showRectangle ? 1 : 0.2)
-                        .opacity(showRectangle ? 1 : 0)
-                    
-                    VStack {
-                        Text("Allow access to Health")
-                            .font(.largeTitle.bold())
-                            .multilineTextAlignment(.center)
-                            .padding()
-                            .opacity(showTitle ? 1 : 0)
-                            .offset(y: showTitle ? 0 : 10)
-                        
-                        Text("Bottle Cap logs your drinks to Health. It means you're always in control of your data and you can delete it at any time.")
-                            .font(.title3)
-                            .multilineTextAlignment(.center)
-                            .opacity(showBody ? 1 : 0)
-                            .offset(y: showBody ? 0 : 10)
-                    }
-                    .foregroundColor(Color.inkPrimary)
-                    .background(.background)
-                    .padding()
-                    
-                    Spacer()
-                    
-                    // Button to request HealthKit permissions
                     Button {
                         healthKitManager.requestHealthKitPermission { success, error in
                             if success {
-                                // Navigate to ContentView when the user grants access
-                                isPresented = true
+                                // Permissions granted, dismiss the WelcomeView
+                                isPresented = false
                             } else {
-                                print(error?.localizedDescription ?? "Failed to get HealthKit permission.")
+                                // Permissions denied or an error occurred
+                                if let error = error {
+                                    print("Failed to get HealthKit permission: \(error.localizedDescription)")
+                                }
+                                isPresented = false  // Optionally handle denied permissions
                             }
                         }
                     } label: {
@@ -70,49 +67,47 @@ struct WelcomeView: View {
                     .buttonStyle(.borderedProminent)
                     .controlSize(.large)
                     .cornerRadius(100)
-                    .padding()
-                    .opacity(showButton ? 1 : 0)
-                    .scaleEffect(showButton ? 1 : 0.9)
+                    .shadow(color: Color.black.opacity(0.15), radius: 20, x: 0, y: 6)
+                    .shadow(color: .accentPrimary.opacity(0.15), radius: 20, x: 0, y: 6)
+                    .padding(.horizontal, 32)
+                    .padding(.vertical, 16)
+                    .opacity(showButton ? 1 : 0.2)
+                    .offset(y: showBody ? 0 : 8)
+                    .frame(maxWidth: /*@START_MENU_TOKEN@*/.infinity/*@END_MENU_TOKEN@*/)
+                    .background(.thickMaterial)
+                    .ignoresSafeArea()
                 }
-                .onAppear {
-                    startAnimations()
-                }
-        }
-        .alert("Permission Denied", isPresented: $showSettingsAlert) {
-            Button("Go to Settings") {
-                if let settingsURL = URL(string: UIApplication.openSettingsURLString) {
-                    UIApplication.shared.open(settingsURL, options: [:], completionHandler: nil)
-                }
+                
+            }
+            .onAppear {
+                startAnimations()
             }
         }
+        
     }
     
     
     private func startAnimations() {
         // Reset states
-        showRectangle = false
         showTitle = false
         showBody = false
         showButton = false
         
-        withAnimation(Animation.spring(duration: 1.5)) {
-            showRectangle = true
-        }
         
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
-            withAnimation(Animation.easeInOut(duration: 0.3)) {
+        DispatchQueue.main.asyncAfter(deadline: .now()) {
+            withAnimation(Animation.easeOut(duration: 1.6)) {
                 showTitle = true
             }
         }
         
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1.6) {
-            withAnimation(Animation.easeInOut(duration: 0.3)) {
+        DispatchQueue.main.asyncAfter(deadline: .now()) {
+            withAnimation(Animation.easeOut(duration: 1.3)) {
                 showBody = true
             }
         }
         
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1.7) {
-            withAnimation(Animation.easeInOut(duration: 0.3)) {
+        DispatchQueue.main.asyncAfter(deadline: .now()) {
+            withAnimation(Animation.easeOut(duration: 1.3)) {
                 showButton = true
             }
         }

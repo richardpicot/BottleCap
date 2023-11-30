@@ -1,17 +1,17 @@
 {
   "images" : [
     {
-      "filename" : "Headshot.png",
+      "filename" : "HealthIllustration.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
-      "filename" : "Headshot@2x.png",
+      "filename" : "HealthIllustration@2x.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
-      "filename" : "Headshot@3x.png",
+      "filename" : "HealthIllustration@3x.png",
       "idiom" : "universal",
       "scale" : "3x"
     }

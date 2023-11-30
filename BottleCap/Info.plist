@@ -4,12 +4,25 @@
 <dict>
 	<key>CFBundleIdentifier</key>
 	<string></string>
-	<key></key>
-	<string></string>
 	<key>UILaunchScreen</key>
 	<dict>
 		<key>UIColorName</key>
 		<string>BackgroundPrimary</string>
 	</dict>
+	<key>NSHealthUpdateUsageDescription</key>
+	<string>Bottle Cap securely logs your drinks to Health.</string>
+	<key>NSHealthShareUsageDescription</key>
+	<string>Bottle Cap reads data from Health to show how many drinks you&apos;ve had in a week.</string>
+	<key>NSPrivacyAccessedAPITypes</key>
+	<array>
+		<dict>
+			<key>NSPrivacyAccessedAPIType</key>
+			<string>NSPrivacyAccessedAPICategoryUserDefaults</string>
+			<key>NSPrivacyAccessedAPITypeReasons</key>
+			<array>
+				<string>CA92.1</string>
+			</array>
+		</dict>
+	</array>
 </dict>
 </plist>
