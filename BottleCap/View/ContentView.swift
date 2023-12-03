@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import StoreKit
 
 struct ContentView: View {
     @State private var totalDrinks: Double = 0
@@ -17,6 +18,9 @@ struct ContentView: View {
     @State private var isPressed = false
     @State private var animationTrigger: Bool = false
     
+    @AppStorage("processCompletedCount") var processCompletedCount = 0
+    @AppStorage("lastVersionPromptedForReview") var lastVersionPromptedForReview = ""
+    
     @ObservedObject var appSettings = AppSettings.shared
     @ObservedObject var healthKitManager = HealthKitManager()
     
@@ -25,8 +29,8 @@ struct ContentView: View {
     @State private var showWelcomeView = false
     @State private var showAlert = false
     
-    
     @Environment(\.colorScheme) var colorScheme
+    @Environment(\.requestReview) private var requestReview
     
     private var drinksRemaining: Double {
         return max(0, appSettings.drinkLimit - totalDrinks)
@@ -56,6 +60,21 @@ struct ContentView: View {
                     self.animationTrigger.toggle()
                 }
             }
+        }
+        processCompletedCount += 1
+        let currentAppVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? ""
+        if processCompletedCount >= 4, currentAppVersion != lastVersionPromptedForReview {
+            presentReview()
+            lastVersionPromptedForReview = currentAppVersion
+        }
+
+    }
+    
+    private func presentReview() {
+        Task {
+            // Delay for two seconds to avoid interrupting the user
+            try await Task.sleep(for: .seconds(2))
+            requestReview() // No 'await' needed
         }
     }
     

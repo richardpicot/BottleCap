@@ -62,7 +62,7 @@ struct SettingsView: View {
                 
                 Section {
                     Button {
-                        // add review code
+                        openAppStoreReview()
                     } label: {
                         HStack {
                             Image(systemName: "star.fill")
@@ -109,6 +109,18 @@ struct SettingsView: View {
             }
         }
     }
+    
+    func openAppStoreReview() {
+        let appId = "6473561114"
+        let appStoreReviewUrl = "https://apps.apple.com/app/id\(appId)?action=write-review"
+        
+        guard let url = URL(string: appStoreReviewUrl) else {
+            fatalError("Expected a valid URL")
+        }
+
+        UIApplication.shared.open(url)
+    }
+
     
 }
 
