@@ -16,6 +16,7 @@ struct WelcomeView: View {
     @State private var showTitle = false
     @State private var showBody = false
     @State private var showButton = false
+    @State private var isRequestingPermission = false
     
     
     var body: some View {
@@ -47,7 +48,10 @@ struct WelcomeView: View {
                 VStack {
                     Spacer()
                     Button {
+                        isRequestingPermission = true  // Show spinner
+
                         healthKitManager.requestHealthKitPermission { success, error in
+                            isRequestingPermission = false  // Hide spinner
                             if success {
                                 // Permissions granted, dismiss the WelcomeView
                                 isPresented = false
@@ -60,9 +64,19 @@ struct WelcomeView: View {
                             }
                         }
                     } label: {
-                        Text("Connect to Health")
-                            .fontWeight(.semibold)
-                            .frame(maxWidth: .infinity)
+                        ZStack {
+                                Text("Connect to Health")
+                                    .fontWeight(.semibold)
+                                    .opacity(isRequestingPermission ? 0 : 1)  // Hide text when showing spinner
+
+                                if isRequestingPermission {
+                                    ProgressView()
+                                        .progressViewStyle(CircularProgressViewStyle(tint: .white))
+                                        .controlSize(.regular)
+                                }
+                            }
+                        .ignoresSafeArea()
+                        .frame(maxWidth: .infinity)
                     }
                     .buttonStyle(.borderedProminent)
                     .controlSize(.large)
