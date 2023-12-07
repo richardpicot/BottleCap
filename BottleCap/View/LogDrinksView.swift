@@ -10,14 +10,27 @@ import HealthKit
 
 struct LogDrinksView: View {
     @Binding var isPresented: Bool
-    var updateTotalDrinks: () -> Void
-    @State private var numberOfDrinksString: String = ""  // User input stored as a String
+    var logDrinkClosure: (Double, Date) -> Void
+    let totalDrinks: Double
+    let drinkLimit: Double
+    @State private var numberOfDrinksString: String = ""
     @State private var date: Date = Date()
-    @State private var triggerHapticFeedback = false
     @FocusState private var drinksFocus: Bool
     
     @ObservedObject var healthKitManager = HealthKitManager()
     
+    private func triggerHapticFeedback(totalDrinks: Double, drinkLimit: Double) {
+        let feedbackGenerator = UINotificationFeedbackGenerator()
+        
+        if totalDrinks >= drinkLimit {
+            feedbackGenerator.notificationOccurred(.error)
+            print("Error haptic played")
+        } else {
+            feedbackGenerator.notificationOccurred(.success)
+            print("Success haptic played")
+        }
+    }
+
     var body: some View {
         NavigationView {
             Form {
@@ -31,7 +44,7 @@ struct LogDrinksView: View {
                             .keyboardType(.numberPad)
                             .multilineTextAlignment(.trailing)
                             .frame(maxWidth: .infinity, alignment: .trailing)
-
+                        
                     }
                 }
                 
@@ -51,12 +64,10 @@ struct LogDrinksView: View {
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button("Save") {
                         if let numberOfDrinks = Double(numberOfDrinksString) {
-                            healthKitManager.addAlcoholData(numberOfDrinks: numberOfDrinks, date: date) {
-                                updateTotalDrinks()
-                            }
+                            triggerHapticFeedback(totalDrinks: totalDrinks, drinkLimit: drinkLimit)
+                            logDrinkClosure(numberOfDrinks, date)
+                            isPresented = false
                         }
-                        
-                        isPresented = false
                     }
                     .disabled(numberOfDrinksString.isEmpty)
                     .fontWeight(.bold)
@@ -72,7 +83,13 @@ struct LogDrinksView: View {
 
 struct LogDrinksView_Previews: PreviewProvider {
     static var previews: some View {
-        LogDrinksView(isPresented: .constant(true), updateTotalDrinks: {})
+        LogDrinksView(
+            isPresented: .constant(true),
+            logDrinkClosure: { _, _ in },
+            totalDrinks: 5, // Example value
+            drinkLimit: 10  // Example value
+        )
     }
 }
+
 

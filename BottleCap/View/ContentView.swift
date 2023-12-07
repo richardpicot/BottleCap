@@ -51,29 +51,41 @@ struct ContentView: View {
         return String(format: "%g", over)
     }
     
+    private func logDrink() {
+        healthKitManager.addAlcoholData(numberOfDrinks: 1, date: Date()) {
+            DispatchQueue.main.async {
+                updateTotalDrinks()
+                processCompletedCount += 1
+                checkAndPresentReviewRequest()
+                triggerHapticFeedback.toggle()
+            }
+        }
+    }
+    
+    
     private func updateTotalDrinks() {
-        // Fetching drinks count based on the user's selected start of the week
         withAnimation {
-            healthKitManager.readAlcoholData(startWeekDay: appSettings.weekStartDay) { (newTotal) in
+            healthKitManager.readAlcoholData(startWeekDay: appSettings.weekStartDay) { newTotal in
                 DispatchQueue.main.async {
                     self.totalDrinks = newTotal
                     self.animationTrigger.toggle()
                 }
             }
         }
-        processCompletedCount += 1
+    }
+    
+    private func checkAndPresentReviewRequest() {
         let currentAppVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? ""
         if processCompletedCount >= 4, currentAppVersion != lastVersionPromptedForReview {
             presentReview()
             lastVersionPromptedForReview = currentAppVersion
         }
-
     }
     
     private func presentReview() {
         Task {
             // Delay for two seconds to avoid interrupting the user
-            try await Task.sleep(for: .seconds(2))
+            try await Task.sleep(for: .seconds(1))
             requestReview() // No 'await' needed
         }
     }
@@ -89,6 +101,18 @@ struct ContentView: View {
                 // HealthKit access was previously denied; show alert
                 showAlert = true
             }
+        }
+    }
+    
+    private func generateHapticFeedback() {
+        let feedbackGenerator = UINotificationFeedbackGenerator()
+
+        if totalDrinks >= appSettings.drinkLimit {
+            feedbackGenerator.notificationOccurred(.error)
+            print("Error haptic played")
+        } else {
+            feedbackGenerator.notificationOccurred(.success)
+            print("Success haptic played")
         }
     }
     
@@ -171,10 +195,7 @@ struct ContentView: View {
                                 
                                 Button(action: {
                                     checkHealthKitAuthorization()
-                                    healthKitManager.addAlcoholData(numberOfDrinks: 1, date: Date()) {
-                                        updateTotalDrinks()
-                                        triggerHapticFeedback.toggle()
-                                    }
+                                    logDrink()
                                 }) {
                                     Label("Log a Drink", systemImage: "plus.circle")
                                 }
@@ -186,19 +207,23 @@ struct ContentView: View {
                                     .background(.accentPrimary)
                                     .clipShape(Circle())
                                     .sheet(isPresented: $showLogDrinksView) {
-                                        LogDrinksView(isPresented: $showLogDrinksView) {
-                                            healthKitManager.readAlcoholData(startWeekDay: appSettings.weekStartDay) { (newTotal) in
-                                                DispatchQueue.main.async {
-                                                    self.totalDrinks = newTotal
+                                        LogDrinksView(
+                                            isPresented: $showLogDrinksView,
+                                            logDrinkClosure: { numberOfDrinks, date in
+                                                healthKitManager.addAlcoholData(numberOfDrinks: numberOfDrinks, date: date) {
+                                                    DispatchQueue.main.async {
+                                                        updateTotalDrinks()
+                                                        processCompletedCount += 1
+                                                        checkAndPresentReviewRequest()
+                                                    }
                                                 }
-                                            }
-                                        }
+                                            },
+                                            totalDrinks: totalDrinks,
+                                            drinkLimit: appSettings.drinkLimit
+                                        )
                                     }
                                 
                                 
-                            }
-                            .sensoryFeedback(trigger: triggerHapticFeedback) { oldValue, newValue in
-                                totalDrinks >= appSettings.drinkLimit ? .warning : .success
                             }
                             .shadow(color: Color.black.opacity(0.15), radius: 20, x: 0, y: 6)
                             .shadow(color: .accentPrimary.opacity(0.15), radius: 20, x: 0, y: 6)
@@ -238,6 +263,9 @@ struct ContentView: View {
                 updateTotalDrinks()
                 checkHealthKitAuthorization()
             }
+            .onChange(of: triggerHapticFeedback) { oldValue, newValue in
+                generateHapticFeedback()
+            }
             .sheet(isPresented: $showWelcomeView) {
                 WelcomeView(healthKitManager: healthKitManager, isPresented: $showWelcomeView)
                     .interactiveDismissDisabled()
@@ -260,7 +288,7 @@ struct ContentView: View {
             }
             .onReceive(NotificationCenter.default.publisher(for: UIApplication.willEnterForegroundNotification)) { _ in
                 updateTotalDrinks()
-        }
+            }
         }
     }
 }
