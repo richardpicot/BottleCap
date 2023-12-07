@@ -2,17 +2,8 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>CFBundleIdentifier</key>
-	<string></string>
-	<key>UILaunchScreen</key>
-	<dict>
-		<key>UIColorName</key>
-		<string>BackgroundPrimary</string>
-	</dict>
-	<key>NSHealthUpdateUsageDescription</key>
-	<string>Bottle Cap securely logs your drinks to Health.</string>
-	<key>NSHealthShareUsageDescription</key>
-	<string>Bottle Cap reads data from Health to show how many drinks you&apos;ve had in a week.</string>
+	<key>ITSAppUsesNonExemptEncryption</key>
+	<false/>
 	<key>NSPrivacyAccessedAPITypes</key>
 	<array>
 		<dict>
@@ -24,5 +15,10 @@
 			</array>
 		</dict>
 	</array>
+	<key>UILaunchScreen</key>
+	<dict>
+		<key>UIColorName</key>
+		<string>BackgroundPrimary</string>
+	</dict>
 </dict>
 </plist>

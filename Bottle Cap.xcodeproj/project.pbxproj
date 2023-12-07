@@ -345,7 +345,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = BottleCap/BottleCap.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 5;
 				DEVELOPMENT_ASSET_PATHS = "\"BottleCap/Preview Content\"";
 				DEVELOPMENT_TEAM = 36P4XTQEHP;
 				ENABLE_PREVIEWS = YES;
@@ -353,8 +353,8 @@
 				INFOPLIST_FILE = BottleCap/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "Bottle Cap";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.healthcare-fitness";
-				INFOPLIST_KEY_NSHealthShareUsageDescription = "We need your permission to read health data such as your alcohol consumption";
-				INFOPLIST_KEY_NSHealthUpdateUsageDescription = "We need your permission to write health data such as your alcohol consumption";
+				INFOPLIST_KEY_NSHealthShareUsageDescription = "Bottle Cap reads data from Health to show how many drinks you've had in a week.";
+				INFOPLIST_KEY_NSHealthUpdateUsageDescription = "Bottle Cap securely logs your drinks to Health.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
@@ -382,7 +382,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = BottleCap/BottleCap.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 5;
 				DEVELOPMENT_ASSET_PATHS = "\"BottleCap/Preview Content\"";
 				DEVELOPMENT_TEAM = 36P4XTQEHP;
 				ENABLE_PREVIEWS = YES;
@@ -390,8 +390,8 @@
 				INFOPLIST_FILE = BottleCap/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "Bottle Cap";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.healthcare-fitness";
-				INFOPLIST_KEY_NSHealthShareUsageDescription = "We need your permission to read health data such as your alcohol consumption";
-				INFOPLIST_KEY_NSHealthUpdateUsageDescription = "We need your permission to write health data such as your alcohol consumption";
+				INFOPLIST_KEY_NSHealthShareUsageDescription = "Bottle Cap reads data from Health to show how many drinks you've had in a week.";
+				INFOPLIST_KEY_NSHealthUpdateUsageDescription = "Bottle Cap securely logs your drinks to Health.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;

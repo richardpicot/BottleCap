@@ -43,7 +43,7 @@ struct PrivacyPolicyView: View {
                     Text("Contact")
                         .font(.headline)
                     .bold()
-                    Text("If you have any questions or concerns about this Privacy Policy, please contact me.\nhello@bottlecap.com")
+                    Text("If you have any questions or concerns about this Privacy Policy, please contact me.\nhello@richardp.co.com")
                 }
 
             }

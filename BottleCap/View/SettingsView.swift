@@ -103,7 +103,7 @@ struct SettingsView: View {
     
     func sendEmail() {
         // Check if the device can send emails
-        if let url = URL(string: "mailto:richard@richardp.co") {
+        if let url = URL(string: "mailto:hello@richardp.co") {
             if UIApplication.shared.canOpenURL(url) {
                 UIApplication.shared.open(url)
             }
