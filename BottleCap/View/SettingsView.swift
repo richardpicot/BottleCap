@@ -28,7 +28,7 @@ struct SettingsView: View {
                     }
                     
                     Picker(selection: $appSettings.drinkLimit) {
-                        ForEach(1..<51) { limit in
+                        ForEach(1..<26) { limit in
                             Text("\(limit)")
                                 .tag(Double(limit))
                         }

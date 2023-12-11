@@ -106,7 +106,7 @@ struct ContentView: View {
     
     private func generateHapticFeedback() {
         let feedbackGenerator = UINotificationFeedbackGenerator()
-
+        
         if totalDrinks >= appSettings.drinkLimit {
             feedbackGenerator.notificationOccurred(.error)
             print("Error haptic played")
@@ -182,6 +182,7 @@ struct ContentView: View {
                             .background(
                                 .ultraThinMaterial
                             ).clipShape(Circle())
+                                .buttonBorderShape(.circle)
                             
                             Spacer()
                             
@@ -205,6 +206,7 @@ struct ContentView: View {
                                     .foregroundStyle(.white)
                                     .frame(minWidth: 72, minHeight: 72)
                                     .background(.accentPrimary)
+                                    .buttonBorderShape(.circle)
                                     .clipShape(Circle())
                                     .sheet(isPresented: $showLogDrinksView) {
                                         LogDrinksView(
@@ -249,6 +251,8 @@ struct ContentView: View {
                             .background(
                                 .ultraThinMaterial
                             ).clipShape(Circle())
+                                .buttonBorderShape(.circle)
+                            
                             
                             
                             Spacer()
