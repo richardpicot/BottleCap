@@ -139,7 +139,8 @@ struct ContentView: View {
                             .onAppear {
                                 animationTrigger.toggle()
                             }
-                        
+                            .lineLimit(1)
+                            .minimumScaleFactor(0.8)
                         
                         VStack {
                             Text(totalDrinks == 1 ? "Drink this week." : "Drinks this week.")

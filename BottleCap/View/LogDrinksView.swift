@@ -69,7 +69,7 @@ struct LogDrinksView: View {
                             isPresented = false
                         }
                     }
-                    .disabled(numberOfDrinksString.isEmpty)
+                    .disabled(numberOfDrinksString.isEmpty || Double(numberOfDrinksString) ?? 21 > 20)
                     .fontWeight(.bold)
                 }
             }

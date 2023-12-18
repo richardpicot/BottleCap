@@ -28,7 +28,7 @@ struct BackgroundView: View {
             )
         }
         .ignoresSafeArea()
-        .animation(.spring(duration: 1.0, bounce: 0.4), value: progress)
+        .animation(.spring(duration: 1.0, bounce: 0), value: progress)
     }
 }
 
