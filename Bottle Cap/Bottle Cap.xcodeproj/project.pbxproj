@@ -1,0 +1,449 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 56;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		F80546202AE864020067C71D /* HealthAccessView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F805461F2AE864020067C71D /* HealthAccessView.swift */; };
+		F82B684D2AD04E5000892451 /* BottleCap.swift in Sources */ = {isa = PBXBuildFile; fileRef = F82B684C2AD04E5000892451 /* BottleCap.swift */; };
+		F82B684F2AD04E5000892451 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F82B684E2AD04E5000892451 /* ContentView.swift */; };
+		F82B68512AD04E5100892451 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F82B68502AD04E5100892451 /* Assets.xcassets */; };
+		F82B68542AD04E5100892451 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F82B68532AD04E5100892451 /* Preview Assets.xcassets */; };
+		F82B685B2AD04F5400892451 /* HealthKitManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F82B685A2AD04F5400892451 /* HealthKitManager.swift */; };
+		F85150812AE685140041AA2B /* LogDrinksView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F85150802AE685140041AA2B /* LogDrinksView.swift */; };
+		F85150832AE68C4E0041AA2B /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = F85150822AE68C4E0041AA2B /* Extensions.swift */; };
+		F85150852AE68D030041AA2B /* AppSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = F85150842AE68D030041AA2B /* AppSettings.swift */; };
+		F85150872AE693270041AA2B /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F85150862AE693270041AA2B /* SettingsView.swift */; };
+		F85150892AE6AF230041AA2B /* HistoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F85150882AE6AF230041AA2B /* HistoryView.swift */; };
+		F851508D2AE6D8660041AA2B /* BackgroundView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F851508C2AE6D8660041AA2B /* BackgroundView.swift */; };
+		F874863B2B44BC95003B4A66 /* WelcomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F874863A2B44BC95003B4A66 /* WelcomeView.swift */; };
+		F87FB1A62B6419DB00E797A3 /* TermsOfUseView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F87FB1A52B6419DB00E797A3 /* TermsOfUseView.swift */; };
+		F8AF366A2AFFF432005A1BC5 /* PrivacyPolicyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8AF36692AFFF432005A1BC5 /* PrivacyPolicyView.swift */; };
+		F8AF366C2B000189005A1BC5 /* AboutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8AF366B2B000189005A1BC5 /* AboutView.swift */; };
+		F8D8286A2B079099007DBAF0 /* BubbleEffectView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8D828692B079099007DBAF0 /* BubbleEffectView.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		F805461F2AE864020067C71D /* HealthAccessView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthAccessView.swift; sourceTree = "<group>"; };
+		F82B68492AD04E5000892451 /* Bottle Cap.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Bottle Cap.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		F82B684C2AD04E5000892451 /* BottleCap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottleCap.swift; sourceTree = "<group>"; };
+		F82B684E2AD04E5000892451 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		F82B68502AD04E5100892451 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		F82B68532AD04E5100892451 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		F82B685A2AD04F5400892451 /* HealthKitManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthKitManager.swift; sourceTree = "<group>"; };
+		F82B685C2AD0512C00892451 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		F82B685E2AD051BF00892451 /* HealthKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = HealthKit.framework; path = System/Library/Frameworks/HealthKit.framework; sourceTree = SDKROOT; };
+		F82B68602AD0520A00892451 /* BottleCap.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = BottleCap.entitlements; sourceTree = "<group>"; };
+		F85150802AE685140041AA2B /* LogDrinksView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogDrinksView.swift; sourceTree = "<group>"; };
+		F85150822AE68C4E0041AA2B /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
+		F85150842AE68D030041AA2B /* AppSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppSettings.swift; sourceTree = "<group>"; };
+		F85150862AE693270041AA2B /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		F85150882AE6AF230041AA2B /* HistoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryView.swift; sourceTree = "<group>"; };
+		F851508C2AE6D8660041AA2B /* BackgroundView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackgroundView.swift; sourceTree = "<group>"; };
+		F874863A2B44BC95003B4A66 /* WelcomeView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WelcomeView.swift; sourceTree = "<group>"; };
+		F87FB1A52B6419DB00E797A3 /* TermsOfUseView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TermsOfUseView.swift; sourceTree = "<group>"; };
+		F8AF36692AFFF432005A1BC5 /* PrivacyPolicyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrivacyPolicyView.swift; sourceTree = "<group>"; };
+		F8AF366B2B000189005A1BC5 /* AboutView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutView.swift; sourceTree = "<group>"; };
+		F8D828692B079099007DBAF0 /* BubbleEffectView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BubbleEffectView.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		F82B68462AD04E5000892451 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		F82B68402AD04E5000892451 = {
+			isa = PBXGroup;
+			children = (
+				F82B684B2AD04E5000892451 /* BottleCap */,
+				F82B684A2AD04E5000892451 /* Products */,
+				F82B685D2AD051BF00892451 /* Frameworks */,
+			);
+			sourceTree = "<group>";
+		};
+		F82B684A2AD04E5000892451 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				F82B68492AD04E5000892451 /* Bottle Cap.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		F82B684B2AD04E5000892451 /* BottleCap */ = {
+			isa = PBXGroup;
+			children = (
+				F82B68602AD0520A00892451 /* BottleCap.entitlements */,
+				F82B685C2AD0512C00892451 /* Info.plist */,
+				F82B684C2AD04E5000892451 /* BottleCap.swift */,
+				F851508A2AE6B0C10041AA2B /* Model */,
+				F851508B2AE6B0DA0041AA2B /* View */,
+				F82B68502AD04E5100892451 /* Assets.xcassets */,
+				F82B68522AD04E5100892451 /* Preview Content */,
+			);
+			path = BottleCap;
+			sourceTree = "<group>";
+		};
+		F82B68522AD04E5100892451 /* Preview Content */ = {
+			isa = PBXGroup;
+			children = (
+				F82B68532AD04E5100892451 /* Preview Assets.xcassets */,
+			);
+			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		F82B685D2AD051BF00892451 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				F82B685E2AD051BF00892451 /* HealthKit.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		F851508A2AE6B0C10041AA2B /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				F82B685A2AD04F5400892451 /* HealthKitManager.swift */,
+				F85150822AE68C4E0041AA2B /* Extensions.swift */,
+				F85150842AE68D030041AA2B /* AppSettings.swift */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		F851508B2AE6B0DA0041AA2B /* View */ = {
+			isa = PBXGroup;
+			children = (
+				F82B684E2AD04E5000892451 /* ContentView.swift */,
+				F874863A2B44BC95003B4A66 /* WelcomeView.swift */,
+				F805461F2AE864020067C71D /* HealthAccessView.swift */,
+				F851508C2AE6D8660041AA2B /* BackgroundView.swift */,
+				F85150882AE6AF230041AA2B /* HistoryView.swift */,
+				F85150862AE693270041AA2B /* SettingsView.swift */,
+				F8AF36692AFFF432005A1BC5 /* PrivacyPolicyView.swift */,
+				F87FB1A52B6419DB00E797A3 /* TermsOfUseView.swift */,
+				F8AF366B2B000189005A1BC5 /* AboutView.swift */,
+				F85150802AE685140041AA2B /* LogDrinksView.swift */,
+				F8D828692B079099007DBAF0 /* BubbleEffectView.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		F82B68482AD04E5000892451 /* Bottle Cap */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = F82B68572AD04E5100892451 /* Build configuration list for PBXNativeTarget "Bottle Cap" */;
+			buildPhases = (
+				F82B68452AD04E5000892451 /* Sources */,
+				F82B68462AD04E5000892451 /* Frameworks */,
+				F82B68472AD04E5000892451 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "Bottle Cap";
+			productName = HealthKitAlcoholTest;
+			productReference = F82B68492AD04E5000892451 /* Bottle Cap.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		F82B68412AD04E5000892451 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1500;
+				LastUpgradeCheck = 1500;
+				TargetAttributes = {
+					F82B68482AD04E5000892451 = {
+						CreatedOnToolsVersion = 15.0;
+					};
+				};
+			};
+			buildConfigurationList = F82B68442AD04E5000892451 /* Build configuration list for PBXProject "Bottle Cap" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = F82B68402AD04E5000892451;
+			productRefGroup = F82B684A2AD04E5000892451 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				F82B68482AD04E5000892451 /* Bottle Cap */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		F82B68472AD04E5000892451 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F82B68542AD04E5100892451 /* Preview Assets.xcassets in Resources */,
+				F82B68512AD04E5100892451 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		F82B68452AD04E5000892451 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F87FB1A62B6419DB00E797A3 /* TermsOfUseView.swift in Sources */,
+				F85150872AE693270041AA2B /* SettingsView.swift in Sources */,
+				F85150892AE6AF230041AA2B /* HistoryView.swift in Sources */,
+				F85150832AE68C4E0041AA2B /* Extensions.swift in Sources */,
+				F82B684F2AD04E5000892451 /* ContentView.swift in Sources */,
+				F8AF366C2B000189005A1BC5 /* AboutView.swift in Sources */,
+				F8AF366A2AFFF432005A1BC5 /* PrivacyPolicyView.swift in Sources */,
+				F85150852AE68D030041AA2B /* AppSettings.swift in Sources */,
+				F80546202AE864020067C71D /* HealthAccessView.swift in Sources */,
+				F82B684D2AD04E5000892451 /* BottleCap.swift in Sources */,
+				F851508D2AE6D8660041AA2B /* BackgroundView.swift in Sources */,
+				F874863B2B44BC95003B4A66 /* WelcomeView.swift in Sources */,
+				F85150812AE685140041AA2B /* LogDrinksView.swift in Sources */,
+				F82B685B2AD04F5400892451 /* HealthKitManager.swift in Sources */,
+				F8D8286A2B079099007DBAF0 /* BubbleEffectView.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		F82B68552AD04E5100892451 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		F82B68562AD04E5100892451 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		F82B68582AD04E5100892451 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = BottleCap/BottleCap.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 13;
+				DEVELOPMENT_ASSET_PATHS = "\"BottleCap/Preview Content\"";
+				DEVELOPMENT_TEAM = 36P4XTQEHP;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = BottleCap/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "Bottle Cap";
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.healthcare-fitness";
+				INFOPLIST_KEY_NSHealthShareUsageDescription = "Bottle Cap reads data from Health to show how many drinks you've had in a week.";
+				INFOPLIST_KEY_NSHealthUpdateUsageDescription = "Bottle Cap securely logs your drinks to Health.";
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0.6;
+				PRODUCT_BUNDLE_IDENTIFIER = co.richardp.BottleCap;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Debug;
+		};
+		F82B68592AD04E5100892451 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = BottleCap/BottleCap.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 13;
+				DEVELOPMENT_ASSET_PATHS = "\"BottleCap/Preview Content\"";
+				DEVELOPMENT_TEAM = 36P4XTQEHP;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = BottleCap/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "Bottle Cap";
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.healthcare-fitness";
+				INFOPLIST_KEY_NSHealthShareUsageDescription = "Bottle Cap reads data from Health to show how many drinks you've had in a week.";
+				INFOPLIST_KEY_NSHealthUpdateUsageDescription = "Bottle Cap securely logs your drinks to Health.";
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0.6;
+				PRODUCT_BUNDLE_IDENTIFIER = co.richardp.BottleCap;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		F82B68442AD04E5000892451 /* Build configuration list for PBXProject "Bottle Cap" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				F82B68552AD04E5100892451 /* Debug */,
+				F82B68562AD04E5100892451 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		F82B68572AD04E5100892451 /* Build configuration list for PBXNativeTarget "Bottle Cap" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				F82B68582AD04E5100892451 /* Debug */,
+				F82B68592AD04E5100892451 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = F82B68412AD04E5000892451 /* Project object */;
+}
