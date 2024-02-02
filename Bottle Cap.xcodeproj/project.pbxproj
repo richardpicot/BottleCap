@@ -87,13 +87,15 @@
 		F82B684B2AD04E5000892451 /* BottleCap */ = {
 			isa = PBXGroup;
 			children = (
+				F82B68502AD04E5100892451 /* Assets.xcassets */,
+				F82B685C2AD0512C00892451 /* Info.plist */,
+				F82B68602AD0520A00892451 /* BottleCap.entitlements */,
 				F82B684C2AD04E5000892451 /* BottleCap.swift */,
 				F8C058DE2B6D4B5700FFC0A4 /* SceneDelegate.swift */,
 				F8C058E02B6D4BAE00FFC0A4 /* AppDelegate.swift */,
 				F8C058E22B6D4BD500FFC0A4 /* QuickActionType.swift */,
 				F851508A2AE6B0C10041AA2B /* Model */,
 				F851508B2AE6B0DA0041AA2B /* View */,
-				F8C058E42B6D4EE100FFC0A4 /* Supporting Files */,
 				F82B68522AD04E5100892451 /* Preview Content */,
 			);
 			path = BottleCap;
@@ -141,16 +143,6 @@
 				F8D828692B079099007DBAF0 /* BubbleEffectView.swift */,
 			);
 			path = View;
-			sourceTree = "<group>";
-		};
-		F8C058E42B6D4EE100FFC0A4 /* Supporting Files */ = {
-			isa = PBXGroup;
-			children = (
-				F82B68502AD04E5100892451 /* Assets.xcassets */,
-				F82B685C2AD0512C00892451 /* Info.plist */,
-				F82B68602AD0520A00892451 /* BottleCap.entitlements */,
-			);
-			path = "Supporting Files";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */

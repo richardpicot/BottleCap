@@ -120,6 +120,22 @@ struct ContentView: View {
         }
     }
     
+    private func handleLogMultipleDrinksAction() {
+        healthKitManager.checkHealthKitAuthorization { status in
+            DispatchQueue.main.async {
+                switch status {
+                case .authorized:
+                    self.showLogDrinksView = true
+                case .notDetermined:
+                    // Optionally, prompt the user to grant HealthKit access via your custom HealthAccessView
+                    self.showHealthAccessView = true
+                case .denied:
+                    // Show an alert informing the user that HealthKit access is necessary
+                    self.showAlert = true
+                }
+            }
+        }
+    }
     
     var body: some View {
         GeometryReader { geometry in // Used to check for home button
@@ -190,8 +206,8 @@ struct ContentView: View {
                             
                             Menu {
                                 Button(action: {
-                                    checkHealthKitAuthorization()
-                                    showLogDrinksView = true
+                                    handleLogMultipleDrinksAction()
+                                    print("log drinks view is set to \(showLogDrinksView)")
                                 }) {
                                     Label("Log Multiple Drinks...", systemImage: "calendar.badge.plus")
                                 }
@@ -315,9 +331,11 @@ struct ContentView: View {
         
         switch action {
         case .logDrink:
+            checkHealthKitAuthorization()
             logDrink()
             print("Log drink quick action")
         case .logMultipleDrinks:
+            checkHealthKitAuthorization()
             showLogDrinksView = true
             print("Log multiple drinks quick action")
         }
