@@ -31,5 +31,25 @@
 		<key>UIColorName</key>
 		<string>BackgroundPrimary</string>
 	</dict>
+	<key>UIApplicationShortcutItems</key>
+<array>
+    <dict>
+        <key>UIApplicationShortcutItemType</key>
+        <string>LogDrink</string>
+        <key>UIApplicationShortcutItemIconSymbolName</key>
+        <string>plus.circle</string>
+        <key>UIApplicationShortcutItemTitle</key>
+        <string>Log a Drink</string>
+    </dict>
+    <dict>
+        <key>UIApplicationShortcutItemType</key>
+        <string>LogMultipleDrinks</string>
+        <key>UIApplicationShortcutItemIconSymbolName</key>
+        <string>calendar.badge.plus</string>
+        <key>UIApplicationShortcutItemTitle</key>
+        <string>Log Multiple Drinks...</string>
+    </dict>
+</array>
+
 </dict>
 </plist>

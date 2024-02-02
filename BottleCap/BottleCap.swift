@@ -11,17 +11,15 @@ import HealthKit
 @main
 struct BottleCap: App {
     @StateObject var healthKitManager = HealthKitManager()
-    
+    private let qaService = QAService.shared
+    @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
+
     var body: some Scene {
         WindowGroup {
             ContentView()
                 .environmentObject(healthKitManager)
+                .environmentObject(qaService)
                 .fontDesign(.rounded)
-                .onOpenURL { url in
-                    print("Received URL: \(url)")
-                }
         }
     }
 }
-
-

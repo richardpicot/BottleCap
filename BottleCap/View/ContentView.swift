@@ -32,6 +32,10 @@ struct ContentView: View {
     @Environment(\.colorScheme) var colorScheme
     @Environment(\.requestReview) private var requestReview
     
+    //Homescreen quick action
+    @EnvironmentObject var qaService: QAService
+    @Environment(\.scenePhase) var scenePhase
+    
     private var drinksRemaining: Double {
         return max(0, appSettings.drinkLimit - totalDrinks)
     }
@@ -116,6 +120,22 @@ struct ContentView: View {
         }
     }
     
+    private func handleLogMultipleDrinksAction() {
+        healthKitManager.checkHealthKitAuthorization { status in
+            DispatchQueue.main.async {
+                switch status {
+                case .authorized:
+                    self.showLogDrinksView = true
+                case .notDetermined:
+                    // Optionally, prompt the user to grant HealthKit access via your custom HealthAccessView
+                    self.showHealthAccessView = true
+                case .denied:
+                    // Show an alert informing the user that HealthKit access is necessary
+                    self.showAlert = true
+                }
+            }
+        }
+    }
     
     var body: some View {
         GeometryReader { geometry in // Used to check for home button
@@ -186,8 +206,8 @@ struct ContentView: View {
                             
                             Menu {
                                 Button(action: {
-                                    checkHealthKitAuthorization()
-                                    showLogDrinksView = true
+                                    handleLogMultipleDrinksAction()
+                                    print("log drinks view is set to \(showLogDrinksView)")
                                 }) {
                                     Label("Log Multiple Drinks...", systemImage: "calendar.badge.plus")
                                 }
@@ -252,7 +272,7 @@ struct ContentView: View {
                             Spacer()
                             
                             
-
+                            
                             
                             
                         }
@@ -270,9 +290,9 @@ struct ContentView: View {
             }
             .sheet(isPresented: $showWelcomeView) {
                 WelcomeView(isPresented: $showWelcomeView)
-                        .interactiveDismissDisabled()
-
-                    }
+                    .interactiveDismissDisabled()
+                
+            }
             .sheet(isPresented: $showHealthAccessView) {
                 HealthAccessView(healthKitManager: healthKitManager, isPresented: $showHealthAccessView)
                     .interactiveDismissDisabled()
@@ -299,6 +319,28 @@ struct ContentView: View {
                 updateTotalDrinks()
             }
         }
+        .onChange(of: scenePhase) {
+            if scenePhase == .active {
+                performAction()
+            }
+        }
+    }
+    
+    func performAction() {
+        guard let action = qaService.action else { return }
+        
+        switch action {
+        case .logDrink:
+            checkHealthKitAuthorization()
+            logDrink()
+            print("Log drink quick action")
+        case .logMultipleDrinks:
+            checkHealthKitAuthorization()
+            showLogDrinksView = true
+            print("Log multiple drinks quick action")
+        }
+        
+        qaService.action = nil
     }
 }
 

@@ -23,6 +23,9 @@
 		F87FB1A62B6419DB00E797A3 /* TermsOfUseView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F87FB1A52B6419DB00E797A3 /* TermsOfUseView.swift */; };
 		F8AF366A2AFFF432005A1BC5 /* PrivacyPolicyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8AF36692AFFF432005A1BC5 /* PrivacyPolicyView.swift */; };
 		F8AF366C2B000189005A1BC5 /* AboutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8AF366B2B000189005A1BC5 /* AboutView.swift */; };
+		F8C058DF2B6D4B5700FFC0A4 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8C058DE2B6D4B5700FFC0A4 /* SceneDelegate.swift */; };
+		F8C058E12B6D4BAE00FFC0A4 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8C058E02B6D4BAE00FFC0A4 /* AppDelegate.swift */; };
+		F8C058E32B6D4BD500FFC0A4 /* QuickActionType.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8C058E22B6D4BD500FFC0A4 /* QuickActionType.swift */; };
 		F8D8286A2B079099007DBAF0 /* BubbleEffectView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8D828692B079099007DBAF0 /* BubbleEffectView.swift */; };
 /* End PBXBuildFile section */
 
@@ -34,7 +37,7 @@
 		F82B68502AD04E5100892451 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		F82B68532AD04E5100892451 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		F82B685A2AD04F5400892451 /* HealthKitManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthKitManager.swift; sourceTree = "<group>"; };
-		F82B685C2AD0512C00892451 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		F82B685C2AD0512C00892451 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		F82B685E2AD051BF00892451 /* HealthKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = HealthKit.framework; path = System/Library/Frameworks/HealthKit.framework; sourceTree = SDKROOT; };
 		F82B68602AD0520A00892451 /* BottleCap.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = BottleCap.entitlements; sourceTree = "<group>"; };
 		F85150802AE685140041AA2B /* LogDrinksView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogDrinksView.swift; sourceTree = "<group>"; };
@@ -47,6 +50,9 @@
 		F87FB1A52B6419DB00E797A3 /* TermsOfUseView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TermsOfUseView.swift; sourceTree = "<group>"; };
 		F8AF36692AFFF432005A1BC5 /* PrivacyPolicyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrivacyPolicyView.swift; sourceTree = "<group>"; };
 		F8AF366B2B000189005A1BC5 /* AboutView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutView.swift; sourceTree = "<group>"; };
+		F8C058DE2B6D4B5700FFC0A4 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
+		F8C058E02B6D4BAE00FFC0A4 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		F8C058E22B6D4BD500FFC0A4 /* QuickActionType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuickActionType.swift; sourceTree = "<group>"; };
 		F8D828692B079099007DBAF0 /* BubbleEffectView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BubbleEffectView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -81,12 +87,15 @@
 		F82B684B2AD04E5000892451 /* BottleCap */ = {
 			isa = PBXGroup;
 			children = (
-				F82B68602AD0520A00892451 /* BottleCap.entitlements */,
+				F82B68502AD04E5100892451 /* Assets.xcassets */,
 				F82B685C2AD0512C00892451 /* Info.plist */,
+				F82B68602AD0520A00892451 /* BottleCap.entitlements */,
 				F82B684C2AD04E5000892451 /* BottleCap.swift */,
+				F8C058DE2B6D4B5700FFC0A4 /* SceneDelegate.swift */,
+				F8C058E02B6D4BAE00FFC0A4 /* AppDelegate.swift */,
+				F8C058E22B6D4BD500FFC0A4 /* QuickActionType.swift */,
 				F851508A2AE6B0C10041AA2B /* Model */,
 				F851508B2AE6B0DA0041AA2B /* View */,
-				F82B68502AD04E5100892451 /* Assets.xcassets */,
 				F82B68522AD04E5100892451 /* Preview Content */,
 			);
 			path = BottleCap;
@@ -209,10 +218,12 @@
 				F87FB1A62B6419DB00E797A3 /* TermsOfUseView.swift in Sources */,
 				F85150872AE693270041AA2B /* SettingsView.swift in Sources */,
 				F85150892AE6AF230041AA2B /* HistoryView.swift in Sources */,
+				F8C058E32B6D4BD500FFC0A4 /* QuickActionType.swift in Sources */,
 				F85150832AE68C4E0041AA2B /* Extensions.swift in Sources */,
 				F82B684F2AD04E5000892451 /* ContentView.swift in Sources */,
 				F8AF366C2B000189005A1BC5 /* AboutView.swift in Sources */,
 				F8AF366A2AFFF432005A1BC5 /* PrivacyPolicyView.swift in Sources */,
+				F8C058DF2B6D4B5700FFC0A4 /* SceneDelegate.swift in Sources */,
 				F85150852AE68D030041AA2B /* AppSettings.swift in Sources */,
 				F80546202AE864020067C71D /* HealthAccessView.swift in Sources */,
 				F82B684D2AD04E5000892451 /* BottleCap.swift in Sources */,
@@ -220,6 +231,7 @@
 				F874863B2B44BC95003B4A66 /* WelcomeView.swift in Sources */,
 				F85150812AE685140041AA2B /* LogDrinksView.swift in Sources */,
 				F82B685B2AD04F5400892451 /* HealthKitManager.swift in Sources */,
+				F8C058E12B6D4BAE00FFC0A4 /* AppDelegate.swift in Sources */,
 				F8D8286A2B079099007DBAF0 /* BubbleEffectView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
