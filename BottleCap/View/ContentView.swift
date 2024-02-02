@@ -32,6 +32,10 @@ struct ContentView: View {
     @Environment(\.colorScheme) var colorScheme
     @Environment(\.requestReview) private var requestReview
     
+    //Homescreen quick action
+    @EnvironmentObject var qaService: QAService
+    @Environment(\.scenePhase) var scenePhase
+    
     private var drinksRemaining: Double {
         return max(0, appSettings.drinkLimit - totalDrinks)
     }
@@ -252,7 +256,7 @@ struct ContentView: View {
                             Spacer()
                             
                             
-
+                            
                             
                             
                         }
@@ -270,9 +274,9 @@ struct ContentView: View {
             }
             .sheet(isPresented: $showWelcomeView) {
                 WelcomeView(isPresented: $showWelcomeView)
-                        .interactiveDismissDisabled()
-
-                    }
+                    .interactiveDismissDisabled()
+                
+            }
             .sheet(isPresented: $showHealthAccessView) {
                 HealthAccessView(healthKitManager: healthKitManager, isPresented: $showHealthAccessView)
                     .interactiveDismissDisabled()
@@ -299,6 +303,26 @@ struct ContentView: View {
                 updateTotalDrinks()
             }
         }
+        .onChange(of: scenePhase) {
+            if scenePhase == .active {
+                performAction()
+            }
+        }
+    }
+    
+    func performAction() {
+        guard let action = qaService.action else { return }
+        
+        switch action {
+        case .logDrink:
+            logDrink()
+            print("Log drink quick action")
+        case .logMultipleDrinks:
+            showLogDrinksView = true
+            print("Log multiple drinks quick action")
+        }
+        
+        qaService.action = nil
     }
 }
 
