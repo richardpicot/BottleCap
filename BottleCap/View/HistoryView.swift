@@ -53,8 +53,9 @@ struct HistoryView: View {
                                 Text("\(date, format: .dateTime.weekday().day().month().year())")
                                 Spacer()
                                 let drinkCount = allDrinks[date]!
-                                Text("\(drinkCount, specifier: "%.0f") \(drinkCount == 1 ? "drink" : "drinks")")
-                                    .foregroundStyle(.secondary)
+                                let formattedDrinkCount = NumberFormatterUtility.formatRounded(drinkCount)
+                                                                Text("\(formattedDrinkCount) \(drinkCount == 1 ? "drink" : "drinks")")
+                                                                    .foregroundStyle(.secondary)
                             }
                         }
                     }

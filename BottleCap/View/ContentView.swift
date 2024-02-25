@@ -36,13 +36,19 @@ struct ContentView: View {
     @EnvironmentObject var qaService: QAService
     @Environment(\.scenePhase) var scenePhase
     
+    
+    // Numbers
+    private var formattedTotalDrinks: String {
+        return NumberFormatterUtility.formatRounded(totalDrinks)
+    }
+    
     private var drinksRemaining: Double {
-        return max(0, appSettings.drinkLimit - totalDrinks)
+        let roundedTotal = NumberFormatterUtility.roundedValue(totalDrinks)
+        return max(0, appSettings.drinkLimit - roundedTotal)
     }
     
     private var formattedDrinksRemaining: String {
-        let remaining = drinksRemaining
-        return String(format: "%g", remaining)
+        return NumberFormatterUtility.formatRounded(drinksRemaining)
     }
     
     private var drinksOverLimit: Double {
@@ -51,8 +57,8 @@ struct ContentView: View {
     }
     
     private var formattedDrinksOverLimit: String {
-        let over = drinksOverLimit
-        return String(format: "%g", over)
+        return NumberFormatterUtility.formatRounded(drinksOverLimit)
+
     }
     
     private func logDrink() {
@@ -141,15 +147,13 @@ struct ContentView: View {
         GeometryReader { geometry in // Used to check for home button
             NavigationView {
                 ZStack {
-                    BackgroundView(progress: CGFloat(totalDrinks) / CGFloat(appSettings.drinkLimit))
+                    BackgroundView(progress: CGFloat(NumberFormatterUtility.roundedValue(totalDrinks)) / CGFloat(appSettings.drinkLimit))
                         .animation(.default, value: animationTrigger)
                     
                     VStack {
                         Spacer()
                         
-                        
-                        // COUNT
-                        Text("\(totalDrinks, specifier: "%.0f")")
+                        Text("\(formattedTotalDrinks)")
                             .font(.system(size: 96))
                             .fontWeight(.medium)
                             .foregroundStyle(.textPrimary)
@@ -162,12 +166,11 @@ struct ContentView: View {
                             .minimumScaleFactor(0.8)
                         
                         VStack {
-                            Text(totalDrinks == 1 ? "Drink this week." : "Drinks this week.")
-                            
+                            Text(NumberFormatterUtility.roundedValue(totalDrinks) == 1 ? "Drink this week." : "Drinks this week.")
                             if drinksRemaining > 0 {
                                 Text("\(formattedDrinksRemaining) more until you reach your limit.")
                             } else if
-                                totalDrinks == appSettings.drinkLimit {
+                                NumberFormatterUtility.roundedValue(totalDrinks) == appSettings.drinkLimit {
                                 Text("You've reached your limit.")
                             } else {
                                 Text("You're \(formattedDrinksOverLimit) over your weekly limit.")
