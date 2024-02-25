@@ -14,6 +14,7 @@ struct LogDrinksView: View {
     let totalDrinks: Double
     let drinkLimit: Double
     @State private var numberOfDrinksString: String = ""
+    @State private var lastValidNumberOfDrinksString: String = ""
     @State private var date: Date = Date()
     @FocusState private var drinksFocus: Bool
     
@@ -40,10 +41,19 @@ struct LogDrinksView: View {
                             .bold()
                         Spacer()
                         TextField("Required", text: $numberOfDrinksString)
-                            .focused($drinksFocus)
-                            .keyboardType(.numberPad)
-                            .multilineTextAlignment(.trailing)
-                            .frame(maxWidth: .infinity, alignment: .trailing)
+                                                    .onChange(of: numberOfDrinksString) { newValue, oldValue in
+                                                        let decimalCount = newValue.filter { $0 == "." }.count
+                                                        if decimalCount > 1 {
+                                                            numberOfDrinksString = lastValidNumberOfDrinksString
+                                                        } else {
+                                                            // Update the last valid value
+                                                            lastValidNumberOfDrinksString = newValue
+                                                        }
+                                                    }
+                                                    .focused($drinksFocus)
+                                                    .keyboardType(.decimalPad)
+                                                    .multilineTextAlignment(.trailing)
+                                                    .frame(maxWidth: .infinity, alignment: .trailing)
                         
                     }
                 }

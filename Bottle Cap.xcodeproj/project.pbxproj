@@ -26,6 +26,7 @@
 		F8C058DF2B6D4B5700FFC0A4 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8C058DE2B6D4B5700FFC0A4 /* SceneDelegate.swift */; };
 		F8C058E12B6D4BAE00FFC0A4 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8C058E02B6D4BAE00FFC0A4 /* AppDelegate.swift */; };
 		F8C058E32B6D4BD500FFC0A4 /* QuickActionType.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8C058E22B6D4BD500FFC0A4 /* QuickActionType.swift */; };
+		F8CF22032B88AE7D002A4BF0 /* NumberFormatterUtility.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8CF22022B88AE7D002A4BF0 /* NumberFormatterUtility.swift */; };
 		F8D8286A2B079099007DBAF0 /* BubbleEffectView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8D828692B079099007DBAF0 /* BubbleEffectView.swift */; };
 /* End PBXBuildFile section */
 
@@ -53,6 +54,7 @@
 		F8C058DE2B6D4B5700FFC0A4 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
 		F8C058E02B6D4BAE00FFC0A4 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		F8C058E22B6D4BD500FFC0A4 /* QuickActionType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuickActionType.swift; sourceTree = "<group>"; };
+		F8CF22022B88AE7D002A4BF0 /* NumberFormatterUtility.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NumberFormatterUtility.swift; sourceTree = "<group>"; };
 		F8D828692B079099007DBAF0 /* BubbleEffectView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BubbleEffectView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -123,6 +125,7 @@
 				F82B685A2AD04F5400892451 /* HealthKitManager.swift */,
 				F85150822AE68C4E0041AA2B /* Extensions.swift */,
 				F85150842AE68D030041AA2B /* AppSettings.swift */,
+				F8CF22022B88AE7D002A4BF0 /* NumberFormatterUtility.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -219,6 +222,7 @@
 				F85150872AE693270041AA2B /* SettingsView.swift in Sources */,
 				F85150892AE6AF230041AA2B /* HistoryView.swift in Sources */,
 				F8C058E32B6D4BD500FFC0A4 /* QuickActionType.swift in Sources */,
+				F8CF22032B88AE7D002A4BF0 /* NumberFormatterUtility.swift in Sources */,
 				F85150832AE68C4E0041AA2B /* Extensions.swift in Sources */,
 				F82B684F2AD04E5000892451 /* ContentView.swift in Sources */,
 				F8AF366C2B000189005A1BC5 /* AboutView.swift in Sources */,

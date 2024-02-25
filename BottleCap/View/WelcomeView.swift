@@ -1,10 +1,3 @@
-//
-//  HealthAccessView.swift
-//  Bottle Cap
-//
-//  Created by Richard Picot on 24/10/2023.
-//
-
 import SwiftUI
 
 struct WelcomeView: View {
@@ -12,6 +5,7 @@ struct WelcomeView: View {
     @State private var showTitle = false
     @State private var showBody = false
     @State private var showButton = false
+    @State private var showTermsOfUse = false // State to control the presentation of the TermsOfUseView
     
     @Binding var isPresented: Bool
     
@@ -103,11 +97,27 @@ struct WelcomeView: View {
             
             // Footer VStack
             VStack(spacing: 24) {
-                Text("Bottle Cap was designed to track and limit casual alcohol consumption, not to manage an addiction.\nBy proceeding, you confirm you are not suffering from alcohol dependency and agree to our [Terms of Use.](https://www.richardp.co/)")
-                    .font(.footnote)
-                    .multilineTextAlignment(.center)
-                    .foregroundColor(.secondary)
-                
+                Button(action: {
+                    showTermsOfUse = true
+                }) {
+                    Text("Bottle Cap was designed to track and limit casual alcohol consumption, not to manage an addiction.\nBy proceeding, you confirm you are not suffering from alcohol dependency and agree to our ")
+                                       .foregroundColor(.secondary)
+                                       .font(.footnote)
+                                       +
+                                   Text("Terms of Use")
+                                       .foregroundColor(.textAccent)
+                                       .font(.footnote)
+                                       
+                    
+                }
+                .sheet(isPresented: $showTermsOfUse) {
+                    NavigationView {
+                        TermsOfUseView()
+                    }
+                    .presentationDragIndicator(.visible)
+                    .presentationDetents([.large])
+                }
+
                 
                 NavigationLink(destination: HealthAccessView(healthKitManager: HealthKitManager(), isPresented: $isPresented)) {
                     Text("Continue")
@@ -129,9 +139,6 @@ struct WelcomeView: View {
             .ignoresSafeArea()
             
         }
-        //        .navigationDestination(isPresented: $navigateToHealthAccessView) {
-        //            HealthAccessView(healthKitManager: HealthKitManager(), isPresented: $navigateToHealthAccessView)
-        //        }
         .onAppear {
             startAnimations()
         }
