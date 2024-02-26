@@ -38,9 +38,23 @@ struct ContentView: View {
     
     
     // Numbers
-    private var formattedTotalDrinks: String {
-        return NumberFormatterUtility.formatRounded(totalDrinks)
+    
+    // Split the formattedTotalDrinks into two components: the integer part and the decimal part
+    private func splitFormattedTotalDrinks() -> (String, String) {
+        let formattedString = String(format: "%.1f", totalDrinks) // Format with one decimal place
+        let components = formattedString.split(separator: ".", maxSplits: 1, omittingEmptySubsequences: true).map(String.init)
+        
+        // Check if the decimal part is "0" and return accordingly
+        if components.count == 2 && components[1] == "0" {
+            return (components[0], "") // Return only the integer part, omitting the decimal part
+        } else if components.count == 2 {
+            return (components[0], components[1]) // Return both parts if the decimal is not "0"
+        } else {
+            return (formattedString, "") // Fallback, though this case may not be hit due to the formatting
+        }
     }
+
+
     
     private var drinksRemaining: Double {
         let roundedTotal = NumberFormatterUtility.roundedValue(totalDrinks)
@@ -152,18 +166,39 @@ struct ContentView: View {
                     
                     VStack {
                         Spacer()
+                        let (integerPart, decimalPart) = splitFormattedTotalDrinks()
                         
-                        Text("\(formattedTotalDrinks)")
-                            .font(.system(size: 96))
-                            .fontWeight(.medium)
-                            .foregroundStyle(.textPrimary)
-                            .animation(.default, value: animationTrigger)
-                            .contentTransition(.numericText(value: totalDrinks))
-                            .onAppear {
-                                animationTrigger.toggle()
+                        HStack(alignment: .firstTextBaseline, spacing: 0) {
+                                Text(integerPart)
+                                    .font(.system(size: 96)) // Larger font for the integer part
+                                    .fontWeight(.medium)
+                                    .foregroundStyle(.textPrimary)
+                                    .animation(.default, value: animationTrigger)
+                                    .contentTransition(.numericText(value: totalDrinks))
+                                
+                                if !decimalPart.isEmpty {
+                                    Text(".\(decimalPart)")
+                                        .font(.system(size: 52))
+                                        .fontWeight(.medium)
+                                        .foregroundStyle(.textPrimary)
+                                        .animation(.default, value: animationTrigger)
+                                        .contentTransition(.numericText(value: totalDrinks))
+                                }
                             }
                             .lineLimit(1)
                             .minimumScaleFactor(0.8)
+                        
+//                        Text("\(formattedTotalDrinks)")
+//                            .font(.system(size: 96))
+//                            .fontWeight(.medium)
+//                            .foregroundStyle(.textPrimary)
+//                            .animation(.default, value: animationTrigger)
+//                            .contentTransition(.numericText(value: totalDrinks))
+//                            .onAppear {
+//                                animationTrigger.toggle()
+//                            }
+//                            .lineLimit(1)
+//                            .minimumScaleFactor(0.8)
                         
                         VStack {
                             Text(NumberFormatterUtility.roundedValue(totalDrinks) == 1 ? "Drink this week." : "Drinks this week.")
