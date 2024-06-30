@@ -247,7 +247,7 @@ struct ContentView: View {
                                     handleLogMultipleDrinksAction()
                                     print("log drinks view is set to \(showLogDrinksView)")
                                 }) {
-                                    Label("Log Multiple Drinks...", systemImage: "calendar.badge.plus")
+                                    Label("More Options...", systemImage: "calendar.badge.plus")
                                 }
                                 
                                 Button(action: {
