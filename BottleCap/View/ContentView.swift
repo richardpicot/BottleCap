@@ -178,7 +178,7 @@ struct ContentView: View {
                                 
                                 if !decimalPart.isEmpty {
                                     Text(".\(decimalPart)")
-                                        .font(.system(size: 52))
+                                        .font(.system(size: 56))
                                         .fontWeight(.medium)
                                         .foregroundStyle(.textPrimary)
                                         .animation(.default, value: animationTrigger)
@@ -317,8 +317,13 @@ struct ContentView: View {
                         .padding(.bottom, geometry.safeAreaInsets.bottom < 20 ? 20 : 0) // Inset on devices with a home button
                     }
                 }
-                .background(Color.backgroundPrimary)
-            }
+                .background(
+                    LinearGradient(
+                        gradient: Gradient(colors: [Color.gradientBackgroundPrimaryLeading, Color.gradientBackgroundPrimaryTrailing]),
+                        startPoint: .top,
+                        endPoint: .bottom
+                    )
+                )            }
             .onAppear {
                 updateTotalDrinks()
                 checkHealthKitAuthorization()
