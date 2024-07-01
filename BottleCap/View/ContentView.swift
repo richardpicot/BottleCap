@@ -232,7 +232,10 @@ struct ContentView: View {
                             .font(.system(size: 18, weight: .semibold))
                             .foregroundStyle(.textPrimary)
                             .frame(minWidth: 44, minHeight: 44)
-                            .background(.ultraThinMaterial)
+                            .background(
+                                        Circle()
+                                            .fill(colorScheme == .dark ? Color.fillTertiary.opacity(0.8) : Color.fillTertiary)
+                                    )
                             .clipShape(Circle())
                             .buttonBorderShape(.circle)
                             .sheet(isPresented: $showSettingsView) {
@@ -261,7 +264,16 @@ struct ContentView: View {
                                     .font((.system(size: 28)))
                                     .foregroundStyle(.white)
                                     .frame(minWidth: 72, minHeight: 72)
-                                    .background(.fillPrimary)
+                                    .background(
+                                            Circle()
+                                                .fill(
+                                                    LinearGradient(
+                                                        gradient: Gradient(colors: [Color.gradientButtonPrimaryLeading, Color.gradientButtonPrimaryTrailing]),
+                                                        startPoint: .top,
+                                                        endPoint: .bottom
+                                                    )
+                                                )
+                                        )                                    
                                     .buttonBorderShape(.circle)
                                     .clipShape(Circle())
                                     .sheet(isPresented: $showLogDrinksView) {
@@ -299,7 +311,10 @@ struct ContentView: View {
                             .font(.system(size: 18, weight: .semibold))
                             .foregroundStyle(.textPrimary)
                             .frame(minWidth: 44, minHeight: 44)
-                            .background(.ultraThinMaterial)
+                            .background(
+                                        Circle()
+                                            .fill(colorScheme == .dark ? Color.fillTertiary.opacity(0.8) : Color.fillTertiary)
+                                    )
                             .clipShape(Circle())
                             .buttonBorderShape(.circle)
                             .sheet(isPresented: $showHistoryView) {
