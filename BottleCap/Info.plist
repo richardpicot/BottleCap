@@ -40,7 +40,7 @@
 			<key>UIApplicationShortcutItemIconSymbolName</key>
 			<string>calendar.badge.plus</string>
 			<key>UIApplicationShortcutItemTitle</key>
-			<string>Log Multiple Drinks...</string>
+			<string>More Options...</string>
 			<key>UIApplicationShortcutItemType</key>
 			<string>LogMultipleDrinks</string>
 		</dict>
