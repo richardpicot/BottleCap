@@ -234,7 +234,7 @@ struct ContentView: View {
                             .frame(minWidth: 44, minHeight: 44)
                             .background(
                                         Circle()
-                                            .fill(colorScheme == .dark ? Color.fillTertiary.opacity(0.8) : Color.fillTertiary)
+                                            .fill(colorScheme == .dark ? Color.fillTertiary.opacity(0.6) : Color.fillTertiary)
                                     )
                             .clipShape(Circle())
                             .buttonBorderShape(.circle)
