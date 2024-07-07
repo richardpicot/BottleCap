@@ -28,6 +28,8 @@
 		F8C058E32B6D4BD500FFC0A4 /* QuickActionType.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8C058E22B6D4BD500FFC0A4 /* QuickActionType.swift */; };
 		F8CF22032B88AE7D002A4BF0 /* NumberFormatterUtility.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8CF22022B88AE7D002A4BF0 /* NumberFormatterUtility.swift */; };
 		F8D8286A2B079099007DBAF0 /* BubbleEffectView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8D828692B079099007DBAF0 /* BubbleEffectView.swift */; };
+		F8E00D2D2C38946E0019D958 /* GradientView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8E00D2C2C38946E0019D958 /* GradientView.swift */; };
+		F8E00D312C38AA570019D958 /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F8E00D302C38AA560019D958 /* Launch Screen.storyboard */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -56,6 +58,8 @@
 		F8C058E22B6D4BD500FFC0A4 /* QuickActionType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuickActionType.swift; sourceTree = "<group>"; };
 		F8CF22022B88AE7D002A4BF0 /* NumberFormatterUtility.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NumberFormatterUtility.swift; sourceTree = "<group>"; };
 		F8D828692B079099007DBAF0 /* BubbleEffectView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BubbleEffectView.swift; sourceTree = "<group>"; };
+		F8E00D2C2C38946E0019D958 /* GradientView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GradientView.swift; sourceTree = "<group>"; };
+		F8E00D302C38AA560019D958 /* Launch Screen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = "Launch Screen.storyboard"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -72,6 +76,7 @@
 		F82B68402AD04E5000892451 = {
 			isa = PBXGroup;
 			children = (
+				F8E00D302C38AA560019D958 /* Launch Screen.storyboard */,
 				F82B684B2AD04E5000892451 /* BottleCap */,
 				F82B684A2AD04E5000892451 /* Products */,
 				F82B685D2AD051BF00892451 /* Frameworks */,
@@ -144,6 +149,7 @@
 				F8AF366B2B000189005A1BC5 /* AboutView.swift */,
 				F85150802AE685140041AA2B /* LogDrinksView.swift */,
 				F8D828692B079099007DBAF0 /* BubbleEffectView.swift */,
+				F8E00D2C2C38946E0019D958 /* GradientView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -206,6 +212,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F8E00D312C38AA570019D958 /* Launch Screen.storyboard in Resources */,
 				F82B68542AD04E5100892451 /* Preview Assets.xcassets in Resources */,
 				F82B68512AD04E5100892451 /* Assets.xcassets in Resources */,
 			);
@@ -220,6 +227,7 @@
 			files = (
 				F87FB1A62B6419DB00E797A3 /* TermsOfUseView.swift in Sources */,
 				F85150872AE693270041AA2B /* SettingsView.swift in Sources */,
+				F8E00D2D2C38946E0019D958 /* GradientView.swift in Sources */,
 				F85150892AE6AF230041AA2B /* HistoryView.swift in Sources */,
 				F8C058E32B6D4BD500FFC0A4 /* QuickActionType.swift in Sources */,
 				F8CF22032B88AE7D002A4BF0 /* NumberFormatterUtility.swift in Sources */,
@@ -369,7 +377,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = BottleCap/BottleCap.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 16;
+				CURRENT_PROJECT_VERSION = 17;
 				DEVELOPMENT_ASSET_PATHS = "\"BottleCap/Preview Content\"";
 				DEVELOPMENT_TEAM = 36P4XTQEHP;
 				ENABLE_PREVIEWS = YES;
@@ -381,6 +389,7 @@
 				INFOPLIST_KEY_NSHealthUpdateUsageDescription = "Bottle Cap securely logs your drinks to Health.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchStoryboardName = "Launch Screen.storyboard";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -407,7 +416,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = BottleCap/BottleCap.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 16;
+				CURRENT_PROJECT_VERSION = 17;
 				DEVELOPMENT_ASSET_PATHS = "\"BottleCap/Preview Content\"";
 				DEVELOPMENT_TEAM = 36P4XTQEHP;
 				ENABLE_PREVIEWS = YES;
@@ -419,6 +428,7 @@
 				INFOPLIST_KEY_NSHealthUpdateUsageDescription = "Bottle Cap securely logs your drinks to Health.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchStoryboardName = "Launch Screen.storyboard";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				LD_RUNPATH_SEARCH_PATHS = (

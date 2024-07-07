@@ -178,7 +178,7 @@ struct ContentView: View {
                                 
                                 if !decimalPart.isEmpty {
                                     Text(".\(decimalPart)")
-                                        .font(.system(size: 52))
+                                        .font(.system(size: 56))
                                         .fontWeight(.medium)
                                         .foregroundStyle(.textPrimary)
                                         .animation(.default, value: animationTrigger)
@@ -232,7 +232,10 @@ struct ContentView: View {
                             .font(.system(size: 18, weight: .semibold))
                             .foregroundStyle(.textPrimary)
                             .frame(minWidth: 44, minHeight: 44)
-                            .background(.ultraThinMaterial)
+                            .background(
+                                        Circle()
+                                            .fill(colorScheme == .dark ? Color.fillTertiary.opacity(0.6) : Color.fillTertiary)
+                                    )
                             .clipShape(Circle())
                             .buttonBorderShape(.circle)
                             .sheet(isPresented: $showSettingsView) {
@@ -247,7 +250,7 @@ struct ContentView: View {
                                     handleLogMultipleDrinksAction()
                                     print("log drinks view is set to \(showLogDrinksView)")
                                 }) {
-                                    Label("Log Multiple Drinks...", systemImage: "calendar.badge.plus")
+                                    Label("More Options...", systemImage: "calendar.badge.plus")
                                 }
                                 
                                 Button(action: {
@@ -261,7 +264,16 @@ struct ContentView: View {
                                     .font((.system(size: 28)))
                                     .foregroundStyle(.white)
                                     .frame(minWidth: 72, minHeight: 72)
-                                    .background(.fillPrimary)
+                                    .background(
+                                            Circle()
+                                                .fill(
+                                                    LinearGradient(
+                                                        gradient: Gradient(colors: [Color.gradientButtonPrimaryLeading, Color.gradientButtonPrimaryTrailing]),
+                                                        startPoint: .top,
+                                                        endPoint: .bottom
+                                                    )
+                                                )
+                                        )                                    
                                     .buttonBorderShape(.circle)
                                     .clipShape(Circle())
                                     .sheet(isPresented: $showLogDrinksView) {
@@ -299,7 +311,10 @@ struct ContentView: View {
                             .font(.system(size: 18, weight: .semibold))
                             .foregroundStyle(.textPrimary)
                             .frame(minWidth: 44, minHeight: 44)
-                            .background(.ultraThinMaterial)
+                            .background(
+                                        Circle()
+                                            .fill(colorScheme == .dark ? Color.fillTertiary.opacity(0.8) : Color.fillTertiary)
+                                    )
                             .clipShape(Circle())
                             .buttonBorderShape(.circle)
                             .sheet(isPresented: $showHistoryView) {
@@ -317,8 +332,13 @@ struct ContentView: View {
                         .padding(.bottom, geometry.safeAreaInsets.bottom < 20 ? 20 : 0) // Inset on devices with a home button
                     }
                 }
-                .background(Color.backgroundPrimary)
-            }
+                .background(
+                    LinearGradient(
+                        gradient: Gradient(colors: [Color.gradientBackgroundPrimaryLeading, Color.gradientBackgroundPrimaryTrailing]),
+                        startPoint: .top,
+                        endPoint: .bottom
+                    )
+                )            }
             .onAppear {
                 updateTotalDrinks()
                 checkHealthKitAuthorization()

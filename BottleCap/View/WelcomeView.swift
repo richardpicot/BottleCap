@@ -125,7 +125,13 @@ struct WelcomeView: View {
                         .foregroundColor(.white) // Set text color
                         .frame(maxWidth: .infinity)
                         .padding()
-                        .background(Color.accentColor) // Set background color
+                        .background(
+                                    LinearGradient(
+                                        gradient: Gradient(colors: [Color.gradientButtonPrimaryLeading, Color.gradientButtonPrimaryTrailing]),
+                                        startPoint: .top,
+                                        endPoint: .bottom
+                                    )
+                                )
                         .cornerRadius(100)
                         .shadow(color: Color.black.opacity(0.15), radius: 20, x: 0, y: 6)
                         .shadow(color: .fillPrimary.opacity(0.15), radius: 20, x: 0, y: 6)
