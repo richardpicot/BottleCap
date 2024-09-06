@@ -1,7 +1,31 @@
 {
   "images" : [
     {
-      "filename" : "BottleCap_Icon_Orange.png",
+      "filename" : "BottleCap_Icon_Light.png",
+      "idiom" : "universal",
+      "platform" : "ios",
+      "size" : "1024x1024"
+    },
+    {
+      "appearances" : [
+        {
+          "appearance" : "luminosity",
+          "value" : "dark"
+        }
+      ],
+      "filename" : "BottleCap_Icon_Dark.png",
+      "idiom" : "universal",
+      "platform" : "ios",
+      "size" : "1024x1024"
+    },
+    {
+      "appearances" : [
+        {
+          "appearance" : "luminosity",
+          "value" : "tinted"
+        }
+      ],
+      "filename" : "BottleCap_Icon_Tinted.png",
       "idiom" : "universal",
       "platform" : "ios",
       "size" : "1024x1024"
