@@ -12,6 +12,7 @@ struct HistoryView: View {
     @State private var allDrinks: [Date: Double] = [:]
     @ObservedObject var healthKitManager = HealthKitManager()
     @Environment(\.dismiss) var dismiss
+    @ObservedObject var appSettings = AppSettings.shared
     
     var body: some View {
         NavigationView {
@@ -36,27 +37,27 @@ struct HistoryView: View {
                 .multilineTextAlignment(.center)
             } else {
                 List {
-                    Section(footer:
-                                HStack(spacing: 2) {
-                        Text("[Edit in Health](x-apple-health://)")
-                        Image(systemName: "arrow.up.forward")
-                            .foregroundColor(.accentColor)
-                            .onTapGesture {
-                                if let url = URL(string: "x-apple-health://") {
-                                    UIApplication.shared.open(url)
-                                }
-                            }
+                    Section {
+                        ForEach(drinksThisWeek, id: \.0) { date, count in
+                            drinkRow(date: date, count: count)
+                        }
+                    } header: {
+                        Text("This week")
+                    } footer: {
+                        if drinksPreviousWeeks.isEmpty {
+                            editInHealthButton
+                        }
                     }
-                    ) {
-                        ForEach(allDrinks.keys.sorted(by: >), id: \.self) { date in
-                            HStack {
-                                Text("\(date, format: .dateTime.weekday().day().month().year())")
-                                Spacer()
-                                let drinkCount = allDrinks[date]!
-                                let formattedDrinkCount = NumberFormatterUtility.formatRounded(drinkCount)
-                                                                Text("\(formattedDrinkCount) \(drinkCount == 1 ? "drink" : "drinks")")
-                                                                    .foregroundStyle(.secondary)
+                    
+                    if !drinksPreviousWeeks.isEmpty {
+                        Section {
+                            ForEach(drinksPreviousWeeks, id: \.0) { date, count in
+                                drinkRow(date: date, count: count)
                             }
+                        } header: {
+                            Text("Previous weeks")
+                        } footer: {
+                            editInHealthButton
                         }
                     }
                 }
@@ -71,23 +72,66 @@ struct HistoryView: View {
             }
         }
         .onAppear {
-            healthKitManager.readAllAlcoholEntries { drinks in
-                var drinksByDate: [Date: Double] = [:]
-                
-                for drink in drinks {
-                    let date = drink.endDate.startOfDay
-                    let count = drink.quantity.doubleValue(for: HKUnit.count())
-                    
-                    drinksByDate[date, default: 0] += count
-                }
-                
-                self.allDrinks = drinksByDate
-            }
+            updateDrinks()
         }
-        
+    }
+    
+    private var drinksThisWeek: [(Date, Double)] {
+        let calendar = Calendar.current
+        guard let startOfWeek = calendar.date(toNearestOrLastWeekday: appSettings.weekStartDay, matching: Date()) else {
+            return []
+        }
+        // Include drinks from the start of the week
+        return allDrinks.filter { $0.key >= startOfWeek.startOfDay }.sorted { $0.key > $1.key }
+    }
+
+    private var drinksPreviousWeeks: [(Date, Double)] {
+        let calendar = Calendar.current
+        guard let startOfWeek = calendar.date(toNearestOrLastWeekday: appSettings.weekStartDay, matching: Date()) else {
+            return []
+        }
+        // Exclude drinks from the start of the week and later
+        return allDrinks.filter { $0.key < startOfWeek.startOfDay }.sorted { $0.key > $1.key }
+    }
+
+    private func drinkRow(date: Date, count: Double) -> some View {
+        HStack {
+            Text("\(date, format: .dateTime.weekday().day().month().year())")
+            Spacer()
+            let formattedDrinkCount = NumberFormatterUtility.formatRounded(count)
+            Text("\(formattedDrinkCount) \(count == 1 ? "drink" : "drinks")")
+                .foregroundStyle(.secondary)
+        }
+    }
+    
+    private func updateDrinks() {
+        healthKitManager.readAllAlcoholEntries { drinks in
+            var drinksByDate: [Date: Double] = [:]
+            
+            for drink in drinks {
+                let date = drink.endDate.startOfDay
+                let count = drink.quantity.doubleValue(for: HKUnit.count())
+                
+                drinksByDate[date, default: 0] += count
+            }
+            
+            self.allDrinks = drinksByDate
+        }
+    }
+    
+    private var editInHealthButton: some View {
+        HStack(spacing: 2) {
+            Text("[Edit in Health](x-apple-health://)")
+            Image(systemName: "arrow.up.forward")
+                .foregroundColor(.accentColor)
+                .onTapGesture {
+                    if let url = URL(string: "x-apple-health://") {
+                        UIApplication.shared.open(url)
+                    }
+                }
+        }
     }
 }
-
 
 struct HistoryView_Previews: PreviewProvider {
     static var previews: some View {
