@@ -21,6 +21,7 @@
 		F851508D2AE6D8660041AA2B /* BackgroundView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F851508C2AE6D8660041AA2B /* BackgroundView.swift */; };
 		F874863B2B44BC95003B4A66 /* WelcomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F874863A2B44BC95003B4A66 /* WelcomeView.swift */; };
 		F87FB1A62B6419DB00E797A3 /* TermsOfUseView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F87FB1A52B6419DB00E797A3 /* TermsOfUseView.swift */; };
+		F88443E92CAEAB38000406D4 /* WeeklyDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F88443E82CAEAB38000406D4 /* WeeklyDetailView.swift */; };
 		F8AF366A2AFFF432005A1BC5 /* PrivacyPolicyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8AF36692AFFF432005A1BC5 /* PrivacyPolicyView.swift */; };
 		F8AF366C2B000189005A1BC5 /* AboutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8AF366B2B000189005A1BC5 /* AboutView.swift */; };
 		F8C058DF2B6D4B5700FFC0A4 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8C058DE2B6D4B5700FFC0A4 /* SceneDelegate.swift */; };
@@ -51,6 +52,7 @@
 		F851508C2AE6D8660041AA2B /* BackgroundView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackgroundView.swift; sourceTree = "<group>"; };
 		F874863A2B44BC95003B4A66 /* WelcomeView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WelcomeView.swift; sourceTree = "<group>"; };
 		F87FB1A52B6419DB00E797A3 /* TermsOfUseView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TermsOfUseView.swift; sourceTree = "<group>"; };
+		F88443E82CAEAB38000406D4 /* WeeklyDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeeklyDetailView.swift; sourceTree = "<group>"; };
 		F8AF36692AFFF432005A1BC5 /* PrivacyPolicyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrivacyPolicyView.swift; sourceTree = "<group>"; };
 		F8AF366B2B000189005A1BC5 /* AboutView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutView.swift; sourceTree = "<group>"; };
 		F8C058DE2B6D4B5700FFC0A4 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -143,6 +145,7 @@
 				F805461F2AE864020067C71D /* HealthAccessView.swift */,
 				F851508C2AE6D8660041AA2B /* BackgroundView.swift */,
 				F85150882AE6AF230041AA2B /* HistoryView.swift */,
+				F88443E82CAEAB38000406D4 /* WeeklyDetailView.swift */,
 				F85150862AE693270041AA2B /* SettingsView.swift */,
 				F8AF36692AFFF432005A1BC5 /* PrivacyPolicyView.swift */,
 				F87FB1A52B6419DB00E797A3 /* TermsOfUseView.swift */,
@@ -236,6 +239,7 @@
 				F8AF366C2B000189005A1BC5 /* AboutView.swift in Sources */,
 				F8AF366A2AFFF432005A1BC5 /* PrivacyPolicyView.swift in Sources */,
 				F8C058DF2B6D4B5700FFC0A4 /* SceneDelegate.swift in Sources */,
+				F88443E92CAEAB38000406D4 /* WeeklyDetailView.swift in Sources */,
 				F85150852AE68D030041AA2B /* AppSettings.swift in Sources */,
 				F80546202AE864020067C71D /* HealthAccessView.swift in Sources */,
 				F82B684D2AD04E5000892451 /* BottleCap.swift in Sources */,
@@ -377,7 +381,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = BottleCap/BottleCap.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 18;
+				CURRENT_PROJECT_VERSION = 19;
 				DEVELOPMENT_ASSET_PATHS = "\"BottleCap/Preview Content\"";
 				DEVELOPMENT_TEAM = 36P4XTQEHP;
 				ENABLE_PREVIEWS = YES;
@@ -396,7 +400,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.1.3;
+				MARKETING_VERSION = 1.1.4;
 				PRODUCT_BUNDLE_IDENTIFIER = co.richardp.BottleCap;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
@@ -416,7 +420,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = BottleCap/BottleCap.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 18;
+				CURRENT_PROJECT_VERSION = 19;
 				DEVELOPMENT_ASSET_PATHS = "\"BottleCap/Preview Content\"";
 				DEVELOPMENT_TEAM = 36P4XTQEHP;
 				ENABLE_PREVIEWS = YES;
@@ -435,7 +439,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.1.3;
+				MARKETING_VERSION = 1.1.4;
 				PRODUCT_BUNDLE_IDENTIFIER = co.richardp.BottleCap;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
