@@ -51,8 +51,8 @@ struct HistoryView: View {
                     
                     if !drinksPreviousWeeks.isEmpty {
                         Section {
-                            ForEach(drinksPreviousWeeks, id: \.0) { date, count in
-                                drinkRow(date: date, count: count)
+                            ForEach(drinksPreviousWeeks, id: \.0) { weekStart, count in
+                                drinkRow(date: weekStart, count: count, isWeekly: true)
                             }
                         } header: {
                             Text("Previous weeks")
@@ -91,12 +91,27 @@ struct HistoryView: View {
             return []
         }
         // Exclude drinks from the start of the week and later
-        return allDrinks.filter { $0.key < startOfWeek.startOfDay }.sorted { $0.key > $1.key }
+        let previousWeeksDrinks = allDrinks.filter { $0.key < startOfWeek.startOfDay }
+        return groupDrinksByWeek(drinks: previousWeeksDrinks)
     }
 
-    private func drinkRow(date: Date, count: Double) -> some View {
+    private func groupDrinksByWeek(drinks: [Date: Double]) -> [(Date, Double)] {
+        let calendar = Calendar.current
+        var weeklyDrinks: [Date: Double] = [:]
+
+        for (date, count) in drinks {
+            guard let weekStart = calendar.date(toNearestOrLastWeekday: appSettings.weekStartDay, matching: date) else {
+                continue
+            }
+            weeklyDrinks[weekStart, default: 0] += count
+        }
+
+        return weeklyDrinks.sorted { $0.key > $1.key }
+    }
+
+    private func drinkRow(date: Date, count: Double, isWeekly: Bool = false) -> some View {
         HStack {
-            Text("\(date, format: .dateTime.weekday().day().month().year())")
+            Text(date, format: .dateTime.weekday().day().month().year())
             Spacer()
             let formattedDrinkCount = NumberFormatterUtility.formatRounded(count)
             Text("\(formattedDrinkCount) \(count == 1 ? "drink" : "drinks")")
