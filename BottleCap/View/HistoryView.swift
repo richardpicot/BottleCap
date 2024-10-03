@@ -52,7 +52,9 @@ struct HistoryView: View {
                     if !drinksPreviousWeeks.isEmpty {
                         Section {
                             ForEach(drinksPreviousWeeks, id: \.0) { weekStart, count in
-                                drinkRow(date: weekStart, count: count, isWeekly: true)
+                                NavigationLink(destination: WeeklyDetailView(weekStart: weekStart, drinks: allDrinks, appSettings: appSettings)) {
+                                    drinkRow(date: weekStart, count: count, isWeekly: true)
+                                }
                             }
                         } header: {
                             Text("Previous weeks")
@@ -109,9 +111,25 @@ struct HistoryView: View {
         return weeklyDrinks.sorted { $0.key > $1.key }
     }
 
+    private func weekTitle(for date: Date) -> String {
+        let calendar = Calendar.current
+        let endOfWeek = calendar.date(byAdding: .day, value: 6, to: date)!
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "MMM d"
+        return "\(dateFormatter.string(from: date)) - \(dateFormatter.string(from: endOfWeek))"
+    }
+
     private func drinkRow(date: Date, count: Double, isWeekly: Bool = false) -> some View {
         HStack {
-            Text(date, format: .dateTime.weekday().day().month().year())
+            if isWeekly {
+                Text(weekTitle(for: date))
+            } else {
+                if Calendar.current.isDateInToday(date) {
+                    Text("Today")
+                } else {
+                    Text(date, format: .dateTime.weekday().day().month())
+                }
+            }
             Spacer()
             let formattedDrinkCount = NumberFormatterUtility.formatRounded(count)
             Text("\(formattedDrinkCount) \(count == 1 ? "drink" : "drinks")")
