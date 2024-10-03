@@ -16,60 +16,62 @@ struct HistoryView: View {
     
     var body: some View {
         NavigationView {
-            if allDrinks.isEmpty {
-                VStack(spacing: 16) {
-                    Text("🍺")
-                        .font(.system(size: 48))
-                        .grayscale(1)
-                        .opacity(0.6)
-                    
-                    VStack(spacing: 12) {
-                        Text("No Drinks Logged")
-                            .font(.title2)
-                            .fontWeight(.bold)
-                            .foregroundStyle(.primary)
-                        Text("Drinks you log will appear here.\nTap the plus to get started.")
-                            .font(.body)
-                            .foregroundColor(.secondary)
-                    }
-                }
-                .padding()
-                .multilineTextAlignment(.center)
-            } else {
-                List {
-                    Section {
-                        ForEach(drinksThisWeek, id: \.0) { date, count in
-                            drinkRow(date: date, count: count)
-                        }
-                    } header: {
-                        Text("This week")
-                    } footer: {
-                        if drinksPreviousWeeks.isEmpty {
-                            editInHealthButton
+            Group {
+                if allDrinks.isEmpty {
+                    VStack(spacing: 16) {
+                        Text("🍺")
+                            .font(.system(size: 48))
+                            .grayscale(1)
+                            .opacity(0.6)
+                        
+                        VStack(spacing: 12) {
+                            Text("No Drinks Logged")
+                                .font(.title2)
+                                .fontWeight(.bold)
+                                .foregroundStyle(.primary)
+                            Text("Drinks you log will appear here.\nTap the plus to get started.")
+                                .font(.body)
+                                .foregroundColor(.secondary)
                         }
                     }
-                    
-                    if !drinksPreviousWeeks.isEmpty {
+                    .padding()
+                    .multilineTextAlignment(.center)
+                } else {
+                    List {
                         Section {
-                            ForEach(drinksPreviousWeeks, id: \.0) { weekStart, count in
-                                NavigationLink(destination: WeeklyDetailView(weekStart: weekStart, drinks: allDrinks, appSettings: appSettings)) {
-                                    drinkRow(date: weekStart, count: count, isWeekly: true)
-                                }
+                            ForEach(drinksThisWeek, id: \.0) { date, count in
+                                drinkRow(date: date, count: count)
                             }
                         } header: {
-                            Text("Previous weeks")
+                            Text("This week")
                         } footer: {
-                            editInHealthButton
+                            if drinksPreviousWeeks.isEmpty {
+                                editInHealthButton
+                            }
+                        }
+                        
+                        if !drinksPreviousWeeks.isEmpty {
+                            Section {
+                                ForEach(drinksPreviousWeeks, id: \.0) { weekStart, count in
+                                    NavigationLink(destination: WeeklyDetailView(weekStart: weekStart, drinks: allDrinks, appSettings: appSettings)) {
+                                        drinkRow(date: weekStart, count: count, isWeekly: true)
+                                    }
+                                }
+                            } header: {
+                                Text("Previous weeks")
+                            } footer: {
+                                editInHealthButton
+                            }
                         }
                     }
                 }
-                .navigationBarTitle("History", displayMode: .inline)
-                .toolbar {
-                    Button(action: {
-                        dismiss()
-                    }) {
-                        Text("Done").bold()
-                    }
+            }
+            .navigationBarTitle("History", displayMode: .inline)
+            .toolbar {
+                Button(action: {
+                    dismiss()
+                }) {
+                    Text("Done").bold()
                 }
             }
         }
