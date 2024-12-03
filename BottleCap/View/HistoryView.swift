@@ -5,15 +5,15 @@
 //  Created by Richard Picot on 23/10/2023.
 //
 
-import SwiftUI
 import HealthKit
+import SwiftUI
 
 struct HistoryView: View {
     @State private var allDrinks: [Date: Double] = [:]
     @ObservedObject var healthKitManager = HealthKitManager()
     @Environment(\.dismiss) var dismiss
     @ObservedObject var appSettings = AppSettings.shared
-    
+
     var body: some View {
         NavigationView {
             Group {
@@ -23,7 +23,7 @@ struct HistoryView: View {
                             .font(.system(size: 48))
                             .grayscale(1)
                             .opacity(0.6)
-                        
+
                         VStack(spacing: 12) {
                             Text("No Drinks Logged")
                                 .font(.title2)
@@ -38,18 +38,20 @@ struct HistoryView: View {
                     .multilineTextAlignment(.center)
                 } else {
                     List {
-                        Section {
-                            ForEach(drinksThisWeek, id: \.0) { date, count in
-                                drinkRow(date: date, count: count)
-                            }
-                        } header: {
-                            Text("This week")
-                        } footer: {
-                            if drinksPreviousWeeks.isEmpty {
-                                editInHealthButton
+                        if !drinksThisWeek.isEmpty {
+                            Section {
+                                ForEach(drinksThisWeek, id: \.0) { date, count in
+                                    drinkRow(date: date, count: count)
+                                }
+                            } header: {
+                                Text("This week")
+                            } footer: {
+                                if drinksPreviousWeeks.isEmpty {
+                                    editInHealthButton
+                                }
                             }
                         }
-                        
+
                         if !drinksPreviousWeeks.isEmpty {
                             Section {
                                 ForEach(drinksPreviousWeeks, id: \.0) { weekStart, count in
@@ -79,7 +81,7 @@ struct HistoryView: View {
             updateDrinks()
         }
     }
-    
+
     private var drinksThisWeek: [(Date, Double)] {
         let calendar = Calendar.current
         guard let startOfWeek = calendar.date(toNearestOrLastWeekday: appSettings.weekStartDay, matching: Date()) else {
@@ -138,22 +140,22 @@ struct HistoryView: View {
                 .foregroundStyle(.secondary)
         }
     }
-    
+
     private func updateDrinks() {
         healthKitManager.readAllAlcoholEntries { drinks in
             var drinksByDate: [Date: Double] = [:]
-            
+
             for drink in drinks {
                 let date = drink.endDate.startOfDay
                 let count = drink.quantity.doubleValue(for: HKUnit.count())
-                
+
                 drinksByDate[date, default: 0] += count
             }
-            
+
             self.allDrinks = drinksByDate
         }
     }
-    
+
     private var editInHealthButton: some View {
         HStack(spacing: 2) {
             Text("[Edit in Health](x-apple-health://)")
