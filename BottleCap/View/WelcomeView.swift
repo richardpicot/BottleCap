@@ -1,20 +1,12 @@
 import SwiftUI
 
 struct WelcomeView: View {
-    
-    @State private var showTitle = false
-    @State private var showBody = false
-    @State private var showButton = false
     @State private var showTermsOfUse = false // State to control the presentation of the TermsOfUseView
-    
+
     @Binding var isPresented: Bool
-    
-    let animationDuration = 0.6
-    let staggerDelay = 0.1
-    
+
     @State private var isRequestingPermission = false
-    
-    
+
     var body: some View {
         NavigationStack {
             ScrollView {
@@ -24,7 +16,7 @@ struct WelcomeView: View {
                             .shadow(color: .black.opacity(0.1), radius: 4, x: 0, y: 4)
                             .shadow(color: .black.opacity(0.1), radius: 7, x: 0, y: 14)
                             .shadow(color: .black.opacity(0.05), radius: 9.5, x: 0, y: 32)
-                        
+
                         // title
                         VStack(alignment: .center, spacing: 0.0) {
                             Text("Welcome to")
@@ -33,9 +25,7 @@ struct WelcomeView: View {
                         }
                         .font(.system(size: 40, weight: .bold))
                     }
-                    .opacity(showTitle ? 1 : 0)
-                    .offset(y: showTitle ? 0 : 8)
-                    
+
                     // feature list
                     VStack(alignment: .leading, spacing: 16.0) {
                         // feature 1
@@ -85,30 +75,24 @@ struct WelcomeView: View {
                         }
                     }
                     .padding(.top, 16)
-                    .opacity(showBody ? 1 : 0.2)
-                    .offset(y: showBody ? 0 : 8)
-                    
-                    
+
                     Spacer()
-                    
                 }
                 .padding(24)
             }
-            
+
             // Footer VStack
             VStack(spacing: 24) {
                 Button(action: {
                     showTermsOfUse = true
                 }) {
-                    Text("Bottle Cap was designed to track and limit casual alcohol consumption, not to manage an addiction.\nBy proceeding, you confirm you are not suffering from alcohol dependency and agree to our ")
-                                       .foregroundColor(.secondary)
-                                       .font(.footnote)
-                                       +
-                                   Text("Terms of Use")
-                                       .foregroundColor(.textAccent)
-                                       .font(.footnote)
-                                       
-                    
+                    Text("Bottle Cap is for people who want to keep casual tabs on their drinking – not addiction support.If that's you, please check the ")
+                        .foregroundColor(.secondary)
+                        .font(.footnote)
+                        +
+                        Text("Terms of Use")
+                        .foregroundColor(.textAccent)
+                        .font(.footnote)
                 }
                 .sheet(isPresented: $showTermsOfUse) {
                     NavigationView {
@@ -118,62 +102,32 @@ struct WelcomeView: View {
                     .presentationDetents([.large])
                 }
 
-                
-                NavigationLink(destination: HealthAccessView(healthKitManager: HealthKitManager(), isPresented: $isPresented)) {
-                    Text("Continue")
-                        .fontWeight(.semibold)
-                        .foregroundColor(.white) // Set text color
-                        .frame(maxWidth: .infinity)
-                        .padding()
-                        .background(
-                                    LinearGradient(
-                                        gradient: Gradient(colors: [Color.gradientButtonPrimaryLeading, Color.gradientButtonPrimaryTrailing]),
-                                        startPoint: .top,
-                                        endPoint: .bottom
-                                    )
-                                )
-                        .cornerRadius(100)
-                        .shadow(color: Color.black.opacity(0.15), radius: 20, x: 0, y: 6)
-                        .shadow(color: .fillPrimary.opacity(0.15), radius: 20, x: 0, y: 6)
+                Group {
+                    if #available(iOS 26, *) {
+                        NavigationLink(destination: HealthAccessView(healthKitManager: HealthKitManager(), isPresented: $isPresented)) {
+                            Text("Continue")
+                                .fontWeight(.semibold)
+                                .frame(maxWidth: .infinity)
+                                .controlSize(.large)
+                        }
+                        .buttonStyle(.glassProminent)
+                        .controlSize(.large)
+                    } else {
+                        NavigationLink(destination: HealthAccessView(healthKitManager: HealthKitManager(), isPresented: $isPresented)) {
+                            Text("Continue")
+                                .fontWeight(.semibold)
+                                .frame(maxWidth: .infinity)
+                                .controlSize(.large)
+                        }
+                        .buttonStyle(.borderedProminent)
+                        .clipShape(Capsule())
+                        .controlSize(.large)
+                    }
                 }
-                .buttonStyle(.plain) // Apply plain style to hide default link style
             }
             .padding(.horizontal, 24)
             .padding(.vertical, 16)
-            .opacity(showButton ? 1 : 0.2)
-            .offset(y: showButton ? 0 : 8)
             .ignoresSafeArea()
-            
-        }
-        .onAppear {
-            startAnimations()
-        }
-    }
-    
-    
-    private func startAnimations() {
-        // Reset states
-        showTitle = false
-        showBody = false
-        showButton = false
-        
-        
-        DispatchQueue.main.asyncAfter(deadline: .now() + staggerDelay) {
-            withAnimation(Animation.easeOut(duration: animationDuration)) {
-                showTitle = true
-            }
-        }
-        
-        DispatchQueue.main.asyncAfter(deadline: .now() + staggerDelay * 1.5) {
-            withAnimation(Animation.easeOut(duration: animationDuration)) {
-                showBody = true
-            }
-        }
-        
-        DispatchQueue.main.asyncAfter(deadline: .now() + staggerDelay * 2) {
-            withAnimation(Animation.easeOut(duration: animationDuration)) {
-                showButton = true
-            }
         }
     }
 }
