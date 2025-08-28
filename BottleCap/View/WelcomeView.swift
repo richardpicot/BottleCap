@@ -8,7 +8,7 @@ struct WelcomeView: View {
     @State private var isRequestingPermission = false
 
     var body: some View {
-        NavigationView {
+        NavigationStack {
             VStack(spacing: 0) {
                 ScrollView {
                     VStack(alignment: .center, spacing: 16) {
@@ -96,7 +96,7 @@ struct WelcomeView: View {
                             .font(.footnote)
                     }
                     .sheet(isPresented: $showTermsOfUse) {
-                        NavigationView {
+                        NavigationStack {
                             TermsOfUseView()
                         }
                         .presentationDragIndicator(.visible)
@@ -128,6 +128,15 @@ struct WelcomeView: View {
                 }
                 .padding(.horizontal, 24)
                 .padding(.vertical, 16)
+            }
+            // Keep inline bar metrics but make the title area visually empty using an empty principal item.
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .principal) {
+                    Color.clear
+                        .frame(width: 1, height: 1)
+                        .accessibilityHidden(true)
+                }
             }
         }
     }

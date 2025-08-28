@@ -36,20 +36,16 @@ struct ContentView: View {
     @EnvironmentObject var qaService: QAService
     @Environment(\.scenePhase) var scenePhase
 
-    // Numbers
-
-    // Split the formattedTotalDrinks into two components: the integer part and the decimal part
     private func splitFormattedTotalDrinks() -> (String, String) {
-        let formattedString = String(format: "%.1f", totalDrinks) // Format with one decimal place
+        let formattedString = String(format: "%.1f", totalDrinks)
         let components = formattedString.split(separator: ".", maxSplits: 1, omittingEmptySubsequences: true).map(String.init)
 
-        // Check if the decimal part is "0" and return accordingly
         if components.count == 2 && components[1] == "0" {
-            return (components[0], "") // Return only the integer part, omitting the decimal part
+            return (components[0], "")
         } else if components.count == 2 {
-            return (components[0], components[1]) // Return both parts if the decimal is not "0"
+            return (components[0], components[1])
         } else {
-            return (formattedString, "") // Fallback, though this case may not be hit due to the formatting
+            return (formattedString, "")
         }
     }
 
@@ -103,21 +99,18 @@ struct ContentView: View {
 
     private func presentReview() {
         Task {
-            // Delay for two seconds to avoid interrupting the user
             try await Task.sleep(for: .seconds(1))
-            requestReview() // No 'await' needed
+            requestReview()
         }
     }
 
     private func checkHealthKitAuthorization() {
         healthKitManager.checkHealthKitAuthorization { status in
             switch status {
-            case .authorized: break // Normal functionality
+            case .authorized: break
             case .notDetermined:
-                // Handle first-time access, potentially showing HealthAccessView
                 showWelcomeView = true
             case .denied:
-                // HealthKit access was previously denied; show alert
                 showAlert = true
             }
         }
@@ -142,10 +135,8 @@ struct ContentView: View {
                 case .authorized:
                     self.showLogDrinksView = true
                 case .notDetermined:
-                    // Optionally, prompt the user to grant HealthKit access via your custom HealthAccessView
                     self.showHealthAccessView = true
                 case .denied:
-                    // Show an alert informing the user that HealthKit access is necessary
                     self.showAlert = true
                 }
             }
@@ -153,8 +144,8 @@ struct ContentView: View {
     }
 
     var body: some View {
-        GeometryReader { geometry in // Used to check for home button
-            NavigationView {
+        GeometryReader { geometry in
+            NavigationStack {
                 ZStack {
                     BackgroundView(progress: CGFloat(NumberFormatterUtility.roundedValue(totalDrinks)) / CGFloat(appSettings.drinkLimit))
                         .animation(.default, value: animationTrigger)
@@ -165,7 +156,7 @@ struct ContentView: View {
 
                         HStack(alignment: .firstTextBaseline, spacing: 0) {
                             Text(integerPart)
-                                .font(.system(size: 96)) // Larger font for the integer part
+                                .font(.system(size: 96))
                                 .fontWeight(.medium)
                                 .foregroundStyle(.textPrimary)
                                 .animation(.default, value: animationTrigger)
@@ -182,18 +173,6 @@ struct ContentView: View {
                         }
                         .lineLimit(1)
                         .minimumScaleFactor(0.8)
-
-//                        Text("\(formattedTotalDrinks)")
-//                            .font(.system(size: 96))
-//                            .fontWeight(.medium)
-//                            .foregroundStyle(.textPrimary)
-//                            .animation(.default, value: animationTrigger)
-//                            .contentTransition(.numericText(value: totalDrinks))
-//                            .onAppear {
-//                                animationTrigger.toggle()
-//                            }
-//                            .lineLimit(1)
-//                            .minimumScaleFactor(0.8)
 
                         VStack {
                             Text(NumberFormatterUtility.roundedValue(totalDrinks) == 1 ? "Drink this week." : "Drinks this week.")
@@ -314,7 +293,7 @@ struct ContentView: View {
 
                             Spacer()
                         }
-                        .padding(.bottom, geometry.safeAreaInsets.bottom < 20 ? 20 : 0) // Inset on devices with a home button
+                        .padding(.bottom, geometry.safeAreaInsets.bottom < 20 ? 20 : 0)
                     }
                 }
                 .background(
@@ -345,7 +324,6 @@ struct ContentView: View {
                     title: Text("Health Access Denied"),
                     message: Text("Please enable HealthKit access in Settings."),
                     primaryButton: .default(Text("Open Settings"), action: {
-                        // Action to open the settings app
                         if let url = URL(string: UIApplication.openSettingsURLString), UIApplication.shared.canOpenURL(url) {
                             UIApplication.shared.open(url, options: [:], completionHandler: nil)
                         }
