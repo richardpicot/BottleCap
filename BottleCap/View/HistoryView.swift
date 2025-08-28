@@ -68,12 +68,23 @@ struct HistoryView: View {
                     }
                 }
             }
-            .navigationBarTitle("History", displayMode: .inline)
+            .navigationTitle("History")
+            .navigationBarTitleDisplayMode(.inline)
             .toolbar {
-                Button(action: {
-                    dismiss()
-                }) {
-                    Text("Done").bold()
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    if #available(iOS 26.0, *) {
+                        Button(action: {
+                            dismiss()
+                        }) {
+                            Image(systemName: "xmark")
+                        }
+                    } else {
+                        Button(action: {
+                            dismiss()
+                        }) {
+                            Text("Done").bold()
+                        }
+                    }
                 }
             }
         }

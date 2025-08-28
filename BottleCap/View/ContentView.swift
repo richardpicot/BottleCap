@@ -255,7 +255,7 @@ struct ContentView: View {
                                             .foregroundStyle(.white)
                                             .frame(width: 72, height: 72)
                                             .glassEffect(.regular.tint(.fillPrimary).interactive())
-                                            .clipShape(.circle)
+                                            .clipShape(.rect(cornerRadius: 36))
                                     }
                                     .sheet(isPresented: $showLogDrinksView) {
                                         LogDrinksView(
