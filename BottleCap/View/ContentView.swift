@@ -199,56 +199,64 @@ struct ContentView: View {
                             Spacer()
 
                             // Settings button
-                            Button("Settings", systemImage: "gear") {
-                                showSettingsView = true
+                            Group {
+                                if #available(iOS 26, *) {
+                                    Button("Settings", systemImage: "gear") {
+                                        showSettingsView = true
+                                    }
+                                    .labelStyle(.iconOnly)
+                                    .font(.system(size: 18, weight: .semibold))
+                                    .foregroundStyle(.textPrimary)
+                                    .frame(minWidth: 44, minHeight: 44)
+                                    .glassEffect(.regular.tint(.fillTertiary).interactive())
+                                    .clipShape(Circle())
+                                    .buttonBorderShape(.circle)
+                                } else {
+                                    Button("Settings", systemImage: "gear") {
+                                        showSettingsView = true
+                                    }
+                                    .labelStyle(.iconOnly)
+                                    .font(.system(size: 18, weight: .semibold))
+                                    .foregroundStyle(.textPrimary)
+                                    .frame(minWidth: 44, minHeight: 44)
+                                    .background(
+                                        Circle()
+                                            .fill(colorScheme == .dark ? Color.fillTertiary.opacity(0.6) : Color.fillTertiary)
+                                    )
+                                    .clipShape(Circle())
+                                    .buttonBorderShape(.circle)
+                                }
                             }
-                            .labelStyle(.iconOnly)
-                            .font(.system(size: 18, weight: .semibold))
-                            .foregroundStyle(.textPrimary)
-                            .frame(minWidth: 44, minHeight: 44)
-                            .background(
-                                Circle()
-                                    .fill(colorScheme == .dark ? Color.fillTertiary.opacity(0.6) : Color.fillTertiary)
-                            )
-                            .clipShape(Circle())
-                            .buttonBorderShape(.circle)
                             .sheet(isPresented: $showSettingsView) {
                                 SettingsView(isPresented: $showSettingsView, appSettings: appSettings)
                             }
 
                             Spacer()
 
-                            Menu {
-                                Button(action: {
-                                    handleLogMultipleDrinksAction()
-                                    print("log drinks view is set to \(showLogDrinksView)")
-                                }) {
-                                    Label("More Options...", systemImage: "calendar.badge.plus")
-                                }
+                            Group {
+                                if #available(iOS 26, *) {
+                                    Menu {
+                                        Button(action: {
+                                            handleLogMultipleDrinksAction()
+                                            print("log drinks view is set to \(showLogDrinksView)")
+                                        }) {
+                                            Label("More Options...", systemImage: "calendar.badge.plus")
+                                        }
 
-                                Button(action: {
-                                    checkHealthKitAuthorization()
-                                    logDrink()
-                                }) {
-                                    Label("Log a Drink", systemImage: "plus.circle")
-                                }
-                            } label: {
-                                Image(systemName: "plus")
-                                    .font((.system(size: 28)))
-                                    .foregroundStyle(.white)
-                                    .frame(minWidth: 72, minHeight: 72)
-                                    .background(
-                                        Circle()
-                                            .fill(
-                                                LinearGradient(
-                                                    gradient: Gradient(colors: [Color.gradientButtonPrimaryLeading, Color.gradientButtonPrimaryTrailing]),
-                                                    startPoint: .top,
-                                                    endPoint: .bottom
-                                                )
-                                            )
-                                    )
-                                    .buttonBorderShape(.circle)
-                                    .clipShape(Circle())
+                                        Button(action: {
+                                            checkHealthKitAuthorization()
+                                            logDrink()
+                                        }) {
+                                            Label("Log a Drink", systemImage: "plus.circle")
+                                        }
+                                    } label: {
+                                        Image(systemName: "plus")
+                                            .font((.system(size: 28)))
+                                            .foregroundStyle(.white)
+                                            .frame(width: 72, height: 72)
+                                            .glassEffect(.regular.tint(.fillPrimary).interactive())
+                                            .clipShape(.circle)
+                                    }
                                     .sheet(isPresented: $showLogDrinksView) {
                                         LogDrinksView(
                                             isPresented: $showLogDrinksView,
@@ -265,28 +273,93 @@ struct ContentView: View {
                                             drinkLimit: appSettings.drinkLimit
                                         )
                                     }
+                                } else {
+                                    Menu {
+                                        Button(action: {
+                                            handleLogMultipleDrinksAction()
+                                            print("log drinks view is set to \(showLogDrinksView)")
+                                        }) {
+                                            Label("More Options...", systemImage: "calendar.badge.plus")
+                                        }
+
+                                        Button(action: {
+                                            checkHealthKitAuthorization()
+                                            logDrink()
+                                        }) {
+                                            Label("Log a Drink", systemImage: "plus.circle")
+                                        }
+                                    } label: {
+                                        Image(systemName: "plus")
+                                            .font((.system(size: 28)))
+                                            .foregroundStyle(.white)
+                                            .frame(minWidth: 72, minHeight: 72)
+                                            .background(
+                                                Circle()
+                                                    .fill(
+                                                        LinearGradient(
+                                                            gradient: Gradient(colors: [Color.gradientButtonPrimaryLeading, Color.gradientButtonPrimaryTrailing]),
+                                                            startPoint: .top,
+                                                            endPoint: .bottom
+                                                        )
+                                                    )
+                                            )
+                                            .buttonBorderShape(.circle)
+                                            .clipShape(Circle())
+                                            .sheet(isPresented: $showLogDrinksView) {
+                                                LogDrinksView(
+                                                    isPresented: $showLogDrinksView,
+                                                    logDrinkClosure: { numberOfDrinks, date in
+                                                        healthKitManager.addAlcoholData(numberOfDrinks: numberOfDrinks, date: date) {
+                                                            DispatchQueue.main.async {
+                                                                updateTotalDrinks()
+                                                                processCompletedCount += 1
+                                                                checkAndPresentReviewRequest()
+                                                            }
+                                                        }
+                                                    },
+                                                    totalDrinks: totalDrinks,
+                                                    drinkLimit: appSettings.drinkLimit
+                                                )
+                                            }
+                                    }
+//                                    .shadow(color: Color.black.opacity(0.15), radius: 20, x: 0, y: 6)
+//                                    .shadow(color: .fillPrimary.opacity(0.15), radius: 20, x: 0, y: 6)
+//                                    .scaleEffect(isPressed ? 0.85 : 1)
+//                                    .animation(.spring(response: 0.5, dampingFraction: 0.8, blendDuration: 0), value: isPressed)
+                                }
                             }
-                            .shadow(color: Color.black.opacity(0.15), radius: 20, x: 0, y: 6)
-                            .shadow(color: .fillPrimary.opacity(0.15), radius: 20, x: 0, y: 6)
-                            .scaleEffect(isPressed ? 0.85 : 1)
-                            .animation(.spring(response: 0.5, dampingFraction: 0.8, blendDuration: 0), value: isPressed)
 
                             Spacer()
 
                             // History button
-                            Button("History", systemImage: "list.bullet") {
-                                showHistoryView = true
+                            Group {
+                                if #available(iOS 26, *) {
+                                    Button("History", systemImage: "list.bullet") {
+                                        showHistoryView = true
+                                    }
+                                    .labelStyle(.iconOnly)
+                                    .font(.system(size: 18, weight: .semibold))
+                                    .foregroundStyle(.textPrimary)
+                                    .frame(minWidth: 44, minHeight: 44)
+                                    .glassEffect(.regular.tint(.fillTertiary).interactive())
+                                    .clipShape(Circle())
+                                    .buttonBorderShape(.circle)
+                                } else {
+                                    Button("History", systemImage: "list.bullet") {
+                                        showHistoryView = true
+                                    }
+                                    .labelStyle(.iconOnly)
+                                    .font(.system(size: 18, weight: .semibold))
+                                    .foregroundStyle(.textPrimary)
+                                    .frame(minWidth: 44, minHeight: 44)
+                                    .background(
+                                        Circle()
+                                            .fill(colorScheme == .dark ? Color.fillTertiary.opacity(0.8) : Color.fillTertiary)
+                                    )
+                                    .clipShape(Circle())
+                                    .buttonBorderShape(.circle)
+                                }
                             }
-                            .labelStyle(.iconOnly)
-                            .font(.system(size: 18, weight: .semibold))
-                            .foregroundStyle(.textPrimary)
-                            .frame(minWidth: 44, minHeight: 44)
-                            .background(
-                                Circle()
-                                    .fill(colorScheme == .dark ? Color.fillTertiary.opacity(0.8) : Color.fillTertiary)
-                            )
-                            .clipShape(Circle())
-                            .buttonBorderShape(.circle)
                             .sheet(isPresented: $showHistoryView) {
                                 HistoryView()
                             }
