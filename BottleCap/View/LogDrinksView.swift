@@ -80,6 +80,7 @@ struct LogDrinksView: View {
                 }
                 ToolbarItem(placement: .navigationBarTrailing) {
                     if #available(iOS 26.0, *) {
+                        let isInvalidInput = numberOfDrinksString.isEmpty || (Double(numberOfDrinksString) ?? 21) > 20
                         Button(action: {
                             if let numberOfDrinks = Double(numberOfDrinksString) {
                                 triggerHapticFeedback(totalDrinks: totalDrinks, drinkLimit: drinkLimit)
@@ -89,7 +90,9 @@ struct LogDrinksView: View {
                         }) {
                             Image(systemName: "checkmark")
                         }
-                        .disabled(numberOfDrinksString.isEmpty || Double(numberOfDrinksString) ?? 21 > 20)
+                        .buttonStyle(.borderedProminent)
+                        .disabled(isInvalidInput)
+                        .opacity(isInvalidInput ? 0.4 : 1.0)
                     } else {
                         Button("Save") {
                             if let numberOfDrinks = Double(numberOfDrinksString) {

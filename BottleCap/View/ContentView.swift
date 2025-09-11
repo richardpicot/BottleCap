@@ -201,16 +201,13 @@ struct ContentView: View {
                             // Settings button
                             Group {
                                 if #available(iOS 26, *) {
-                                    Button("Settings", systemImage: "gear") {
-                                        showSettingsView = true
-                                    }
-                                    .labelStyle(.iconOnly)
-                                    .font(.system(size: 18, weight: .semibold))
-                                    .foregroundStyle(.textPrimary)
-                                    .frame(minWidth: 44, minHeight: 44)
-                                    .glassEffect(.regular.tint(.fillTertiary).interactive())
-                                    .clipShape(Circle())
-                                    .buttonBorderShape(.circle)
+                                    Image(systemName: "gear")
+                                        .font(.system(size: 18, weight: .semibold))
+                                        .frame(width: 44, height: 44)
+                                        .glassEffect(.regular.tint(Color.fillTertiary).interactive())
+                                        .onTapGesture {
+                                            showSettingsView = true
+                                        }
                                 } else {
                                     Button("Settings", systemImage: "gear") {
                                         showSettingsView = true
@@ -334,16 +331,13 @@ struct ContentView: View {
                             // History button
                             Group {
                                 if #available(iOS 26, *) {
-                                    Button("History", systemImage: "list.bullet") {
-                                        showHistoryView = true
-                                    }
-                                    .labelStyle(.iconOnly)
-                                    .font(.system(size: 18, weight: .semibold))
-                                    .foregroundStyle(.textPrimary)
-                                    .frame(minWidth: 44, minHeight: 44)
-                                    .glassEffect(.regular.tint(.fillTertiary).interactive())
-                                    .clipShape(Circle())
-                                    .buttonBorderShape(.circle)
+                                    Image(systemName: "list.bullet")
+                                        .font(.system(size: 18, weight: .semibold))
+                                        .frame(width: 44, height: 44)
+                                        .glassEffect(.regular.tint(Color.fillTertiary).interactive())
+                                        .onTapGesture {
+                                            showHistoryView = true
+                                        }
                                 } else {
                                     Button("History", systemImage: "list.bullet") {
                                         showHistoryView = true
