@@ -28,6 +28,7 @@ struct ContentView: View {
     @State private var showWelcomeView = false
     @State private var showHealthAccessView = false
     @State private var showAlert = false
+    @State private var isShowingMenu = false
 
     @Environment(\.colorScheme) var colorScheme
     @Environment(\.requestReview) private var requestReview
@@ -232,44 +233,9 @@ struct ContentView: View {
 
                             Group {
                                 if #available(iOS 26, *) {
-                                    Menu {
-                                        Button(action: {
-                                            handleLogMultipleDrinksAction()
-                                            print("log drinks view is set to \(showLogDrinksView)")
-                                        }) {
-                                            Label("More Options...", systemImage: "calendar.badge.plus")
-                                        }
-
-                                        Button(action: {
-                                            checkHealthKitAuthorization()
-                                            logDrink()
-                                        }) {
-                                            Label("Log a Drink", systemImage: "plus.circle")
-                                        }
-                                    } label: {
-                                        Image(systemName: "plus")
-                                            .font((.system(size: 28)))
-                                            .foregroundStyle(.white)
-                                            .frame(width: 72, height: 72)
-                                            .glassEffect(.regular.tint(.fillPrimary).interactive())
-                                            .clipShape(.rect(cornerRadius: 36))
-                                    }
-                                    .sheet(isPresented: $showLogDrinksView) {
-                                        LogDrinksView(
-                                            isPresented: $showLogDrinksView,
-                                            logDrinkClosure: { numberOfDrinks, date in
-                                                healthKitManager.addAlcoholData(numberOfDrinks: numberOfDrinks, date: date) {
-                                                    DispatchQueue.main.async {
-                                                        updateTotalDrinks()
-                                                        processCompletedCount += 1
-                                                        checkAndPresentReviewRequest()
-                                                    }
-                                                }
-                                            },
-                                            totalDrinks: totalDrinks,
-                                            drinkLimit: appSettings.drinkLimit
-                                        )
-                                    }
+                                    // Placeholder for plus button - will be in overlay
+                                    Color.clear
+                                        .frame(width: 72, height: 72)
                                 } else {
                                     Menu {
                                         Button(action: {
@@ -361,6 +327,88 @@ struct ContentView: View {
                             Spacer()
                         }
                         .padding(.bottom, geometry.safeAreaInsets.bottom < 20 ? 20 : 0)
+                    }
+
+                    // iOS 26+ Menu Overlay
+                    if #available(iOS 26, *) {
+                        ZStack {
+                            GlassEffectContainer {
+                                VStack {
+                                    Spacer()
+
+                                    if isShowingMenu {
+                                        Group {
+                                            HStack(spacing: 8) {
+                                                Image(systemName: "plus.circle")
+                                                    .font(.body)
+                                                    .foregroundStyle(.textPrimary)
+                                                Text("Log a drink")
+                                                    .font(.body)
+                                                    .foregroundStyle(.textPrimary)
+                                            }
+                                            .frame(height: 44)
+                                            .padding(.horizontal, 16)
+                                            .onTapGesture {
+                                                checkHealthKitAuthorization()
+                                                logDrink()
+                                                isShowingMenu = false
+                                            }
+                                            HStack(spacing: 8) {
+                                                Image(systemName: "calendar.badge.plus")
+                                                    .font(.body)
+                                                    .foregroundStyle(.textPrimary)
+                                                Text("More options...")
+                                                    .font(.body)
+                                                    .foregroundStyle(.textPrimary)
+                                            }
+                                            .frame(height: 44)
+                                            .padding(.horizontal, 16)
+                                            .onTapGesture {
+                                                isShowingMenu = false
+                                                DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                                                    handleLogMultipleDrinksAction()
+                                                }
+                                            }
+                                        }
+                                        .glassEffect(.regular.interactive())
+                                    }
+
+//                                    Button { isShowingMenu.toggle() } label: {
+//                                        Image(systemName: "plus")
+//                                            .font(.title)
+//                                            .rotationEffect(isShowingMenu ? .degrees(45) : .zero)
+//                                    }
+                                    Image(systemName: "plus")
+                                        .font((.system(size: 28)))
+                                        .foregroundStyle(isShowingMenu ? .textPrimary : .white)
+                                        .rotationEffect(isShowingMenu ? .degrees(45) : .zero)
+                                        .frame(width: 72, height: 72)
+                                        .glassEffect(isShowingMenu ? .regular.interactive() : .regular.tint(Color.fillPrimary).interactive())
+                                        .onTapGesture {
+                                            isShowingMenu.toggle()
+                                        }
+                                        .sheet(isPresented: $showLogDrinksView) {
+                                            LogDrinksView(
+                                                isPresented: $showLogDrinksView,
+                                                logDrinkClosure: { numberOfDrinks, date in
+                                                    healthKitManager.addAlcoholData(numberOfDrinks: numberOfDrinks, date: date) {
+                                                        DispatchQueue.main.async {
+                                                            updateTotalDrinks()
+                                                            processCompletedCount += 1
+                                                            checkAndPresentReviewRequest()
+                                                        }
+                                                    }
+                                                },
+                                                totalDrinks: totalDrinks,
+                                                drinkLimit: appSettings.drinkLimit
+                                            )
+                                        }
+//                                    .buttonStyle(.glass)
+//                                    .padding(.bottom)
+                                }
+                            }
+                            .animation(.smooth(duration: 0.3), value: isShowingMenu)
+                        }
                     }
                 }
                 .background(

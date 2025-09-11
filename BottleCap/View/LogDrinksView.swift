@@ -92,7 +92,7 @@ struct LogDrinksView: View {
                         }
                         .buttonStyle(.borderedProminent)
                         .disabled(isInvalidInput)
-                        .opacity(isInvalidInput ? 0.4 : 1.0)
+                        .opacity(isInvalidInput ? 0.2 : 1.0)
                     } else {
                         Button("Save") {
                             if let numberOfDrinks = Double(numberOfDrinksString) {
