@@ -202,17 +202,20 @@ struct ContentView: View {
                             // Settings button
                             Group {
                                 if #available(iOS 26, *) {
-                                    Image(systemName: "gear")
-                                        .font(.system(size: 18, weight: .semibold))
-                                        .opacity(isShowingMenu ? 0.2 : 1.0)
-                                        .animation(.smooth(duration: 0.3), value: isShowingMenu)
-                                        .frame(width: 44, height: 44)
-                                        .glassEffect(.regular.tint(Color.fillTertiary).interactive())
-                                        .onTapGesture {
-                                            if !isShowingMenu {
-                                                showSettingsView = true
-                                            }
+                                    Button(action: {
+                                        if !isShowingMenu {
+                                            showSettingsView = true
                                         }
+                                    }) {
+                                        Image(systemName: "gear")
+                                            .font(.system(size: 18, weight: .semibold))
+                                            .opacity(isShowingMenu ? 0.2 : 1.0)
+                                            .animation(.smooth(duration: 0.3), value: isShowingMenu)
+                                            .frame(width: 44, height: 44)
+                                            .contentShape(Rectangle())
+                                    }
+                                    .buttonStyle(PlainButtonStyle())
+                                    .glassEffect(.regular.tint(Color.fillTertiary).interactive())
                                 } else {
                                     Button("Settings", systemImage: "gear") {
                                         showSettingsView = true
@@ -301,17 +304,20 @@ struct ContentView: View {
                             // History button
                             Group {
                                 if #available(iOS 26, *) {
-                                    Image(systemName: "list.bullet")
-                                        .font(.system(size: 18, weight: .semibold))
-                                        .opacity(isShowingMenu ? 0.2 : 1.0)
-                                        .animation(.smooth(duration: 0.3), value: isShowingMenu)
-                                        .frame(width: 44, height: 44)
-                                        .glassEffect(.regular.tint(Color.fillTertiary).interactive())
-                                        .onTapGesture {
-                                            if !isShowingMenu {
-                                                showHistoryView = true
-                                            }
+                                    Button(action: {
+                                        if !isShowingMenu {
+                                            showHistoryView = true
                                         }
+                                    }) {
+                                        Image(systemName: "list.bullet")
+                                            .font(.system(size: 18, weight: .semibold))
+                                            .opacity(isShowingMenu ? 0.2 : 1.0)
+                                            .animation(.smooth(duration: 0.3), value: isShowingMenu)
+                                            .frame(width: 44, height: 44)
+                                            .contentShape(Rectangle())
+                                    }
+                                    .buttonStyle(PlainButtonStyle())
+                                    .glassEffect(.regular.tint(Color.fillTertiary).interactive())
                                 } else {
                                     Button("History", systemImage: "list.bullet") {
                                         showHistoryView = true
@@ -366,6 +372,7 @@ struct ContentView: View {
                                             }
                                             .frame(height: 44)
                                             .padding(.horizontal, 16)
+                                            .contentShape(Rectangle())
                                             .onTapGesture {
                                                 checkHealthKitAuthorization()
                                                 logDrink()
@@ -381,6 +388,7 @@ struct ContentView: View {
                                             }
                                             .frame(height: 44)
                                             .padding(.horizontal, 16)
+                                            .contentShape(Rectangle())
                                             .onTapGesture {
                                                 isShowingMenu = false
                                                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.18) {
