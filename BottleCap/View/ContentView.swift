@@ -458,8 +458,8 @@ struct ContentView: View {
             }
             .alert(isPresented: $showAlert) {
                 Alert(
-                    title: Text("Health Access Denied"),
-                    message: Text("Please enable HealthKit access in Settings."),
+                    title: Text("Health Access Required"),
+                    message: Text("Bottle Cap needs access to Health to track your drinks. You can enable this in Settings > Privacy & Security > Health > Bottle Cap."),
                     primaryButton: .default(Text("Open Settings"), action: {
                         if let url = URL(string: UIApplication.openSettingsURLString), UIApplication.shared.canOpenURL(url) {
                             UIApplication.shared.open(url, options: [:], completionHandler: nil)
