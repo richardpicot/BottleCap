@@ -10,6 +10,8 @@ import SwiftUI
 
 struct HistoryView: View {
     @State private var allDrinks: [Date: Double] = [:]
+    @State private var allDrinkSamples: [Date: [HKQuantitySample]] = [:]
+    @Environment(\.editMode) private var editMode
     @ObservedObject var healthKitManager = HealthKitManager()
     @Environment(\.dismiss) var dismiss
     @ObservedObject var appSettings = AppSettings.shared
@@ -42,49 +44,77 @@ struct HistoryView: View {
                             Section {
                                 ForEach(drinksThisWeek, id: \.0) { date, count in
                                     drinkRow(date: date, count: count)
+                                        .swipeActions(edge: .trailing, allowsFullSwipe: true) {
+                                            if editMode?.wrappedValue == .inactive {
+                                                Button(role: .destructive) {
+                                                    deleteDrinksForDate(date)
+                                                } label: {
+                                                    Label("Delete", systemImage: "trash")
+                                                }
+                                            }
+                                        }
+                                }
+                                .onDelete { indexSet in
+                                    for index in indexSet {
+                                        let date = drinksThisWeek[index].0
+                                        deleteDrinksForDate(date)
+                                    }
                                 }
                             } header: {
                                 Text("This week")
-                            } footer: {
-                                if drinksPreviousWeeks.isEmpty {
-                                    editInHealthButton
-                                }
                             }
                         }
 
                         if !drinksPreviousWeeks.isEmpty {
                             Section {
                                 ForEach(drinksPreviousWeeks, id: \.0) { weekStart, count in
-                                    NavigationLink(destination: WeeklyDetailView(weekStart: weekStart, drinks: allDrinks, appSettings: appSettings)) {
-                                        drinkRow(date: weekStart, count: count, isWeekly: true)
+                                    Group {
+                                        if editMode?.wrappedValue == .active {
+                                            drinkRow(date: weekStart, count: count, isWeekly: true)
+                                        } else {
+                                            NavigationLink(destination: WeeklyDetailView(weekStart: weekStart, drinks: allDrinks, appSettings: appSettings, onDrinksUpdated: updateDrinks)) {
+                                                drinkRow(date: weekStart, count: count, isWeekly: true)
+                                            }
+                                        }
+                                    }
+                                    .swipeActions(edge: .trailing, allowsFullSwipe: true) {
+                                        if editMode?.wrappedValue == .inactive {
+                                            Button(role: .destructive) {
+                                                deleteDrinksForWeek(weekStart)
+                                            } label: {
+                                                Label("Delete Week", systemImage: "trash")
+                                            }
+                                        }
+                                    }
+                                }
+                                .onDelete { indexSet in
+                                    for index in indexSet {
+                                        let weekStart = drinksPreviousWeeks[index].0
+                                        deleteDrinksForWeek(weekStart)
                                     }
                                 }
                             } header: {
                                 Text("Previous weeks")
-                            } footer: {
-                                editInHealthButton
                             }
                         }
                     }
+                    .environment(\.editMode, editMode)
                 }
             }
             .navigationTitle("History")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    if #available(iOS 26.0, *) {
-                        Button(action: {
-                            dismiss()
-                        }) {
-                            Image(systemName: "xmark")
-                        }
-                    } else {
-                        Button(action: {
-                            dismiss()
-                        }) {
-                            Text("Done").bold()
-                        }
+                ToolbarItem(placement: .navigationBarLeading) {
+                    Button(action: {
+                        dismiss()
+                    }) {
+                        Image(systemName: "xmark")
                     }
+                }
+
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    EditButton()
+                        .disabled(allDrinks.isEmpty)
                 }
             }
         }
@@ -155,28 +185,65 @@ struct HistoryView: View {
     private func updateDrinks() {
         healthKitManager.readAllAlcoholEntries { drinks in
             var drinksByDate: [Date: Double] = [:]
+            var samplesByDate: [Date: [HKQuantitySample]] = [:]
 
             for drink in drinks {
                 let date = drink.endDate.startOfDay
                 let count = drink.quantity.doubleValue(for: HKUnit.count())
 
                 drinksByDate[date, default: 0] += count
+                samplesByDate[date, default: []].append(drink)
             }
 
             self.allDrinks = drinksByDate
+            self.allDrinkSamples = samplesByDate
         }
     }
 
-    private var editInHealthButton: some View {
-        HStack(spacing: 2) {
-            Text("[Edit in Health](x-apple-health://)")
-            Image(systemName: "arrow.up.forward")
-                .foregroundColor(.accentColor)
-                .onTapGesture {
-                    if let url = URL(string: "x-apple-health://") {
-                        UIApplication.shared.open(url)
-                    }
+    private func deleteDrinksForDate(_ date: Date) {
+        healthKitManager.deleteAlcoholDataForDate(date) { success, error in
+            if success {
+                // Update the local data
+                allDrinks.removeValue(forKey: date)
+                allDrinkSamples.removeValue(forKey: date)
+            } else {
+                print("Failed to delete drinks: \(String(describing: error?.localizedDescription))")
+            }
+        }
+    }
+
+    private func deleteDrinksForWeek(_ weekStart: Date) {
+        let calendar = Calendar.current
+        let endOfWeek = calendar.date(byAdding: .day, value: 6, to: weekStart)!
+
+        // Get all dates in this week that have drinks
+        let datesInWeek = allDrinks.keys.filter { date in
+            date >= weekStart.startOfDay && date <= endOfWeek.startOfDay
+        }
+
+        // Delete drinks for each date in the week
+        let group = DispatchGroup()
+        var allSuccessful = true
+
+        for date in datesInWeek {
+            group.enter()
+            healthKitManager.deleteAlcoholDataForDate(date) { success, error in
+                if !success {
+                    allSuccessful = false
+                    print("Failed to delete drinks for date \(date): \(String(describing: error?.localizedDescription))")
                 }
+                group.leave()
+            }
+        }
+
+        group.notify(queue: .main) {
+            if allSuccessful {
+                // Update the local data
+                for date in datesInWeek {
+                    allDrinks.removeValue(forKey: date)
+                    allDrinkSamples.removeValue(forKey: date)
+                }
+            }
         }
     }
 }

@@ -337,6 +337,12 @@ struct ContentView: View {
                             .sheet(isPresented: $showHistoryView) {
                                 HistoryView()
                             }
+                            .onChange(of: showHistoryView) { _, isPresented in
+                                if !isPresented {
+                                    // Refresh data when returning from history view
+                                    updateTotalDrinks()
+                                }
+                            }
 
                             Spacer()
                         }
@@ -426,6 +432,15 @@ struct ContentView: View {
                                             totalDrinks: totalDrinks,
                                             drinkLimit: appSettings.drinkLimit
                                         )
+                                    }
+                                    .sheet(isPresented: $showHistoryView) {
+                                        HistoryView()
+                                    }
+                                    .onChange(of: showHistoryView) { _, isPresented in
+                                        if !isPresented {
+                                            // Refresh data when returning from history view
+                                            updateTotalDrinks()
+                                        }
                                     }
                                 }
                             }
