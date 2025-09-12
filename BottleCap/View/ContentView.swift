@@ -383,7 +383,7 @@ struct ContentView: View {
                                             .padding(.horizontal, 16)
                                             .onTapGesture {
                                                 isShowingMenu = false
-                                                DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                                                DispatchQueue.main.asyncAfter(deadline: .now() + 0.18) {
                                                     handleLogMultipleDrinksAction()
                                                 }
                                             }
@@ -391,11 +391,6 @@ struct ContentView: View {
                                         .glassEffect(.regular.interactive())
                                     }
 
-//                                    Button { isShowingMenu.toggle() } label: {
-//                                        Image(systemName: "plus")
-//                                            .font(.title)
-//                                            .rotationEffect(isShowingMenu ? .degrees(45) : .zero)
-//                                    }
                                     Button(action: {
                                         isShowingMenu.toggle()
                                     }) {
@@ -424,8 +419,6 @@ struct ContentView: View {
                                             drinkLimit: appSettings.drinkLimit
                                         )
                                     }
-//                                    .buttonStyle(.glass)
-//                                    .padding(.bottom)
                                 }
                             }
                             .animation(.smooth(duration: 0.3), value: isShowingMenu)
