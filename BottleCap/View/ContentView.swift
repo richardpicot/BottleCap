@@ -204,10 +204,14 @@ struct ContentView: View {
                                 if #available(iOS 26, *) {
                                     Image(systemName: "gear")
                                         .font(.system(size: 18, weight: .semibold))
+                                        .opacity(isShowingMenu ? 0.2 : 1.0)
+                                        .animation(.smooth(duration: 0.3), value: isShowingMenu)
                                         .frame(width: 44, height: 44)
                                         .glassEffect(.regular.tint(Color.fillTertiary).interactive())
                                         .onTapGesture {
-                                            showSettingsView = true
+                                            if !isShowingMenu {
+                                                showSettingsView = true
+                                            }
                                         }
                                 } else {
                                     Button("Settings", systemImage: "gear") {
@@ -299,10 +303,14 @@ struct ContentView: View {
                                 if #available(iOS 26, *) {
                                     Image(systemName: "list.bullet")
                                         .font(.system(size: 18, weight: .semibold))
+                                        .opacity(isShowingMenu ? 0.2 : 1.0)
+                                        .animation(.smooth(duration: 0.3), value: isShowingMenu)
                                         .frame(width: 44, height: 44)
                                         .glassEffect(.regular.tint(Color.fillTertiary).interactive())
                                         .onTapGesture {
-                                            showHistoryView = true
+                                            if !isShowingMenu {
+                                                showHistoryView = true
+                                            }
                                         }
                                 } else {
                                     Button("History", systemImage: "list.bullet") {
@@ -332,6 +340,16 @@ struct ContentView: View {
                     // iOS 26+ Menu Overlay
                     if #available(iOS 26, *) {
                         ZStack {
+                            // Scrim background
+                            if isShowingMenu {
+                                Color.black.opacity(0.001)
+                                    .ignoresSafeArea()
+                                    .onTapGesture {
+                                        isShowingMenu = false
+                                    }
+                                    .transition(.opacity)
+                            }
+
                             GlassEffectContainer {
                                 VStack {
                                     Spacer()
@@ -378,31 +396,34 @@ struct ContentView: View {
 //                                            .font(.title)
 //                                            .rotationEffect(isShowingMenu ? .degrees(45) : .zero)
 //                                    }
-                                    Image(systemName: "plus")
-                                        .font((.system(size: 28)))
-                                        .foregroundStyle(isShowingMenu ? .textPrimary : .white)
-                                        .rotationEffect(isShowingMenu ? .degrees(45) : .zero)
-                                        .frame(width: 72, height: 72)
-                                        .glassEffect(isShowingMenu ? .regular.interactive() : .regular.tint(Color.fillPrimary).interactive())
-                                        .onTapGesture {
-                                            isShowingMenu.toggle()
-                                        }
-                                        .sheet(isPresented: $showLogDrinksView) {
-                                            LogDrinksView(
-                                                isPresented: $showLogDrinksView,
-                                                logDrinkClosure: { numberOfDrinks, date in
-                                                    healthKitManager.addAlcoholData(numberOfDrinks: numberOfDrinks, date: date) {
-                                                        DispatchQueue.main.async {
-                                                            updateTotalDrinks()
-                                                            processCompletedCount += 1
-                                                            checkAndPresentReviewRequest()
-                                                        }
+                                    Button(action: {
+                                        isShowingMenu.toggle()
+                                    }) {
+                                        Image(systemName: "plus")
+                                            .font((.system(size: 28)))
+                                            .foregroundStyle(isShowingMenu ? .textPrimary : .white)
+                                            .rotationEffect(isShowingMenu ? .degrees(45) : .zero)
+                                            .frame(width: 72, height: 72)
+                                            .contentShape(Rectangle())
+                                    }
+                                    .buttonStyle(PlainButtonStyle())
+                                    .glassEffect(isShowingMenu ? .regular.interactive() : .regular.tint(Color.fillPrimary).interactive())
+                                    .sheet(isPresented: $showLogDrinksView) {
+                                        LogDrinksView(
+                                            isPresented: $showLogDrinksView,
+                                            logDrinkClosure: { numberOfDrinks, date in
+                                                healthKitManager.addAlcoholData(numberOfDrinks: numberOfDrinks, date: date) {
+                                                    DispatchQueue.main.async {
+                                                        updateTotalDrinks()
+                                                        processCompletedCount += 1
+                                                        checkAndPresentReviewRequest()
                                                     }
-                                                },
-                                                totalDrinks: totalDrinks,
-                                                drinkLimit: appSettings.drinkLimit
-                                            )
-                                        }
+                                                }
+                                            },
+                                            totalDrinks: totalDrinks,
+                                            drinkLimit: appSettings.drinkLimit
+                                        )
+                                    }
 //                                    .buttonStyle(.glass)
 //                                    .padding(.bottom)
                                 }
