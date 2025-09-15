@@ -57,6 +57,7 @@ struct WeeklyDetailView: View {
         .toolbar {
             ToolbarItem(placement: .navigationBarTrailing) {
                 EditButton()
+                    .fontWeight(.medium)
                     .disabled(localDrinks.isEmpty)
             }
         }
