@@ -79,7 +79,7 @@ struct WelcomeView: View {
 
                         Spacer()
                     }
-                    .padding(24)
+                    .padding(.horizontal, 24)
                 }
 
                 // Footer VStack
@@ -87,11 +87,11 @@ struct WelcomeView: View {
                     Button(action: {
                         showTermsOfUse = true
                     }) {
-                        Text("Bottle Cap is for people who want to keep casual tabs on their drinking – not addiction support.If that's you, please check the ")
+                        Text("Bottle Cap is for people who want to keep casual tabs on their drinking – not addiction support. If that's you, please check the ")
                             .foregroundColor(.secondary)
                             .font(.footnote)
                             +
-                            Text("Terms of Use")
+                            Text("Terms of Use.")
                             .foregroundColor(.textAccent)
                             .font(.footnote)
                     }
