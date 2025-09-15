@@ -11,6 +11,7 @@ import SwiftUI
 struct HistoryView: View {
     @State private var allDrinks: [Date: Double] = [:]
     @State private var allDrinkSamples: [Date: [HKQuantitySample]] = [:]
+    @State private var isLoading = true
     @Environment(\.editMode) private var editMode
     @ObservedObject var healthKitManager = HealthKitManager()
     @Environment(\.dismiss) var dismiss
@@ -19,7 +20,16 @@ struct HistoryView: View {
     var body: some View {
         NavigationView {
             Group {
-                if allDrinks.isEmpty {
+                if isLoading {
+                    VStack(spacing: 16) {
+                        ProgressView()
+                            .scaleEffect(1.2)
+                        Text("Loading history...")
+                            .font(.body)
+                            .foregroundColor(.secondary)
+                    }
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                } else if allDrinks.isEmpty {
                     VStack(spacing: 16) {
                         Text("🍺")
                             .font(.system(size: 48))
@@ -65,9 +75,9 @@ struct HistoryView: View {
                             }
                         }
 
-                        if !drinksPreviousWeeks.isEmpty {
+                        ForEach(drinksByMonth, id: \.0) { monthKey, weeks in
                             Section {
-                                ForEach(drinksPreviousWeeks, id: \.0) { weekStart, count in
+                                ForEach(weeks, id: \.0) { weekStart, count in
                                     Group {
                                         if editMode?.wrappedValue == .active {
                                             drinkRow(date: weekStart, count: count, isWeekly: true)
@@ -89,12 +99,12 @@ struct HistoryView: View {
                                 }
                                 .onDelete { indexSet in
                                     for index in indexSet {
-                                        let weekStart = drinksPreviousWeeks[index].0
+                                        let weekStart = weeks[index].0
                                         deleteDrinksForWeek(weekStart)
                                     }
                                 }
                             } header: {
-                                Text("Previous weeks")
+                                Text(monthKey)
                             }
                         }
                     }
@@ -115,7 +125,7 @@ struct HistoryView: View {
                 ToolbarItem(placement: .navigationBarTrailing) {
                     EditButton()
                         .fontWeight(.medium)
-                        .disabled(allDrinks.isEmpty)
+                        .disabled(allDrinks.isEmpty || isLoading)
                 }
             }
         }
@@ -133,14 +143,46 @@ struct HistoryView: View {
         return allDrinks.filter { $0.key >= startOfWeek.startOfDay }.sorted { $0.key > $1.key }
     }
 
-    private var drinksPreviousWeeks: [(Date, Double)] {
+    private var drinksByMonth: [(String, [(Date, Double)])] {
         let calendar = Calendar.current
         guard let startOfWeek = calendar.date(toNearestOrLastWeekday: appSettings.weekStartDay, matching: Date()) else {
             return []
         }
         // Exclude drinks from the start of the week and later
         let previousWeeksDrinks = allDrinks.filter { $0.key < startOfWeek.startOfDay }
-        return groupDrinksByWeek(drinks: previousWeeksDrinks)
+        return groupDrinksByMonth(drinks: previousWeeksDrinks)
+    }
+
+    private func groupDrinksByMonth(drinks: [Date: Double]) -> [(String, [(Date, Double)])] {
+        let calendar = Calendar.current
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "MMMM yyyy"
+
+        // First group drinks by week
+        let weeklyDrinks = groupDrinksByWeek(drinks: drinks)
+
+        // Then group weeks by month
+        var monthlyWeeks: [String: [(Date, Double)]] = [:]
+
+        for (weekStart, count) in weeklyDrinks {
+            let monthKey = dateFormatter.string(from: weekStart)
+            monthlyWeeks[monthKey, default: []].append((weekStart, count))
+        }
+
+        // Sort each month's weeks by date (newest first) and sort months by date (newest first)
+        return monthlyWeeks.map { monthKey, weeks in
+            let sortedWeeks = weeks.sorted { $0.0 > $1.0 }
+            return (monthKey, sortedWeeks)
+        }.sorted { first, second in
+            let dateFormatter = DateFormatter()
+            dateFormatter.dateFormat = "MMMM yyyy"
+            guard let firstDate = dateFormatter.date(from: first.0),
+                  let secondDate = dateFormatter.date(from: second.0)
+            else {
+                return first.0 > second.0
+            }
+            return firstDate > secondDate
+        }
     }
 
     private func groupDrinksByWeek(drinks: [Date: Double]) -> [(Date, Double)] {
@@ -196,8 +238,11 @@ struct HistoryView: View {
                 samplesByDate[date, default: []].append(drink)
             }
 
-            self.allDrinks = drinksByDate
-            self.allDrinkSamples = samplesByDate
+            DispatchQueue.main.async {
+                self.allDrinks = drinksByDate
+                self.allDrinkSamples = samplesByDate
+                self.isLoading = false
+            }
         }
     }
 
