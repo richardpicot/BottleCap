@@ -114,6 +114,7 @@ struct HistoryView: View {
 
                 ToolbarItem(placement: .navigationBarTrailing) {
                     EditButton()
+                        .fontWeight(.medium)
                         .disabled(allDrinks.isEmpty)
                 }
             }
