@@ -11,7 +11,7 @@ struct SettingsView: View {
     @Environment(\.dismiss) var dismiss
     @Binding var isPresented: Bool
     @ObservedObject var appSettings: AppSettings
-    
+
     var body: some View {
         NavigationView {
             Form {
@@ -26,9 +26,9 @@ struct SettingsView: View {
                             Text("Start Week On")
                         }
                     }
-                    
+
                     Picker(selection: $appSettings.drinkLimit) {
-                        ForEach(1..<26) { limit in
+                        ForEach(1 ..< 26) { limit in
                             Text("\(limit)")
                                 .tag(Double(limit))
                         }
@@ -39,12 +39,11 @@ struct SettingsView: View {
                         }
                     }
                     .pickerStyle(.automatic)
-                    
-                    
+
                 } footer: {
                     Text("It's advised not to drink more than 14 units a week on a regular basis. That's around 6 medium glasses of wine, or 6 pints of 4% beer. [More guidance on alcohol units...](https://www.nhs.uk/live-well/alcohol-advice/calculating-alcohol-units/)")
                 }
-                
+
                 Section {
                     Button {
                         openAppStoreReview()
@@ -59,8 +58,7 @@ struct SettingsView: View {
                         }
                     }
                     .foregroundStyle(.primary)
-                    
-                    
+
                     Button {
                         sendEmail()
                     } label: {
@@ -75,10 +73,10 @@ struct SettingsView: View {
                     }
                     .foregroundStyle(.primary)
                 }
-                
+
                 Section {
                     NavigationLink(destination: TermsOfUseView()) {
-                        HStack() {
+                        HStack {
                             Image(systemName: "list.bullet.rectangle.portrait.fill")
                             Text("Terms of Use")
                         }
@@ -90,22 +88,35 @@ struct SettingsView: View {
                         }
                     }
                     NavigationLink(destination: AboutView()) {
-                        HStack() {
+                        HStack {
                             Image(systemName: "info.circle.fill")
                             Text("About")
                         }
                     }
                 }
             }
-            .navigationBarTitle("Settings", displayMode: .inline)
-            .navigationBarItems(trailing: Button(action: {
-                dismiss()
-            }) {
-                Text("Done").bold()
-            })
+            .navigationTitle("Settings")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    if #available(iOS 26.0, *) {
+                        Button(action: {
+                            dismiss()
+                        }) {
+                            Image(systemName: "xmark")
+                        }
+                    } else {
+                        Button(action: {
+                            dismiss()
+                        }) {
+                            Text("Done").bold()
+                        }
+                    }
+                }
+            }
         }
     }
-    
+
     func sendEmail() {
         // Check if the device can send emails
         if let url = URL(string: "mailto:hello@richardp.co") {
@@ -114,23 +125,18 @@ struct SettingsView: View {
             }
         }
     }
-    
+
     func openAppStoreReview() {
         let appId = "6473561114"
         let appStoreReviewUrl = "https://apps.apple.com/app/id\(appId)?action=write-review"
-        
+
         guard let url = URL(string: appStoreReviewUrl) else {
             fatalError("Expected a valid URL")
         }
 
         UIApplication.shared.open(url)
     }
-
-    
 }
-
-
-
 
 struct SettingsView_Preview: PreviewProvider {
     static var previews: some View {
