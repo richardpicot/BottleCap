@@ -1,12 +1,12 @@
 //
-//  HealthKitAlcoholTestApp.swift
+//  BottleCap.swift
 //  HealthKitAlcoholTest
 //
 //  Created by Richard Picot on 06/10/2023.
 //
 
-import SwiftUI
 import HealthKit
+import SwiftUI
 
 @main
 struct BottleCap: App {
@@ -19,7 +19,7 @@ struct BottleCap: App {
             ContentView()
                 .environmentObject(healthKitManager)
                 .environmentObject(qaService)
-                .fontDesign(.rounded)
+            // .fontDesign(.rounded) // Commented out to test font changes
         }
     }
 }

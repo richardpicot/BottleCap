@@ -155,21 +155,23 @@ struct ContentView: View {
                         Spacer()
                         let (integerPart, decimalPart) = splitFormattedTotalDrinks()
 
-                        HStack(alignment: .firstTextBaseline, spacing: 0) {
+                        HStack(alignment: .firstTextBaseline, spacing: -4) {
                             Text(integerPart)
-                                .font(.system(size: 96))
-                                .fontWeight(.medium)
+                                .font(.system(size: 200, weight: .regular, design: .default))
                                 .foregroundStyle(.textPrimary)
                                 .animation(.default, value: animationTrigger)
                                 .contentTransition(.numericText(value: totalDrinks))
+                                .fontWidth(.condensed)
+                                .tracking(-1)
 
                             if !decimalPart.isEmpty {
                                 Text(".\(decimalPart)")
-                                    .font(.system(size: 56))
-                                    .fontWeight(.medium)
+                                    .font(.system(size: 128, weight: .regular, design: .default))
                                     .foregroundStyle(.textPrimary)
                                     .animation(.default, value: animationTrigger)
                                     .contentTransition(.numericText(value: totalDrinks))
+                                    .fontWidth(.condensed)
+                                    .tracking(-1)
                             }
                         }
                         .lineLimit(1)

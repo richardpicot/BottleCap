@@ -156,6 +156,8 @@
 				F85150802AE685140041AA2B /* LogDrinksView.swift */,
 				F8D828692B079099007DBAF0 /* BubbleEffectView.swift */,
 				F8E00D2C2C38946E0019D958 /* GradientView.swift */,
+				F8E00D332C38AA570019D958 /* DrinkRowView.swift */,
+				F8E00D342C38AA570019D958 /* SkeletonLoadingView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -253,6 +255,9 @@
 				F82B685B2AD04F5400892451 /* HealthKitManager.swift in Sources */,
 				F8C058E12B6D4BAE00FFC0A4 /* AppDelegate.swift in Sources */,
 				F8D8286A2B079099007DBAF0 /* BubbleEffectView.swift in Sources */,
+				F8E00D352C38AA570019D958 /* HistoryViewModel.swift in Sources */,
+				F8E00D362C38AA570019D958 /* DrinkRowView.swift in Sources */,
+				F8E00D372C38AA570019D958 /* SkeletonLoadingView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
