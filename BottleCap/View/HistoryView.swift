@@ -82,7 +82,7 @@ struct HistoryView: View {
                                             Button(role: .destructive) {
                                                 deleteDrinksForWeek(weekStart)
                                             } label: {
-                                                Label("Delete Week", systemImage: "trash")
+                                                Label("Delete", systemImage: "trash")
                                             }
                                         }
                                     }
