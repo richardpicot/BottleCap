@@ -110,6 +110,20 @@ class HealthKitManager: ObservableObject {
         print("Successfully deleted alcohol data")
     }
 
+    // MARK: - Widget Support
+
+    func processPendingWidgetLogs() async {
+        let defaults = UserDefaults(suiteName: AppSettings.suiteName)!
+        guard let pending = defaults.array(forKey: "pendingDrinkLogs") as? [Double], !pending.isEmpty else { return }
+
+        for timestamp in pending {
+            let date = Date(timeIntervalSince1970: timestamp)
+            try? await addAlcoholData(numberOfDrinks: 1, date: date)
+        }
+
+        defaults.removeObject(forKey: "pendingDrinkLogs")
+    }
+
     func deleteAlcoholDataForDate(_ date: Date) async throws {
         let calendar = Calendar.current
         let startOfDay = calendar.startOfDay(for: date)

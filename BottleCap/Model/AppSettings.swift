@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import WidgetKit
 
 extension AppSettings {
     static var preview: AppSettings {
@@ -31,12 +32,16 @@ class AppSettings: ObservableObject {
     @Published var weekStartDay: Weekday {
         didSet {
             defaults.set(weekStartDay.rawValue, forKey: "weekStartDay")
+            defaults.set(weekStartDay.rawValue, forKey: "widgetWeekStartDay")
+            WidgetCenter.shared.reloadAllTimelines()
         }
     }
 
     @Published var drinkLimit: Double {
         didSet {
             defaults.set(drinkLimit, forKey: "drinkLimit")
+            defaults.set(drinkLimit, forKey: "widgetDrinkLimit")
+            WidgetCenter.shared.reloadAllTimelines()
         }
     }
 

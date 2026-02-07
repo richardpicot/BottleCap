@@ -7,6 +7,7 @@
 
 import StoreKit
 import SwiftUI
+import WidgetKit
 
 struct ContentView: View {
     @State private var totalDrinks: Double = 0
@@ -85,7 +86,16 @@ struct ContentView: View {
                 totalDrinks = newTotal
                 animationTrigger.toggle()
             }
+            syncToWidget(total: newTotal)
         }
+    }
+
+    private func syncToWidget(total: Double) {
+        let defaults = UserDefaults(suiteName: AppSettings.suiteName)
+        defaults?.set(total, forKey: "widgetDrinkCount")
+        defaults?.set(appSettings.drinkLimit, forKey: "widgetDrinkLimit")
+        defaults?.set(appSettings.weekStartDay.rawValue, forKey: "widgetWeekStartDay")
+        WidgetCenter.shared.reloadAllTimelines()
     }
 
     private func checkAndPresentReviewRequest() {
@@ -485,7 +495,10 @@ struct ContentView: View {
                 }
             }
             .onReceive(NotificationCenter.default.publisher(for: UIApplication.willEnterForegroundNotification)) { _ in
-                updateTotalDrinks()
+                Task {
+                    await healthKitManager.processPendingWidgetLogs()
+                    updateTotalDrinks()
+                }
             }
         }
         .onChange(of: scenePhase) {

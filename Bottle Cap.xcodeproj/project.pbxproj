@@ -3,10 +3,16 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 56;
+	objectVersion = 70;
 	objects = {
 
 /* Begin PBXBuildFile section */
+		9B2178A72F3760C9006E6DF1 /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9B21786E2F375D5A006E6DF1 /* WidgetKit.framework */; };
+		9B2178A82F3760C9006E6DF1 /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9B2178702F375D5A006E6DF1 /* SwiftUI.framework */; };
+		9B2178B72F3760C9006E6DF1 /* BottleCapWidgetExtensionExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 9B2178A62F3760C8006E6DF1 /* BottleCapWidgetExtensionExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		9B2178C22F376211006E6DF1 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F82B68502AD04E5100892451 /* Assets.xcassets */; };
+		AA0000012F0700000000DD01 /* DrinkData.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000012F0700000000DD00 /* DrinkData.swift */; };
+		AA0000022F0700000000DD01 /* DrinkDataService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000022F0700000000DD00 /* DrinkDataService.swift */; };
 		F80546202AE864020067C71D /* HealthAccessView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F805461F2AE864020067C71D /* HealthAccessView.swift */; };
 		F82B684D2AD04E5000892451 /* BottleCap.swift in Sources */ = {isa = PBXBuildFile; fileRef = F82B684C2AD04E5000892451 /* BottleCap.swift */; };
 		F82B684F2AD04E5000892451 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F82B684E2AD04E5000892451 /* ContentView.swift */; };
@@ -32,11 +38,39 @@
 		F8D8286A2B079099007DBAF0 /* BubbleEffectView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8D828692B079099007DBAF0 /* BubbleEffectView.swift */; };
 		F8E00D2D2C38946E0019D958 /* GradientView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8E00D2C2C38946E0019D958 /* GradientView.swift */; };
 		F8E00D312C38AA570019D958 /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F8E00D302C38AA560019D958 /* Launch Screen.storyboard */; };
-		AA0000012F0700000000DD01 /* DrinkData.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000012F0700000000DD00 /* DrinkData.swift */; };
-		AA0000022F0700000000DD01 /* DrinkDataService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000022F0700000000DD00 /* DrinkDataService.swift */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXContainerItemProxy section */
+		9B2178B52F3760C9006E6DF1 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F82B68412AD04E5000892451 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 9B2178A52F3760C8006E6DF1;
+			remoteInfo = BottleCapWidgetExtensionExtension;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		9B2178832F375D5B006E6DF1 /* Embed Foundation Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				9B2178B72F3760C9006E6DF1 /* BottleCapWidgetExtensionExtension.appex in Embed Foundation Extensions */,
+			);
+			name = "Embed Foundation Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
+		9B21786E2F375D5A006E6DF1 /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
+		9B2178702F375D5A006E6DF1 /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
+		9B2178A62F3760C8006E6DF1 /* BottleCapWidgetExtensionExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = BottleCapWidgetExtensionExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		9B2178C32F376284006E6DF1 /* BottleCapWidgetExtensionExtension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = BottleCapWidgetExtensionExtension.entitlements; sourceTree = "<group>"; };
+		AA0000012F0700000000DD00 /* DrinkData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DrinkData.swift; sourceTree = "<group>"; };
+		AA0000022F0700000000DD00 /* DrinkDataService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DrinkDataService.swift; sourceTree = "<group>"; };
 		F805461F2AE864020067C71D /* HealthAccessView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthAccessView.swift; sourceTree = "<group>"; };
 		F82B68492AD04E5000892451 /* Bottle Cap.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Bottle Cap.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		F82B684C2AD04E5000892451 /* BottleCap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottleCap.swift; sourceTree = "<group>"; };
@@ -66,11 +100,32 @@
 		F8D828692B079099007DBAF0 /* BubbleEffectView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BubbleEffectView.swift; sourceTree = "<group>"; };
 		F8E00D2C2C38946E0019D958 /* GradientView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GradientView.swift; sourceTree = "<group>"; };
 		F8E00D302C38AA560019D958 /* Launch Screen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = "Launch Screen.storyboard"; sourceTree = "<group>"; };
-		AA0000012F0700000000DD00 /* DrinkData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DrinkData.swift; sourceTree = "<group>"; };
-		AA0000022F0700000000DD00 /* DrinkDataService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DrinkDataService.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		9B2178C62F376409006E6DF1 /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = 9B2178A52F3760C8006E6DF1 /* BottleCapWidgetExtensionExtension */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
+/* Begin PBXFileSystemSynchronizedRootGroup section */
+		9B2178A92F3760C9006E6DF1 /* BottleCapWidgetExtension */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (9B2178C62F376409006E6DF1 /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = BottleCapWidgetExtension; sourceTree = "<group>"; };
+/* End PBXFileSystemSynchronizedRootGroup section */
+
 /* Begin PBXFrameworksBuildPhase section */
+		9B2178A32F3760C8006E6DF1 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				9B2178A82F3760C9006E6DF1 /* SwiftUI.framework in Frameworks */,
+				9B2178A72F3760C9006E6DF1 /* WidgetKit.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		F82B68462AD04E5000892451 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -84,8 +139,10 @@
 		F82B68402AD04E5000892451 = {
 			isa = PBXGroup;
 			children = (
+				9B2178C32F376284006E6DF1 /* BottleCapWidgetExtensionExtension.entitlements */,
 				F8E00D302C38AA560019D958 /* Launch Screen.storyboard */,
 				F82B684B2AD04E5000892451 /* BottleCap */,
+				9B2178A92F3760C9006E6DF1 /* BottleCapWidgetExtension */,
 				F82B684A2AD04E5000892451 /* Products */,
 				F82B685D2AD051BF00892451 /* Frameworks */,
 				F85E1E5A2E74613700BE01B7 /* AppIcon.icon */,
@@ -96,6 +153,7 @@
 			isa = PBXGroup;
 			children = (
 				F82B68492AD04E5000892451 /* Bottle Cap.app */,
+				9B2178A62F3760C8006E6DF1 /* BottleCapWidgetExtensionExtension.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -129,6 +187,8 @@
 			isa = PBXGroup;
 			children = (
 				F82B685E2AD051BF00892451 /* HealthKit.framework */,
+				9B21786E2F375D5A006E6DF1 /* WidgetKit.framework */,
+				9B2178702F375D5A006E6DF1 /* SwiftUI.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -169,6 +229,28 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		9B2178A52F3760C8006E6DF1 /* BottleCapWidgetExtensionExtension */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 9B2178B92F3760C9006E6DF1 /* Build configuration list for PBXNativeTarget "BottleCapWidgetExtensionExtension" */;
+			buildPhases = (
+				9B2178A22F3760C8006E6DF1 /* Sources */,
+				9B2178A32F3760C8006E6DF1 /* Frameworks */,
+				9B2178A42F3760C8006E6DF1 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				9B2178A92F3760C9006E6DF1 /* BottleCapWidgetExtension */,
+			);
+			name = BottleCapWidgetExtensionExtension;
+			packageProductDependencies = (
+			);
+			productName = BottleCapWidgetExtensionExtension;
+			productReference = 9B2178A62F3760C8006E6DF1 /* BottleCapWidgetExtensionExtension.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
 		F82B68482AD04E5000892451 /* Bottle Cap */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = F82B68572AD04E5100892451 /* Build configuration list for PBXNativeTarget "Bottle Cap" */;
@@ -176,10 +258,12 @@
 				F82B68452AD04E5000892451 /* Sources */,
 				F82B68462AD04E5000892451 /* Frameworks */,
 				F82B68472AD04E5000892451 /* Resources */,
+				9B2178832F375D5B006E6DF1 /* Embed Foundation Extensions */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				9B2178B62F3760C9006E6DF1 /* PBXTargetDependency */,
 			);
 			name = "Bottle Cap";
 			productName = HealthKitAlcoholTest;
@@ -193,9 +277,13 @@
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
-				LastSwiftUpdateCheck = 1500;
+				LastSwiftUpdateCheck = 2620;
 				LastUpgradeCheck = 1500;
 				TargetAttributes = {
+					9B2178A52F3760C8006E6DF1 = {
+						CreatedOnToolsVersion = 26.2;
+						LastSwiftMigration = 2620;
+					};
 					F82B68482AD04E5000892451 = {
 						CreatedOnToolsVersion = 15.0;
 					};
@@ -215,11 +303,20 @@
 			projectRoot = "";
 			targets = (
 				F82B68482AD04E5000892451 /* Bottle Cap */,
+				9B2178A52F3760C8006E6DF1 /* BottleCapWidgetExtensionExtension */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		9B2178A42F3760C8006E6DF1 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				9B2178C22F376211006E6DF1 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		F82B68472AD04E5000892451 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -234,6 +331,13 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		9B2178A22F3760C8006E6DF1 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		F82B68452AD04E5000892451 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -266,7 +370,82 @@
 		};
 /* End PBXSourcesBuildPhase section */
 
+/* Begin PBXTargetDependency section */
+		9B2178B62F3760C9006E6DF1 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 9B2178A52F3760C8006E6DF1 /* BottleCapWidgetExtensionExtension */;
+			targetProxy = 9B2178B52F3760C9006E6DF1 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
 /* Begin XCBuildConfiguration section */
+		9B2178BA2F3760C9006E6DF1 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = BottleCapWidgetExtensionExtension.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 21;
+				DEVELOPMENT_TEAM = 36P4XTQEHP;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = BottleCapWidgetExtension/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = BottleCapWidgetExtension;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 18.6;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = co.richardp.BottleCap.BottleCapWidgetExtension;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		9B2178BB2F3760C9006E6DF1 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = BottleCapWidgetExtensionExtension.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 21;
+				DEVELOPMENT_TEAM = 36P4XTQEHP;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = BottleCapWidgetExtension/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = BottleCapWidgetExtension;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 18.6;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = co.richardp.BottleCap.BottleCapWidgetExtension;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
 		F82B68552AD04E5100892451 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -469,6 +648,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		9B2178B92F3760C9006E6DF1 /* Build configuration list for PBXNativeTarget "BottleCapWidgetExtensionExtension" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				9B2178BA2F3760C9006E6DF1 /* Debug */,
+				9B2178BB2F3760C9006E6DF1 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		F82B68442AD04E5000892451 /* Build configuration list for PBXProject "Bottle Cap" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
