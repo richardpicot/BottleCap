@@ -4,6 +4,7 @@ struct WelcomeView: View {
     @State private var showTermsOfUse = false // State to control the presentation of the TermsOfUseView
 
     @Binding var isPresented: Bool
+    @EnvironmentObject var healthKitManager: HealthKitManager
 
     @State private var isRequestingPermission = false
 
@@ -105,7 +106,7 @@ struct WelcomeView: View {
 
                     Group {
                         if #available(iOS 26, *) {
-                            NavigationLink(destination: HealthAccessView(healthKitManager: HealthKitManager(), isPresented: $isPresented)) {
+                            NavigationLink(destination: HealthAccessView(isPresented: $isPresented)) {
                                 Text("Continue")
                                     .fontWeight(.semibold)
                                     .frame(maxWidth: .infinity)
@@ -114,7 +115,7 @@ struct WelcomeView: View {
                             .buttonStyle(.glassProminent)
                             .controlSize(.large)
                         } else {
-                            NavigationLink(destination: HealthAccessView(healthKitManager: HealthKitManager(), isPresented: $isPresented)) {
+                            NavigationLink(destination: HealthAccessView(isPresented: $isPresented)) {
                                 Text("Continue")
                                     .fontWeight(.semibold)
                                     .frame(maxWidth: .infinity)
@@ -145,5 +146,6 @@ struct WelcomeView: View {
 struct WelcomeView_Previews: PreviewProvider {
     static var previews: some View {
         WelcomeView(isPresented: .constant(true))
+            .environmentObject(HealthKitManager())
     }
 }

@@ -9,7 +9,7 @@ import HealthKit
 import SwiftUI
 
 struct HealthAccessView: View {
-    var healthKitManager: HealthKitManager
+    @EnvironmentObject var healthKitManager: HealthKitManager
     @Binding var isPresented: Bool // Binding variable to control the presentation of HealthAccessView
     @State private var isRequestingPermission = false
 
@@ -45,26 +45,12 @@ struct HealthAccessView: View {
             Group {
                 if #available(iOS 26, *) {
                     Button {
-                        isRequestingPermission = true // Show spinner
-
-                        healthKitManager.requestHealthKitPermission { success, error in
-                            DispatchQueue.main.async {
-                                isRequestingPermission = false // Hide spinner
-                                if success {
-                                    self.isPresented = false
-                                } else {
-                                    if let error = error {
-                                        print("Failed to get HealthKit permission: \(error.localizedDescription)")
-                                    }
-                                    self.isPresented = false
-                                }
-                            }
-                        }
+                        requestPermission()
                     } label: {
                         ZStack {
                             Text("Connect to Health")
                                 .fontWeight(.semibold)
-                                .opacity(isRequestingPermission ? 0 : 1) // Hide text when showing spinner
+                                .opacity(isRequestingPermission ? 0 : 1)
 
                             if isRequestingPermission {
                                 ProgressView()
@@ -81,26 +67,12 @@ struct HealthAccessView: View {
                     .shadow(color: .fillPrimary.opacity(0.15), radius: 20, x: 0, y: 6)
                 } else {
                     Button {
-                        isRequestingPermission = true // Show spinner
-
-                        healthKitManager.requestHealthKitPermission { success, error in
-                            DispatchQueue.main.async {
-                                isRequestingPermission = false // Hide spinner
-                                if success {
-                                    self.isPresented = false
-                                } else {
-                                    if let error = error {
-                                        print("Failed to get HealthKit permission: \(error.localizedDescription)")
-                                    }
-                                    self.isPresented = false
-                                }
-                            }
-                        }
+                        requestPermission()
                     } label: {
                         ZStack {
                             Text("Connect to Health")
                                 .fontWeight(.semibold)
-                                .opacity(isRequestingPermission ? 0 : 1) // Hide text when showing spinner
+                                .opacity(isRequestingPermission ? 0 : 1)
 
                             if isRequestingPermission {
                                 ProgressView()
@@ -119,19 +91,28 @@ struct HealthAccessView: View {
             }
             .padding(.horizontal, 24)
             .padding(.vertical, 16)
-            // Removed: .background(.thinMaterial)
+        }
+    }
+
+    private func requestPermission() {
+        isRequestingPermission = true
+        Task {
+            do {
+                try await healthKitManager.requestHealthKitPermission()
+            } catch {
+                print("Failed to get HealthKit permission: \(error.localizedDescription)")
+            }
+            isRequestingPermission = false
+            isPresented = false
         }
     }
 }
 
 struct HealthAccessView_Previews: PreviewProvider {
     static var previews: some View {
-        // Dummy HealthKitManager
-        let healthKitManager = HealthKitManager()
-
-        // Use a constant binding for isPresented
         NavigationStack {
-            HealthAccessView(healthKitManager: healthKitManager, isPresented: .constant(true))
+            HealthAccessView(isPresented: .constant(true))
+                .environmentObject(HealthKitManager())
         }
     }
 }

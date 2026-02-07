@@ -21,8 +21,8 @@ struct ContentView: View {
     @AppStorage("processCompletedCount") var processCompletedCount = 0
     @AppStorage("lastVersionPromptedForReview") var lastVersionPromptedForReview = ""
 
-    @ObservedObject var appSettings = AppSettings.shared
-    @ObservedObject var healthKitManager = HealthKitManager()
+    @EnvironmentObject var appSettings: AppSettings
+    @EnvironmentObject var healthKitManager: HealthKitManager
 
     // Onboarding
     @State private var showWelcomeView = false
@@ -69,23 +69,21 @@ struct ContentView: View {
     }
 
     private func logDrink() {
-        healthKitManager.addAlcoholData(numberOfDrinks: 1, date: Date()) {
-            DispatchQueue.main.async {
-                updateTotalDrinks()
-                processCompletedCount += 1
-                checkAndPresentReviewRequest()
-                triggerHapticFeedback.toggle()
-            }
+        Task {
+            try await healthKitManager.addAlcoholData(numberOfDrinks: 1, date: Date())
+            updateTotalDrinks()
+            processCompletedCount += 1
+            checkAndPresentReviewRequest()
+            triggerHapticFeedback.toggle()
         }
     }
 
     private func updateTotalDrinks() {
-        withAnimation {
-            healthKitManager.readAlcoholData(startWeekDay: appSettings.weekStartDay) { newTotal in
-                DispatchQueue.main.async {
-                    self.totalDrinks = newTotal
-                    self.animationTrigger.toggle()
-                }
+        Task {
+            let newTotal = await healthKitManager.readAlcoholData(startWeekDay: appSettings.weekStartDay)
+            withAnimation {
+                totalDrinks = newTotal
+                animationTrigger.toggle()
             }
         }
     }
@@ -106,14 +104,13 @@ struct ContentView: View {
     }
 
     private func checkHealthKitAuthorization() {
-        healthKitManager.checkHealthKitAuthorization { status in
-            switch status {
-            case .authorized: break
-            case .notDetermined:
-                showWelcomeView = true
-            case .denied:
-                showAlert = true
-            }
+        let status = healthKitManager.checkHealthKitAuthorization()
+        switch status {
+        case .authorized: break
+        case .notDetermined:
+            showWelcomeView = true
+        case .denied:
+            showAlert = true
         }
     }
 
@@ -130,17 +127,14 @@ struct ContentView: View {
     }
 
     private func handleLogMultipleDrinksAction() {
-        healthKitManager.checkHealthKitAuthorization { status in
-            DispatchQueue.main.async {
-                switch status {
-                case .authorized:
-                    self.showLogDrinksView = true
-                case .notDetermined:
-                    self.showHealthAccessView = true
-                case .denied:
-                    self.showAlert = true
-                }
-            }
+        let status = healthKitManager.checkHealthKitAuthorization()
+        switch status {
+        case .authorized:
+            showLogDrinksView = true
+        case .notDetermined:
+            showHealthAccessView = true
+        case .denied:
+            showAlert = true
         }
     }
 
@@ -235,7 +229,7 @@ struct ContentView: View {
                                 }
                             }
                             .sheet(isPresented: $showSettingsView) {
-                                SettingsView(isPresented: $showSettingsView, appSettings: appSettings)
+                                SettingsView(isPresented: $showSettingsView)
                             }
 
                             Spacer()
@@ -281,12 +275,11 @@ struct ContentView: View {
                                                 LogDrinksView(
                                                     isPresented: $showLogDrinksView,
                                                     logDrinkClosure: { numberOfDrinks, date in
-                                                        healthKitManager.addAlcoholData(numberOfDrinks: numberOfDrinks, date: date) {
-                                                            DispatchQueue.main.async {
-                                                                updateTotalDrinks()
-                                                                processCompletedCount += 1
-                                                                checkAndPresentReviewRequest()
-                                                            }
+                                                        Task {
+                                                            try await healthKitManager.addAlcoholData(numberOfDrinks: numberOfDrinks, date: date)
+                                                            updateTotalDrinks()
+                                                            processCompletedCount += 1
+                                                            checkAndPresentReviewRequest()
                                                         }
                                                     },
                                                     totalDrinks: totalDrinks,
@@ -294,10 +287,6 @@ struct ContentView: View {
                                                 )
                                             }
                                     }
-//                                    .shadow(color: Color.black.opacity(0.15), radius: 20, x: 0, y: 6)
-//                                    .shadow(color: .fillPrimary.opacity(0.15), radius: 20, x: 0, y: 6)
-//                                    .scaleEffect(isPressed ? 0.85 : 1)
-//                                    .animation(.spring(response: 0.5, dampingFraction: 0.8, blendDuration: 0), value: isPressed)
                                 }
                             }
 
@@ -423,12 +412,11 @@ struct ContentView: View {
                                         LogDrinksView(
                                             isPresented: $showLogDrinksView,
                                             logDrinkClosure: { numberOfDrinks, date in
-                                                healthKitManager.addAlcoholData(numberOfDrinks: numberOfDrinks, date: date) {
-                                                    DispatchQueue.main.async {
-                                                        updateTotalDrinks()
-                                                        processCompletedCount += 1
-                                                        checkAndPresentReviewRequest()
-                                                    }
+                                                Task {
+                                                    try await healthKitManager.addAlcoholData(numberOfDrinks: numberOfDrinks, date: date)
+                                                    updateTotalDrinks()
+                                                    processCompletedCount += 1
+                                                    checkAndPresentReviewRequest()
                                                 }
                                             },
                                             totalDrinks: totalDrinks,
@@ -469,9 +457,15 @@ struct ContentView: View {
                 WelcomeView(isPresented: $showWelcomeView)
                     .interactiveDismissDisabled()
             }
+            .onChange(of: showWelcomeView) { _, isPresented in
+                if !isPresented { updateTotalDrinks() }
+            }
             .sheet(isPresented: $showHealthAccessView) {
-                HealthAccessView(healthKitManager: healthKitManager, isPresented: $showHealthAccessView)
+                HealthAccessView(isPresented: $showHealthAccessView)
                     .interactiveDismissDisabled()
+            }
+            .onChange(of: showHealthAccessView) { _, isPresented in
+                if !isPresented { updateTotalDrinks() }
             }
             .alert(isPresented: $showAlert) {
                 Alert(
@@ -521,4 +515,7 @@ struct ContentView: View {
 
 #Preview {
     ContentView()
+        .environmentObject(HealthKitManager())
+        .environmentObject(AppSettings.shared)
+        .environmentObject(QAService.shared)
 }

@@ -11,6 +11,7 @@ import SwiftUI
 @main
 struct BottleCap: App {
     @StateObject var healthKitManager = HealthKitManager()
+    @StateObject var appSettings = AppSettings.shared
     private let qaService = QAService.shared
     @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
 
@@ -18,8 +19,8 @@ struct BottleCap: App {
         WindowGroup {
             ContentView()
                 .environmentObject(healthKitManager)
+                .environmentObject(appSettings)
                 .environmentObject(qaService)
-            // .fontDesign(.rounded) // Commented out to test font changes
         }
     }
 }

@@ -10,7 +10,7 @@ import SwiftUI
 struct SettingsView: View {
     @Environment(\.dismiss) var dismiss
     @Binding var isPresented: Bool
-    @ObservedObject var appSettings: AppSettings
+    @EnvironmentObject var appSettings: AppSettings
 
     var body: some View {
         NavigationView {
@@ -140,6 +140,7 @@ struct SettingsView: View {
 
 struct SettingsView_Preview: PreviewProvider {
     static var previews: some View {
-        SettingsView(isPresented: .constant(true), appSettings: AppSettings.preview)
+        SettingsView(isPresented: .constant(true))
+            .environmentObject(AppSettings.preview)
     }
 }

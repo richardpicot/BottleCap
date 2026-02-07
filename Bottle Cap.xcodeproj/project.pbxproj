@@ -32,6 +32,8 @@
 		F8D8286A2B079099007DBAF0 /* BubbleEffectView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8D828692B079099007DBAF0 /* BubbleEffectView.swift */; };
 		F8E00D2D2C38946E0019D958 /* GradientView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8E00D2C2C38946E0019D958 /* GradientView.swift */; };
 		F8E00D312C38AA570019D958 /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F8E00D302C38AA560019D958 /* Launch Screen.storyboard */; };
+		AA0000012F0700000000DD01 /* DrinkData.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000012F0700000000DD00 /* DrinkData.swift */; };
+		AA0000022F0700000000DD01 /* DrinkDataService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000022F0700000000DD00 /* DrinkDataService.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -64,6 +66,8 @@
 		F8D828692B079099007DBAF0 /* BubbleEffectView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BubbleEffectView.swift; sourceTree = "<group>"; };
 		F8E00D2C2C38946E0019D958 /* GradientView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GradientView.swift; sourceTree = "<group>"; };
 		F8E00D302C38AA560019D958 /* Launch Screen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = "Launch Screen.storyboard"; sourceTree = "<group>"; };
+		AA0000012F0700000000DD00 /* DrinkData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DrinkData.swift; sourceTree = "<group>"; };
+		AA0000022F0700000000DD00 /* DrinkDataService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DrinkDataService.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -136,6 +140,8 @@
 				F85150822AE68C4E0041AA2B /* Extensions.swift */,
 				F85150842AE68D030041AA2B /* AppSettings.swift */,
 				F8CF22022B88AE7D002A4BF0 /* NumberFormatterUtility.swift */,
+				AA0000012F0700000000DD00 /* DrinkData.swift */,
+				AA0000022F0700000000DD00 /* DrinkDataService.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -253,6 +259,8 @@
 				F82B685B2AD04F5400892451 /* HealthKitManager.swift in Sources */,
 				F8C058E12B6D4BAE00FFC0A4 /* AppDelegate.swift in Sources */,
 				F8D8286A2B079099007DBAF0 /* BubbleEffectView.swift in Sources */,
+				AA0000012F0700000000DD01 /* DrinkData.swift in Sources */,
+				AA0000022F0700000000DD01 /* DrinkDataService.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
