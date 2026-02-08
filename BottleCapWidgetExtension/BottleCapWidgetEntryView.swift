@@ -18,6 +18,8 @@ struct BottleCapWidgetEntryView: View {
         switch family {
         case .systemSmall:
             SmallWidgetView(entry: entry)
+        case .accessoryInline:
+            InlineWidgetView(entry: entry)
         case .accessoryCircular:
             CircularWidgetView(entry: entry)
         case .accessoryRectangular:
@@ -142,6 +144,20 @@ private struct SmallWidgetView: View {
         }
         .containerBackground(for: .widget) {
             Color.backgroundPrimary
+        }
+    }
+}
+
+// MARK: - Lock Screen Inline Widget
+
+private struct InlineWidgetView: View {
+    var entry: DrinkEntry
+
+    var body: some View {
+        if entry.drinkCount == 0 {
+            Text("No drinks this week 🍺")
+        } else {
+            Text("\(entry.formattedCount) \(entry.drinkCount == 1 ? "drink" : "drinks") this week")
         }
     }
 }

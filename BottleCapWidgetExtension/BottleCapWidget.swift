@@ -110,9 +110,9 @@ struct BottleCapWidget: Widget {
         StaticConfiguration(kind: kind, provider: Provider()) { entry in
             BottleCapWidgetEntryView(entry: entry)
         }
-        .configurationDisplayName("Weekly Drinks")
+        .configurationDisplayName("Drinks This Week")
         .description("See your drinks logged throughout the week.")
-        .supportedFamilies([.systemSmall, .accessoryCircular, .accessoryRectangular])
+        .supportedFamilies([.systemSmall, .accessoryInline, .accessoryCircular, .accessoryRectangular])
     }
 }
 
