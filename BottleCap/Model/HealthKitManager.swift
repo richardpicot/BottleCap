@@ -6,6 +6,7 @@
 //
 
 import HealthKit
+import WidgetKit
 
 @MainActor
 class HealthKitManager: ObservableObject {
@@ -150,5 +151,15 @@ class HealthKitManager: ObservableObject {
 
         try await healthStore.delete(samples)
         print("Successfully deleted alcohol data for date: \(date)")
+        await syncWidgetData()
+    }
+
+    func syncWidgetData() async {
+        let defaults = UserDefaults(suiteName: AppSettings.suiteName)
+        let weekStartRaw = defaults?.string(forKey: "widgetWeekStartDay") ?? "monday"
+        let weekday = Weekday(rawValue: weekStartRaw) ?? .monday
+        let total = await readAlcoholData(startWeekDay: weekday)
+        defaults?.set(total, forKey: "widgetDrinkCount")
+        WidgetCenter.shared.reloadAllTimelines()
     }
 }

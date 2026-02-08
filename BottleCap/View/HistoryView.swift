@@ -15,6 +15,7 @@ struct HistoryView: View {
     @Environment(\.editMode) private var editMode
     @EnvironmentObject var healthKitManager: HealthKitManager
     @Environment(\.dismiss) var dismiss
+    @Environment(\.scenePhase) var scenePhase
     @EnvironmentObject var appSettings: AppSettings
 
     private var drinksThisWeek: [DailyDrinkTotal] {
@@ -139,6 +140,11 @@ struct HistoryView: View {
         }
         .onAppear {
             updateDrinks()
+        }
+        .onChange(of: scenePhase) { _, phase in
+            if phase == .active {
+                updateDrinks()
+            }
         }
     }
 
