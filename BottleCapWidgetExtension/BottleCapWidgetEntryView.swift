@@ -63,11 +63,21 @@ private struct SmallWidgetView: View {
                     .fontWeight(.semibold)
                     .foregroundStyle(.textPrimary)
 
-                Text(entry.formattedCount)
-                    .font(.system(size: 42, weight: .regular))
-                    .foregroundStyle(.textPrimary)
-                    .contentTransition(.numericText(value: entry.drinkCount))
-                    .invalidatableContent()
+                if entry.isDecimal {
+                    (Text(entry.wholePartString)
+                        .font(.system(size: 42, weight: .regular))
+                    + Text(entry.decimalPartString)
+                        .font(.system(size: 26, weight: .regular)))
+                        .foregroundStyle(.textPrimary)
+                        .contentTransition(.numericText(value: entry.drinkCount))
+                        .invalidatableContent()
+                } else {
+                    Text(entry.formattedCount)
+                        .font(.system(size: 42, weight: .regular))
+                        .foregroundStyle(.textPrimary)
+                        .contentTransition(.numericText(value: entry.drinkCount))
+                        .invalidatableContent()
+                }
 
                 Spacer()
 
@@ -105,6 +115,7 @@ private struct SmallWidgetView: View {
                 .font(.footnote)
                 .foregroundStyle(.textPrimary)
                 .opacity(0.7)
+                .padding(.trailing, 40)
             }
             .frame(maxWidth: .infinity, alignment: .leading)
 
@@ -126,6 +137,8 @@ private struct SmallWidgetView: View {
                     )
             }
             .buttonStyle(.plain)
+            .padding(.trailing, -5)
+            .padding(.bottom, -5)
         }
         .containerBackground(for: .widget) {
             Color.backgroundPrimary
@@ -150,6 +163,20 @@ private struct CircularWidgetView: View {
     }
 }
 
+// MARK: - Lock Screen Log Drink Shortcut
+
+struct LogDrinkShortcutView: View {
+    var body: some View {
+        ZStack {
+            AccessoryWidgetBackground()
+            Image(systemName: "plus")
+                .font(.system(size: 24, weight: .semibold))
+        }
+        .widgetURL(URL(string: "bottlecap://log"))
+        .containerBackground(.clear, for: .widget)
+    }
+}
+
 // MARK: - Lock Screen Rectangular Widget
 
 private struct RectangularWidgetView: View {
@@ -157,11 +184,17 @@ private struct RectangularWidgetView: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 4) {
-            Text("\(entry.formattedCount) \(entry.drinkCount == 1 ? "drink" : "drinks") this week")
-                .font(.headline)
-                .widgetAccentable()
+            if entry.drinkCount == 0 {
+                Text("No drinks logged this week 🍺")
+                    .font(.headline)
+                    .widgetAccentable()
+            } else {
+                Text("\(entry.formattedCount) \(entry.drinkCount == 1 ? "drink" : "drinks") this week")
+                    .font(.headline)
+                    .widgetAccentable()
 
-            ProgressView(value: entry.progress)
+                ProgressView(value: entry.progress)
+            }
         }
         .containerBackground(.clear, for: .widget)
     }

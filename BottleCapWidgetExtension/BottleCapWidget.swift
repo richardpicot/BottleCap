@@ -22,6 +22,21 @@ struct DrinkEntry: TimelineEntry {
         }
     }
 
+    var isDecimal: Bool {
+        let rounded = (drinkCount * 10).rounded() / 10
+        return rounded.truncatingRemainder(dividingBy: 1) != 0
+    }
+
+    var wholePartString: String {
+        String(format: "%.0f", floor((drinkCount * 10).rounded() / 10))
+    }
+
+    var decimalPartString: String {
+        let rounded = (drinkCount * 10).rounded() / 10
+        let fraction = rounded - floor(rounded)
+        return String(format: ".%.0f", fraction * 10)
+    }
+
     var progress: Double {
         guard drinkLimit > 0 else { return 0 }
         return min(drinkCount / drinkLimit, 1.0)
@@ -81,6 +96,13 @@ struct Provider: TimelineProvider {
 }
 
 @main
+struct BottleCapWidgetBundle: WidgetBundle {
+    var body: some Widget {
+        BottleCapWidget()
+        LogDrinkShortcutWidget()
+    }
+}
+
 struct BottleCapWidget: Widget {
     let kind = "BottleCapWidget"
 
@@ -88,11 +110,26 @@ struct BottleCapWidget: Widget {
         StaticConfiguration(kind: kind, provider: Provider()) { entry in
             BottleCapWidgetEntryView(entry: entry)
         }
-        .configurationDisplayName("Bottle Cap")
-        .description("Track your weekly drinks.")
+        .configurationDisplayName("Weekly Drinks")
+        .description("See your drinks logged throughout the week.")
         .supportedFamilies([.systemSmall, .accessoryCircular, .accessoryRectangular])
     }
 }
+
+struct LogDrinkShortcutWidget: Widget {
+    let kind = "LogDrinkShortcutWidget"
+
+    var body: some WidgetConfiguration {
+        StaticConfiguration(kind: kind, provider: Provider()) { _ in
+            LogDrinkShortcutView()
+        }
+        .configurationDisplayName("Log a Drink")
+        .description("Tap to log a drink from your lock screen.")
+        .supportedFamilies([.accessoryCircular])
+    }
+}
+
+// MARK: - Previews
 
 #Preview("Small", as: .systemSmall) {
     BottleCapWidget()
@@ -111,4 +148,10 @@ struct BottleCapWidget: Widget {
     BottleCapWidget()
 } timeline: {
     DrinkEntry(date: Date(), drinkCount: 7, drinkLimit: 14)
+}
+
+#Preview("Log Shortcut", as: .accessoryCircular) {
+    LogDrinkShortcutWidget()
+} timeline: {
+    DrinkEntry(date: Date(), drinkCount: 0, drinkLimit: 14)
 }

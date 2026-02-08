@@ -21,6 +21,11 @@ struct BottleCap: App {
                 .environmentObject(healthKitManager)
                 .environmentObject(appSettings)
                 .environmentObject(qaService)
+                .onOpenURL { url in
+                    if url.scheme == "bottlecap" && url.host == "log" {
+                        qaService.action = .logDrink
+                    }
+                }
         }
     }
 }
