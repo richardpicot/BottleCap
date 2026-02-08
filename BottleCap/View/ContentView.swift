@@ -504,6 +504,10 @@ struct ContentView: View {
         .onChange(of: scenePhase) {
             if scenePhase == .active {
                 performAction()
+                Task {
+                    await healthKitManager.processPendingWidgetLogs()
+                    updateTotalDrinks()
+                }
             }
         }
     }

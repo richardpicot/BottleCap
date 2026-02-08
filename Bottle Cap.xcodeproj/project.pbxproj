@@ -12,6 +12,8 @@
 		9B2178B72F3760C9006E6DF1 /* BottleCapWidgetExtensionExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 9B2178A62F3760C8006E6DF1 /* BottleCapWidgetExtensionExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		9B2178C22F376211006E6DF1 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F82B68502AD04E5100892451 /* Assets.xcassets */; };
 		AA0000012F0700000000DD01 /* DrinkData.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000012F0700000000DD00 /* DrinkData.swift */; };
+		BB0000012F0800000000EE01 /* LogDrinkOpenIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000012F0800000000EE00 /* LogDrinkOpenIntent.swift */; };
+		BB0000022F0800000000EE01 /* LogDrinkOpenIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000012F0800000000EE00 /* LogDrinkOpenIntent.swift */; };
 		AA0000022F0700000000DD01 /* DrinkDataService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000022F0700000000DD00 /* DrinkDataService.swift */; };
 		F80546202AE864020067C71D /* HealthAccessView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F805461F2AE864020067C71D /* HealthAccessView.swift */; };
 		F82B684D2AD04E5000892451 /* BottleCap.swift in Sources */ = {isa = PBXBuildFile; fileRef = F82B684C2AD04E5000892451 /* BottleCap.swift */; };
@@ -70,6 +72,7 @@
 		9B2178A62F3760C8006E6DF1 /* BottleCapWidgetExtensionExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = BottleCapWidgetExtensionExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		9B2178C32F376284006E6DF1 /* BottleCapWidgetExtensionExtension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = BottleCapWidgetExtensionExtension.entitlements; sourceTree = "<group>"; };
 		AA0000012F0700000000DD00 /* DrinkData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DrinkData.swift; sourceTree = "<group>"; };
+		BB0000012F0800000000EE00 /* LogDrinkOpenIntent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogDrinkOpenIntent.swift; sourceTree = "<group>"; };
 		AA0000022F0700000000DD00 /* DrinkDataService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DrinkDataService.swift; sourceTree = "<group>"; };
 		F805461F2AE864020067C71D /* HealthAccessView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthAccessView.swift; sourceTree = "<group>"; };
 		F82B68492AD04E5000892451 /* Bottle Cap.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Bottle Cap.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -202,6 +205,7 @@
 				F8CF22022B88AE7D002A4BF0 /* NumberFormatterUtility.swift */,
 				AA0000012F0700000000DD00 /* DrinkData.swift */,
 				AA0000022F0700000000DD00 /* DrinkDataService.swift */,
+				BB0000012F0800000000EE00 /* LogDrinkOpenIntent.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -335,6 +339,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				BB0000022F0800000000EE01 /* LogDrinkOpenIntent.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -365,6 +370,7 @@
 				F8D8286A2B079099007DBAF0 /* BubbleEffectView.swift in Sources */,
 				AA0000012F0700000000DD01 /* DrinkData.swift in Sources */,
 				AA0000022F0700000000DD01 /* DrinkDataService.swift in Sources */,
+				BB0000012F0800000000EE01 /* LogDrinkOpenIntent.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -95,11 +95,26 @@ struct Provider: TimelineProvider {
     }
 }
 
+// MARK: - Control Center
+
+struct LogDrinkControl: ControlWidget {
+    var body: some ControlWidgetConfiguration {
+        StaticControlConfiguration(kind: "co.richardp.BottleCap.LogDrink") {
+            ControlWidgetButton(action: LogDrinkOpenIntent()) {
+                Label("Log a Drink", systemImage: "plus")
+            }
+        }
+        .displayName("Log a Drink")
+        .description("Open Bottle Cap and log a drink.")
+    }
+}
+
 @main
 struct BottleCapWidgetBundle: WidgetBundle {
     var body: some Widget {
         BottleCapWidget()
         LogDrinkShortcutWidget()
+        LogDrinkControl()
     }
 }
 

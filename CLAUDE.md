@@ -43,12 +43,37 @@ MVVM pattern. All source code lives in `BottleCap/`.
 
 **Quick Actions**: Home screen shortcuts defined in `Info.plist`, handled via `QuickActionType.swift` and `SceneDelegate.swift`.
 
+**Widget extension** (`BottleCapWidgetExtension/`):
+- `BottleCapWidget.swift` — `@main` widget entry point with `StaticConfiguration`, `TimelineProvider` (reads from shared UserDefaults, refreshes at next week boundary), and `DrinkEntry` timeline entry.
+- `BottleCapWidgetEntryView.swift` — Widget UI with fill-up background effect and interactive plus button. **Design is WIP.**
+- `LogDrinkIntent.swift` — `AppIntent` for the interactive plus button. Optimistically increments `widgetDrinkCount` in shared UserDefaults and queues a timestamp in `pendingDrinkLogs` for the main app to process into HealthKit on next foreground.
+- `Info.plist` — Widget extension point identifier (`com.apple.widgetkit-extension`).
+- Source files also exist in `BottleCapWidget/` (original creation directory) — the Xcode project references files from `BottleCapWidgetExtension/` via a synchronized root group.
+
+## Widget Data Flow
+
+```
+Main App                          Shared UserDefaults                Widget
+─────────                         ──────────────────                ──────
+HealthKit ──read──►               "widgetDrinkCount": 4.0          ──read──► Display
+                    ──write──►    "widgetDrinkLimit": 14.0
+                                  "widgetWeekStartDay": "monday"
+                                  "pendingDrinkLogs": [...]         ◄──write── + Button
+```
+
+- Widgets cannot access HealthKit directly (Apple sandbox restriction).
+- Main app syncs current week total to shared UserDefaults after every drink update (`ContentView.syncToWidget()`).
+- Widget plus button: optimistically increments count + queues a pending log entry via `LogDrinkIntent`.
+- Main app processes pending logs on foreground (`HealthKitManager.processPendingWidgetLogs()`), writes them to HealthKit, then re-syncs.
+- `AppSettings.drinkLimit` and `weekStartDay` didSet handlers also write widget keys and call `WidgetCenter.shared.reloadAllTimelines()`.
+
 ## Key Details
 
-- **Minimum deployment target**: iOS 18.6, with iOS 26-specific UI enhancements (glass effects) behind availability checks.
-- **Data storage**: All drink data lives in HealthKit — there is no Core Data, SQLite, or other local persistence. App settings use shared `UserDefaults` via App Group.
+- **Minimum deployment target**: iOS 18.6, with iOS 26-specific UI enhancements (glass effects) behind availability checks. Widget extension also targets iOS 18.6.
+- **Data storage**: All drink data lives in HealthKit — there is no Core Data, SQLite, or other local persistence. App settings use shared `UserDefaults` via App Group. Widget data is relayed through shared UserDefaults.
 - **Dependency injection**: `HealthKitManager` and `AppSettings` are `@StateObject`s in `BottleCap.swift`, passed to all views via `.environmentObject()`. Views consume them with `@EnvironmentObject` — never create their own instances.
 - **Concurrency**: `HealthKitManager` is `@MainActor` with async/await. Views call async methods inside `Task { }` blocks.
-- **App Group**: `group.co.richardp.BottleCap` — shared container for `UserDefaults` so a future widget extension can access settings.
-- **Entitlements**: HealthKit access + background delivery, App Groups, associated domains (`applinks:richardp.co`).
-- **Assets**: Custom colors (Background, Fill, Gradient) with light/dark variants in `Assets.xcassets`.
+- **App Group**: `group.co.richardp.BottleCap` — shared container for `UserDefaults` used by both the main app and widget extension.
+- **Entitlements**: Main app: HealthKit access + background delivery, App Groups, associated domains (`applinks:richardp.co`). Widget extension: App Groups only.
+- **Assets**: Custom colors (Background, Fill, Gradient) with light/dark variants in `Assets.xcassets`. Shared with widget target via target membership.
+- **Bundle IDs**: Main app: `co.richardp.BottleCap`. Widget: `co.richardp.BottleCap.BottleCapWidgetExtension`.

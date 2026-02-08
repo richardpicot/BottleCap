@@ -1,16 +1,32 @@
 //
-//  LogDrinkIntent.swift
-//  BottleCapWidget
+//  LogDrinkOpenIntent.swift
+//  BottleCap
 //
-//  AppIntent for the interactive plus button on the widget.
+//  OpenIntent for Control Center control that opens the app and logs a drink.
+//  Target membership: both Bottle Cap and BottleCapWidgetExtension.
 //
 
 import AppIntents
 import WidgetKit
 
-struct LogDrinkIntent: AppIntent {
+enum LogDrinkTarget: String, AppEnum {
+    case log
+
+    static var typeDisplayRepresentation = TypeDisplayRepresentation("Log Action")
+    static var caseDisplayRepresentations: [LogDrinkTarget: DisplayRepresentation] = [
+        .log: DisplayRepresentation("Log a Drink"),
+    ]
+}
+
+struct LogDrinkOpenIntent: OpenIntent {
     static var title: LocalizedStringResource = "Log a Drink"
-    static var description = IntentDescription("Log one drink")
+
+    @Parameter(title: "Action")
+    var target: LogDrinkTarget
+
+    init() {
+        self.target = .log
+    }
 
     func perform() async throws -> some IntentResult {
         let defaults = UserDefaults(suiteName: "group.co.richardp.BottleCap")!
@@ -24,7 +40,6 @@ struct LogDrinkIntent: AppIntent {
         pending.append(Date().timeIntervalSince1970)
         defaults.set(pending, forKey: "pendingDrinkLogs")
 
-        // Reload widget timeline to reflect new count
         WidgetCenter.shared.reloadAllTimelines()
 
         return .result()
