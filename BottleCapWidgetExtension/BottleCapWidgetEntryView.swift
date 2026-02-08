@@ -2,7 +2,7 @@
 //  BottleCapWidgetEntryView.swift
 //  BottleCapWidget
 //
-//  Widget UI with fill-up background effect and interactive plus button.
+//  Widget UI for home screen and lock screen widgets.
 //
 
 import SwiftUI
@@ -12,13 +12,34 @@ import AppIntents
 struct BottleCapWidgetEntryView: View {
     var entry: DrinkEntry
 
-    private var progress: CGFloat {
-        guard entry.drinkLimit > 0 else { return 0 }
-        return min(CGFloat(entry.drinkCount) / CGFloat(entry.drinkLimit), 1.0)
+    @Environment(\.widgetFamily) var family
+
+    var body: some View {
+        switch family {
+        case .systemSmall:
+            SmallWidgetView(entry: entry)
+        case .accessoryCircular:
+            CircularWidgetView(entry: entry)
+        case .accessoryRectangular:
+            RectangularWidgetView(entry: entry)
+        default:
+            SmallWidgetView(entry: entry)
+        }
+    }
+}
+
+// MARK: - Home Screen Small Widget
+
+private struct SmallWidgetView: View {
+    var entry: DrinkEntry
+
+    private var remaining: Double {
+        entry.drinkLimit - entry.drinkCount
     }
 
-    private var formattedCount: String {
-        let rounded = (entry.drinkCount * 10).rounded() / 10
+    private var formattedRemaining: String {
+        let value = abs(remaining)
+        let rounded = (value * 10).rounded() / 10
         if rounded.truncatingRemainder(dividingBy: 1) == 0 {
             return String(format: "%.0f", rounded)
         } else {
@@ -26,73 +47,122 @@ struct BottleCapWidgetEntryView: View {
         }
     }
 
+    // 1 = under, 0 = reached, -1 = over
+    private var subtitleState: Int {
+        if remaining > 0 { return 1 }
+        if remaining == 0 { return 0 }
+        return -1
+    }
+
     var body: some View {
-        GeometryReader { geometry in
-            let totalHeight = geometry.size.height
-            let totalWidth = geometry.size.width
+        ZStack(alignment: .bottomTrailing) {
+            // Text content with standard padding
+            VStack(alignment: .leading, spacing: 0) {
+                Text(entry.drinkCount == 1 ? "Drink this week" : "Drinks this week")
+                    .font(.footnote)
+                    .fontWeight(.semibold)
+                    .foregroundStyle(.textPrimary)
 
-            ZStack(alignment: .bottom) {
-                // Background gradient
-                LinearGradient(
-                    gradient: Gradient(colors: [Color.gradientBackgroundPrimaryLeading, Color.gradientBackgroundPrimaryTrailing]),
-                    startPoint: .top,
-                    endPoint: .bottom
-                )
+                Text(entry.formattedCount)
+                    .font(.system(size: 42, weight: .regular))
+                    .foregroundStyle(.textPrimary)
+                    .contentTransition(.numericText(value: entry.drinkCount))
+                    .invalidatableContent()
 
-                // Fill effect (solid color from bottom)
-                Rectangle()
-                    .fill(Color.backgroundSecondary)
-                    .frame(width: totalWidth, height: totalHeight * progress)
+                Spacer()
 
-                // Content
-                VStack(spacing: 2) {
-                    Spacer()
-
-                    Text(formattedCount)
-                        .font(.system(size: 64, weight: .regular, design: .default))
-                        .fontWidth(.condensed)
-                        .foregroundStyle(.textPrimary)
-                        .lineLimit(1)
-                        .minimumScaleFactor(0.6)
-
-                    Text(entry.drinkCount == 1 ? "drink this week" : "drinks this week")
-                        .font(.caption)
-                        .fontWeight(.semibold)
-                        .foregroundStyle(.textPrimary)
-                        .opacity(0.8)
-
-                    Spacer()
-
-                    HStack {
-                        Spacer()
-                        Button(intent: LogDrinkIntent()) {
-                            Image(systemName: "plus")
-                                .font(.system(size: 16, weight: .bold))
-                                .foregroundStyle(.white)
-                                .frame(width: 32, height: 32)
-                                .background(
-                                    Circle()
-                                        .fill(
-                                            LinearGradient(
-                                                gradient: Gradient(colors: [Color.gradientButtonPrimaryLeading, Color.gradientButtonPrimaryTrailing]),
-                                                startPoint: .top,
-                                                endPoint: .bottom
-                                            )
-                                        )
-                                )
+                // Subtitle: number animates independently, full view
+                // transitions only when state changes (under → reached → over)
+                Group {
+                    switch subtitleState {
+                    case 1:
+                        VStack(alignment: .leading, spacing: 0) {
+                            HStack(spacing: 0) {
+                                Text(formattedRemaining)
+                                    .contentTransition(.numericText(value: remaining))
+                                Text(" more until")
+                            }
+                            Text("your limit")
                         }
-                        .buttonStyle(.plain)
+                    case 0:
+                        VStack(alignment: .leading, spacing: 0) {
+                            Text("You've reached")
+                            Text("your limit")
+                        }
+                    default:
+                        VStack(alignment: .leading, spacing: 0) {
+                            HStack(spacing: 0) {
+                                Text(formattedRemaining)
+                                    .contentTransition(.numericText(value: -remaining))
+                                Text(" over")
+                            }
+                            Text("your limit")
+                        }
                     }
                 }
-                .padding(12)
+                .id(subtitleState)
+                .transition(.push(from: .bottom))
+                .font(.footnote)
+                .foregroundStyle(.textPrimary)
+                .opacity(0.7)
             }
+            .frame(maxWidth: .infinity, alignment: .leading)
+
+            // + button concentric with widget corner
+            Button(intent: LogDrinkIntent()) {
+                Image(systemName: "plus")
+                    .font(.system(size: 13, weight: .semibold))
+                    .foregroundStyle(.white)
+                    .frame(width: 32, height: 32)
+                    .background(
+                        Circle()
+                            .fill(
+                                LinearGradient(
+                                    colors: [.gradientButtonPrimaryLeading, .gradientButtonPrimaryTrailing],
+                                    startPoint: .top,
+                                    endPoint: .bottom
+                                )
+                            )
+                    )
+            }
+            .buttonStyle(.plain)
         }
         .containerBackground(for: .widget) {
-            LinearGradient(
-                gradient: Gradient(colors: [Color.gradientBackgroundPrimaryLeading, Color.gradientBackgroundPrimaryTrailing]),
-                startPoint: .top,
-                endPoint: .bottom
-            )
+            Color.backgroundPrimary
         }
+    }
+}
+
+// MARK: - Lock Screen Circular Widget
+
+private struct CircularWidgetView: View {
+    var entry: DrinkEntry
+
+    var body: some View {
+        Gauge(value: entry.progress) {
+            Text("Drinks")
+        } currentValueLabel: {
+            Text(entry.formattedCount)
+                .font(.system(.title3, weight: .semibold))
+        }
+        .gaugeStyle(.accessoryCircularCapacity)
+        .containerBackground(.clear, for: .widget)
+    }
+}
+
+// MARK: - Lock Screen Rectangular Widget
+
+private struct RectangularWidgetView: View {
+    var entry: DrinkEntry
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 4) {
+            Text("\(entry.formattedCount) \(entry.drinkCount == 1 ? "drink" : "drinks") this week")
+                .font(.headline)
+                .widgetAccentable()
+
+            ProgressView(value: entry.progress)
+        }
+        .containerBackground(.clear, for: .widget)
     }
 }

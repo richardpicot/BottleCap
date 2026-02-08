@@ -12,6 +12,20 @@ struct DrinkEntry: TimelineEntry {
     let date: Date
     let drinkCount: Double
     let drinkLimit: Double
+
+    var formattedCount: String {
+        let rounded = (drinkCount * 10).rounded() / 10
+        if rounded.truncatingRemainder(dividingBy: 1) == 0 {
+            return String(format: "%.0f", rounded)
+        } else {
+            return String(format: "%.1f", rounded)
+        }
+    }
+
+    var progress: Double {
+        guard drinkLimit > 0 else { return 0 }
+        return min(drinkCount / drinkLimit, 1.0)
+    }
 }
 
 struct Provider: TimelineProvider {
@@ -76,13 +90,25 @@ struct BottleCapWidget: Widget {
         }
         .configurationDisplayName("Bottle Cap")
         .description("Track your weekly drinks.")
-        .supportedFamilies([.systemSmall])
+        .supportedFamilies([.systemSmall, .accessoryCircular, .accessoryRectangular])
     }
 }
 
-#Preview(as: .systemSmall) {
+#Preview("Small", as: .systemSmall) {
+    BottleCapWidget()
+} timeline: {
+    DrinkEntry(date: Date(), drinkCount: 3, drinkLimit: 8)
+    DrinkEntry(date: Date(), drinkCount: 10, drinkLimit: 8)
+}
+
+#Preview("Circular", as: .accessoryCircular) {
     BottleCapWidget()
 } timeline: {
     DrinkEntry(date: Date(), drinkCount: 3, drinkLimit: 14)
+}
+
+#Preview("Rectangular", as: .accessoryRectangular) {
+    BottleCapWidget()
+} timeline: {
     DrinkEntry(date: Date(), drinkCount: 7, drinkLimit: 14)
 }
