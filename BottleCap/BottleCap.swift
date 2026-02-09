@@ -22,8 +22,14 @@ struct BottleCap: App {
                 .environmentObject(appSettings)
                 .environmentObject(qaService)
                 .onOpenURL { url in
-                    if url.scheme == "bottlecap" && url.host == "log" {
+                    guard url.scheme == "bottlecap" else { return }
+                    switch url.host {
+                    case "log":
                         qaService.action = .logDrink
+                    case "logMultiple":
+                        qaService.action = .logMultipleDrinks
+                    default:
+                        break
                     }
                 }
         }

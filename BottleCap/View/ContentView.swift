@@ -136,6 +136,13 @@ struct ContentView: View {
         }
     }
 
+    private func checkPendingLogForm() {
+        let defaults = UserDefaults(suiteName: AppSettings.suiteName)
+        guard defaults?.bool(forKey: "pendingShowLogForm") == true else { return }
+        defaults?.removeObject(forKey: "pendingShowLogForm")
+        handleLogMultipleDrinksAction()
+    }
+
     private func handleLogMultipleDrinksAction() {
         let status = healthKitManager.checkHealthKitAuthorization()
         switch status {
@@ -495,6 +502,7 @@ struct ContentView: View {
                 }
             }
             .onReceive(NotificationCenter.default.publisher(for: UIApplication.willEnterForegroundNotification)) { _ in
+                checkPendingLogForm()
                 Task {
                     await healthKitManager.processPendingWidgetLogs()
                     updateTotalDrinks()
@@ -504,6 +512,7 @@ struct ContentView: View {
         .onChange(of: scenePhase) {
             if scenePhase == .active {
                 performAction()
+                checkPendingLogForm()
                 Task {
                     await healthKitManager.processPendingWidgetLogs()
                     updateTotalDrinks()

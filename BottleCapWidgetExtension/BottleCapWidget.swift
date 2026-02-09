@@ -12,6 +12,7 @@ struct DrinkEntry: TimelineEntry {
     let date: Date
     let drinkCount: Double
     let drinkLimit: Double
+    var plusAction: WidgetPlusAction = .logADrink
 
     var formattedCount: String {
         let rounded = (drinkCount * 10).rounded() / 10
@@ -43,32 +44,30 @@ struct DrinkEntry: TimelineEntry {
     }
 }
 
-struct Provider: TimelineProvider {
+struct Provider: AppIntentTimelineProvider {
     private let suiteName = "group.co.richardp.BottleCap"
 
     func placeholder(in context: Context) -> DrinkEntry {
         DrinkEntry(date: Date(), drinkCount: 0, drinkLimit: 14)
     }
 
-    func getSnapshot(in context: Context, completion: @escaping (DrinkEntry) -> Void) {
-        let entry = readEntry()
-        completion(entry)
+    func snapshot(for configuration: BottleCapWidgetConfigIntent, in context: Context) async -> DrinkEntry {
+        readEntry(plusAction: configuration.plusAction)
     }
 
-    func getTimeline(in context: Context, completion: @escaping (Timeline<DrinkEntry>) -> Void) {
-        let entry = readEntry()
+    func timeline(for configuration: BottleCapWidgetConfigIntent, in context: Context) async -> Timeline<DrinkEntry> {
+        let entry = readEntry(plusAction: configuration.plusAction)
 
         // Refresh at the next week boundary
         let refreshDate = nextWeekStart() ?? Calendar.current.date(byAdding: .hour, value: 1, to: Date())!
-        let timeline = Timeline(entries: [entry], policy: .after(refreshDate))
-        completion(timeline)
+        return Timeline(entries: [entry], policy: .after(refreshDate))
     }
 
-    private func readEntry() -> DrinkEntry {
+    private func readEntry(plusAction: WidgetPlusAction = .logADrink) -> DrinkEntry {
         let defaults = UserDefaults(suiteName: suiteName)
         let count = defaults?.double(forKey: "widgetDrinkCount") ?? 0
         let limit = defaults?.double(forKey: "widgetDrinkLimit") ?? 14
-        return DrinkEntry(date: Date(), drinkCount: count, drinkLimit: limit)
+        return DrinkEntry(date: Date(), drinkCount: count, drinkLimit: limit, plusAction: plusAction)
     }
 
     private func nextWeekStart() -> Date? {
@@ -105,7 +104,31 @@ struct LogDrinkControl: ControlWidget {
             }
         }
         .displayName("Log a Drink")
-        .description("Open Bottle Cap and log a drink.")
+        .description("Instantly log one drink.")
+    }
+}
+
+struct OpenLogFormControl: ControlWidget {
+    var body: some ControlWidgetConfiguration {
+        StaticControlConfiguration(kind: "co.richardp.BottleCap.OpenLogForm") {
+            ControlWidgetButton(action: OpenLogFormIntent()) {
+                Label("Log Drinks...", systemImage: "plus.circle")
+            }
+        }
+        .displayName("Log Drinks...")
+        .description("Open Bottle Cap to choose amount and date.")
+    }
+}
+
+struct OpenAppControl: ControlWidget {
+    var body: some ControlWidgetConfiguration {
+        StaticControlConfiguration(kind: "co.richardp.BottleCap.OpenApp") {
+            ControlWidgetButton(action: OpenAppIntent()) {
+                Label("Open Bottle Cap", systemImage: "waterbottle")
+            }
+        }
+        .displayName("Open Bottle Cap")
+        .description("Open the Bottle Cap app.")
     }
 }
 
@@ -115,6 +138,8 @@ struct BottleCapWidgetBundle: WidgetBundle {
         BottleCapWidget()
         LogDrinkShortcutWidget()
         LogDrinkControl()
+        OpenLogFormControl()
+        OpenAppControl()
     }
 }
 
@@ -122,7 +147,7 @@ struct BottleCapWidget: Widget {
     let kind = "BottleCapWidget"
 
     var body: some WidgetConfiguration {
-        StaticConfiguration(kind: kind, provider: Provider()) { entry in
+        AppIntentConfiguration(kind: kind, intent: BottleCapWidgetConfigIntent.self, provider: Provider()) { entry in
             BottleCapWidgetEntryView(entry: entry)
         }
         .configurationDisplayName("Drinks This Week")
@@ -135,8 +160,8 @@ struct LogDrinkShortcutWidget: Widget {
     let kind = "LogDrinkShortcutWidget"
 
     var body: some WidgetConfiguration {
-        StaticConfiguration(kind: kind, provider: Provider()) { _ in
-            LogDrinkShortcutView()
+        AppIntentConfiguration(kind: kind, intent: BottleCapWidgetConfigIntent.self, provider: Provider()) { entry in
+            LogDrinkShortcutView(entry: entry)
         }
         .configurationDisplayName("Log a Drink")
         .description("Tap to log a drink from your lock screen.")

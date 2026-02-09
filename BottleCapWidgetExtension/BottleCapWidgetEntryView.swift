@@ -30,10 +30,33 @@ struct BottleCapWidgetEntryView: View {
     }
 }
 
+// MARK: - Shared Plus Icon
+
+private struct PlusIconView: View {
+    var body: some View {
+        Image(systemName: "plus")
+            .font(.system(size: 13, weight: .semibold))
+            .foregroundStyle(.white)
+            .frame(width: 32, height: 32)
+            .background(
+                Circle()
+                    .fill(
+                        LinearGradient(
+                            colors: [.gradientButtonPrimaryLeading, .gradientButtonPrimaryTrailing],
+                            startPoint: .top,
+                            endPoint: .bottom
+                        )
+                    )
+            )
+    }
+}
+
 // MARK: - Home Screen Small Widget
 
 private struct SmallWidgetView: View {
     var entry: DrinkEntry
+
+    @Environment(\.colorScheme) private var colorScheme
 
     private var remaining: Double {
         entry.drinkLimit - entry.drinkCount
@@ -122,28 +145,32 @@ private struct SmallWidgetView: View {
             .frame(maxWidth: .infinity, alignment: .leading)
 
             // + button concentric with widget corner
-            Button(intent: LogDrinkIntent()) {
-                Image(systemName: "plus")
-                    .font(.system(size: 13, weight: .semibold))
-                    .foregroundStyle(.white)
-                    .frame(width: 32, height: 32)
-                    .background(
-                        Circle()
-                            .fill(
-                                LinearGradient(
-                                    colors: [.gradientButtonPrimaryLeading, .gradientButtonPrimaryTrailing],
-                                    startPoint: .top,
-                                    endPoint: .bottom
-                                )
-                            )
-                    )
+            switch entry.plusAction {
+            case .logADrink:
+                Button(intent: LogDrinkIntent()) {
+                    PlusIconView()
+                }
+                .buttonStyle(.plain)
+                .padding(.trailing, -5)
+                .padding(.bottom, -5)
+            case .logDrinks:
+                Link(destination: URL(string: "bottlecap://logMultiple")!) {
+                    PlusIconView()
+                }
+                .padding(.trailing, -5)
+                .padding(.bottom, -5)
             }
-            .buttonStyle(.plain)
-            .padding(.trailing, -5)
-            .padding(.bottom, -5)
         }
         .containerBackground(for: .widget) {
-            Color.backgroundPrimary
+            if colorScheme == .dark {
+                Color(.systemBackground)
+            } else {
+                LinearGradient(
+                    colors: [.gradientBackgroundPrimaryLeading, .gradientBackgroundPrimaryTrailing],
+                    startPoint: .top,
+                    endPoint: .bottom
+                )
+            }
         }
     }
 }
@@ -182,13 +209,17 @@ private struct CircularWidgetView: View {
 // MARK: - Lock Screen Log Drink Shortcut
 
 struct LogDrinkShortcutView: View {
+    var entry: DrinkEntry
+
     var body: some View {
         ZStack {
             AccessoryWidgetBackground()
             Image(systemName: "plus")
                 .font(.system(size: 24, weight: .semibold))
         }
-        .widgetURL(URL(string: "bottlecap://log"))
+        .widgetURL(entry.plusAction == .logDrinks
+            ? URL(string: "bottlecap://logMultiple")
+            : URL(string: "bottlecap://log"))
         .containerBackground(.clear, for: .widget)
     }
 }
