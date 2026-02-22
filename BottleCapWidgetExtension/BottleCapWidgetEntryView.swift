@@ -90,15 +90,15 @@ private struct SmallWidgetView: View {
 
                 if entry.isDecimal {
                     (Text(entry.wholePartString)
-                        .font(.system(size: 42, weight: .regular))
+                        .font(.system(size: 42, weight: .medium, design: .rounded))
                     + Text(entry.decimalPartString)
-                        .font(.system(size: 26, weight: .regular)))
+                        .font(.system(size: 26, weight: .medium, design: .rounded)))
                         .foregroundStyle(.textPrimary)
                         .contentTransition(.numericText(value: entry.drinkCount))
                         .invalidatableContent()
                 } else {
                     Text(entry.formattedCount)
-                        .font(.system(size: 42, weight: .regular))
+                        .font(.system(size: 42, weight: .medium, design: .rounded))
                         .foregroundStyle(.textPrimary)
                         .contentTransition(.numericText(value: entry.drinkCount))
                         .invalidatableContent()

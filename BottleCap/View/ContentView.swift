@@ -168,43 +168,43 @@ struct ContentView: View {
 
                         HStack(alignment: .firstTextBaseline, spacing: -4) {
                             Text(integerPart)
-                                .font(.system(size: 200, weight: .regular, design: .default))
+                                .font(.system(size: 160, weight: .medium, design: .rounded))
                                 .foregroundStyle(.textPrimary)
                                 .animation(.default, value: animationTrigger)
                                 .contentTransition(.numericText(value: totalDrinks))
-                                .fontWidth(.condensed)
-                                .tracking(-1)
 
                             if !decimalPart.isEmpty {
                                 Text(".\(decimalPart)")
-                                    .font(.system(size: 128, weight: .regular, design: .default))
+                                    .font(.system(size: 102, weight: .medium, design: .rounded))
                                     .foregroundStyle(.textPrimary)
                                     .animation(.default, value: animationTrigger)
                                     .contentTransition(.numericText(value: totalDrinks))
-                                    .fontWidth(.condensed)
-                                    .tracking(-1)
                             }
                         }
                         .lineLimit(1)
                         .minimumScaleFactor(0.8)
 
-                        VStack {
-                            Text(NumberFormatterUtility.roundedValue(totalDrinks) == 1 ? "Drink this week." : "Drinks this week.")
+                        VStack(spacing: 8) {
+                            Text(NumberFormatterUtility.roundedValue(totalDrinks) == 1 ? "Drink this week" : "Drinks this week")
+                                .fontWeight(.semibold)
                             if drinksRemaining > 0 {
-                                Text("\(formattedDrinksRemaining) more until you reach your limit.")
+                                Text("\(formattedDrinksRemaining) more until your limit")
+                                    .fontWeight(.regular)
                             } else if
                                 NumberFormatterUtility.roundedValue(totalDrinks) == appSettings.drinkLimit
                             {
-                                Text("You've reached your limit.")
+                                Text("You've reached your limit")
+                                    .fontWeight(.regular)
                             } else {
-                                Text("You're \(formattedDrinksOverLimit) over your weekly limit.")
+                                Text("You're \(formattedDrinksOverLimit) over your weekly limit")
+                                    .fontWeight(.regular)
                             }
                         }
                         .font(.title3)
-                        .fontWeight(.semibold)
                         .foregroundStyle(.textPrimary)
-                        .opacity(colorScheme == .dark ? 0.8 : 0.9)
                         .multilineTextAlignment(.center)
+                        .contentTransition(.numericText(value: totalDrinks))
+                        .animation(.default, value: animationTrigger)
 
                         Spacer()
 
