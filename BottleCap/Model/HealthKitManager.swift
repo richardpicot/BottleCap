@@ -160,6 +160,8 @@ class HealthKitManager: ObservableObject {
         let weekday = Weekday(rawValue: weekStartRaw) ?? .monday
         let total = await readAlcoholData(startWeekDay: weekday)
         defaults?.set(total, forKey: "widgetDrinkCount")
+        let weekStart = currentWeekStart(weekStartDay: weekStartRaw)
+        defaults?.set(weekStart.timeIntervalSince1970, forKey: "widgetSyncedWeekStart")
         WidgetCenter.shared.reloadAllTimelines()
     }
 }

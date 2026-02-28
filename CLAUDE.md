@@ -34,7 +34,7 @@ MVVM pattern. All source code lives in `BottleCap/`.
 - `Extensions.swift` — Calendar/Date helpers for week boundary calculations.
 
 **View layer** (`View/`):
-- `ContentView.swift` — Main screen with drink counter, progress visualization, and navigation. Largest file (~524 lines).
+- `ContentView.swift` — Main screen with drink counter, progress visualization, and navigation. Largest file (~540 lines). Has iOS 26 glass-effect menu overlay and pre-26 `Menu` fallback.
 - `LogDrinksView.swift` — Sheet for logging multiple drinks at once.
 - `SettingsView.swift` — Preferences (week start, drink limit) and legal links.
 - `HistoryView.swift` / `WeeklyDetailView.swift` — Historical data browsing with monthly grouping.
@@ -44,21 +44,29 @@ MVVM pattern. All source code lives in `BottleCap/`.
 **Quick Actions**: Home screen shortcuts defined in `Info.plist`, handled via `QuickActionType.swift` and `SceneDelegate.swift`.
 
 **Widget extension** (`BottleCapWidgetExtension/`):
-- `BottleCapWidget.swift` — `@main` widget entry point with `StaticConfiguration`, `TimelineProvider` (reads from shared UserDefaults, refreshes at next week boundary), and `DrinkEntry` timeline entry.
-- `BottleCapWidgetEntryView.swift` — Widget UI with fill-up background effect and interactive plus button. **Design is WIP.**
+- `BottleCapWidget.swift` — `@main` widget entry point with `AppIntentConfiguration`, `AppIntentTimelineProvider` (reads from shared UserDefaults, refreshes at next week boundary), and `DrinkEntry` timeline entry. Also defines three Control Center controls (`LogDrinkControl`, `OpenLogFormControl`, `OpenAppControl`) and the `WidgetBundle`.
+- `BottleCapWidgetEntryView.swift` — Widget UI with gradient background (light) / system background (dark) and configurable plus button. Small widget conditionally renders `Button(intent:)` or `Link` based on the user's `plusAction` config. Lock screen shortcut conditionally sets `widgetURL`.
 - `LogDrinkIntent.swift` — `AppIntent` for the interactive plus button. Optimistically increments `widgetDrinkCount` in shared UserDefaults and queues a timestamp in `pendingDrinkLogs` for the main app to process into HealthKit on next foreground.
 - `Info.plist` — Widget extension point identifier (`com.apple.widgetkit-extension`).
 - Source files also exist in `BottleCapWidget/` (original creation directory) — the Xcode project references files from `BottleCapWidgetExtension/` via a synchronized root group.
 
+**Shared intents** (`Model/LogDrinkOpenIntent.swift` — dual target membership):
+- `WidgetPlusAction` — `AppEnum` with `.logADrink` / `.logDrinks` for widget config picker.
+- `BottleCapWidgetConfigIntent` — `WidgetConfigurationIntent` with a `plusAction` parameter (default `.logADrink`).
+- `LogDrinkOpenIntent` — `OpenIntent` for CC "Log a Drink" control (logs a drink + opens app).
+- `OpenLogFormIntent` — `OpenIntent` for CC "Log Drinks..." control (sets `pendingShowLogForm` flag, app opens to `LogDrinksView`).
+- `OpenAppIntent` — `OpenIntent` for CC "Open Bottle Cap" control (no-op perform, just opens app).
+
 ## Widget Data Flow
 
 ```
-Main App                          Shared UserDefaults                Widget
-─────────                         ──────────────────                ──────
+Main App                          Shared UserDefaults                Widget / CC
+─────────                         ──────────────────                ───────────
 HealthKit ──read──►               "widgetDrinkCount": 4.0          ──read──► Display
                     ──write──►    "widgetDrinkLimit": 14.0
                                   "widgetWeekStartDay": "monday"
-                                  "pendingDrinkLogs": [...]         ◄──write── + Button
+                                  "pendingDrinkLogs": [...]         ◄──write── + Button (LogDrinkIntent)
+                                  "pendingShowLogForm": Bool        ◄──write── CC "Log Drinks..." (OpenLogFormIntent)
 ```
 
 - Widgets cannot access HealthKit directly (Apple sandbox restriction).
@@ -66,6 +74,8 @@ HealthKit ──read──►               "widgetDrinkCount": 4.0          ─
 - Widget plus button: optimistically increments count + queues a pending log entry via `LogDrinkIntent`.
 - Main app processes pending logs on foreground (`HealthKitManager.processPendingWidgetLogs()`), writes them to HealthKit, then re-syncs.
 - `AppSettings.drinkLimit` and `weekStartDay` didSet handlers also write widget keys and call `WidgetCenter.shared.reloadAllTimelines()`.
+- CC "Log Drinks..." control sets `pendingShowLogForm` flag; `ContentView.checkPendingLogForm()` reads/clears it on foreground and opens `LogDrinksView`.
+- URL scheme `bottlecap://log` triggers quick log; `bottlecap://logMultiple` opens the log form. Routed in `BottleCap.swift` via `onOpenURL`.
 
 ## Key Details
 

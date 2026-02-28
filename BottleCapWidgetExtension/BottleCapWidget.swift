@@ -65,32 +65,28 @@ struct Provider: AppIntentTimelineProvider {
 
     private func readEntry(plusAction: WidgetPlusAction = .logADrink) -> DrinkEntry {
         let defaults = UserDefaults(suiteName: suiteName)
-        let count = defaults?.double(forKey: "widgetDrinkCount") ?? 0
+        let weekStartDay = defaults?.string(forKey: "widgetWeekStartDay") ?? "monday"
+
+        var count = defaults?.double(forKey: "widgetDrinkCount") ?? 0
         let limit = defaults?.double(forKey: "widgetDrinkLimit") ?? 14
+
+        // Reset count if it belongs to a previous week
+        let storedWeekStart = defaults?.double(forKey: "widgetSyncedWeekStart") ?? 0
+        if isWidgetCountStale(storedWeekStart: storedWeekStart, weekStartDay: weekStartDay) {
+            count = 0
+            defaults?.set(0.0, forKey: "widgetDrinkCount")
+            let newWeekStart = currentWeekStart(weekStartDay: weekStartDay)
+            defaults?.set(newWeekStart.timeIntervalSince1970, forKey: "widgetSyncedWeekStart")
+        }
+
         return DrinkEntry(date: Date(), drinkCount: count, drinkLimit: limit, plusAction: plusAction)
     }
 
     private func nextWeekStart() -> Date? {
         let defaults = UserDefaults(suiteName: suiteName)
-        let weekStartRaw = defaults?.string(forKey: "widgetWeekStartDay") ?? "monday"
-
-        let calendar = Calendar.current
-        let now = Date()
-
-        // Convert weekday string to Calendar weekday int (1=Sunday, 2=Monday, etc.)
-        let weekdayInt: Int
-        switch weekStartRaw {
-        case "sunday": weekdayInt = 1
-        case "monday": weekdayInt = 2
-        case "tuesday": weekdayInt = 3
-        case "wednesday": weekdayInt = 4
-        case "thursday": weekdayInt = 5
-        case "friday": weekdayInt = 6
-        case "saturday": weekdayInt = 7
-        default: weekdayInt = 2
-        }
-
-        return calendar.nextDate(after: now, matching: DateComponents(weekday: weekdayInt), matchingPolicy: .nextTime)
+        let weekStartDay = defaults?.string(forKey: "widgetWeekStartDay") ?? "monday"
+        let weekStart = currentWeekStart(weekStartDay: weekStartDay)
+        return Calendar.current.date(byAdding: .day, value: 7, to: weekStart)
     }
 }
 

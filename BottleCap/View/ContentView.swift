@@ -95,6 +95,8 @@ struct ContentView: View {
         defaults?.set(total, forKey: "widgetDrinkCount")
         defaults?.set(appSettings.drinkLimit, forKey: "widgetDrinkLimit")
         defaults?.set(appSettings.weekStartDay.rawValue, forKey: "widgetWeekStartDay")
+        let weekStart = currentWeekStart(weekStartDay: appSettings.weekStartDay.rawValue)
+        defaults?.set(weekStart.timeIntervalSince1970, forKey: "widgetSyncedWeekStart")
         WidgetCenter.shared.reloadAllTimelines()
     }
 

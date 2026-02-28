@@ -9,6 +9,39 @@
 import AppIntents
 import WidgetKit
 
+// MARK: - Shared Week Helpers
+
+/// Computes start-of-day for the most recent occurrence of the configured week start day.
+/// Available to both the main app and widget extension (dual target membership).
+func currentWeekStart(weekStartDay: String) -> Date {
+    let calendar = Calendar.current
+    let now = Date()
+
+    let weekdayInt: Int
+    switch weekStartDay {
+    case "sunday": weekdayInt = 1
+    case "monday": weekdayInt = 2
+    case "tuesday": weekdayInt = 3
+    case "wednesday": weekdayInt = 4
+    case "thursday": weekdayInt = 5
+    case "friday": weekdayInt = 6
+    case "saturday": weekdayInt = 7
+    default: weekdayInt = 2
+    }
+
+    let todayWeekday = calendar.component(.weekday, from: now)
+    let daysBack = (todayWeekday - weekdayInt + 7) % 7
+    let weekStart = calendar.date(byAdding: .day, value: -daysBack, to: now)!
+    return calendar.startOfDay(for: weekStart)
+}
+
+/// Returns true if the stored week start timestamp is from a previous week.
+func isWidgetCountStale(storedWeekStart: TimeInterval, weekStartDay: String) -> Bool {
+    guard storedWeekStart > 0 else { return false } // no timestamp yet (pre-upgrade)
+    let current = currentWeekStart(weekStartDay: weekStartDay)
+    return storedWeekStart < current.timeIntervalSince1970
+}
+
 // MARK: - Widget Configuration
 
 enum WidgetPlusAction: String, AppEnum {
@@ -44,9 +77,18 @@ struct LogDrinkOpenIntent: OpenIntent {
 
     func perform() async throws -> some IntentResult {
         let defaults = UserDefaults(suiteName: "group.co.richardp.BottleCap")!
+        let weekStartDay = defaults.string(forKey: "widgetWeekStartDay") ?? "monday"
+
+        // Reset count if the stored value belongs to a previous week
+        var current = defaults.double(forKey: "widgetDrinkCount")
+        let storedWeekStart = defaults.double(forKey: "widgetSyncedWeekStart")
+        if isWidgetCountStale(storedWeekStart: storedWeekStart, weekStartDay: weekStartDay) {
+            current = 0
+            let newWeekStart = currentWeekStart(weekStartDay: weekStartDay)
+            defaults.set(newWeekStart.timeIntervalSince1970, forKey: "widgetSyncedWeekStart")
+        }
 
         // Optimistically increment displayed count
-        let current = defaults.double(forKey: "widgetDrinkCount")
         defaults.set(current + 1, forKey: "widgetDrinkCount")
 
         // Queue pending log for main app to write to HealthKit

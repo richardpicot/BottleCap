@@ -14,9 +14,18 @@ struct LogDrinkIntent: AppIntent {
 
     func perform() async throws -> some IntentResult {
         let defaults = UserDefaults(suiteName: "group.co.richardp.BottleCap")!
+        let weekStartDay = defaults.string(forKey: "widgetWeekStartDay") ?? "monday"
+
+        // Reset count if the stored value belongs to a previous week
+        var current = defaults.double(forKey: "widgetDrinkCount")
+        let storedWeekStart = defaults.double(forKey: "widgetSyncedWeekStart")
+        if isWidgetCountStale(storedWeekStart: storedWeekStart, weekStartDay: weekStartDay) {
+            current = 0
+            let newWeekStart = currentWeekStart(weekStartDay: weekStartDay)
+            defaults.set(newWeekStart.timeIntervalSince1970, forKey: "widgetSyncedWeekStart")
+        }
 
         // Optimistically increment displayed count
-        let current = defaults.double(forKey: "widgetDrinkCount")
         defaults.set(current + 1, forKey: "widgetDrinkCount")
 
         // Queue pending log for main app to write to HealthKit
