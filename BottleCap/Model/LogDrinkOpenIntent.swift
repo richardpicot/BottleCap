@@ -42,6 +42,32 @@ func isWidgetCountStale(storedWeekStart: TimeInterval, weekStartDay: String) -> 
     return storedWeekStart < current.timeIntervalSince1970
 }
 
+// MARK: - Shared Log-a-Drink Action
+
+/// Optimistically increments the widget drink count and queues a pending log
+/// for the main app to write to HealthKit. Used by both `LogDrinkIntent` (widget
+/// plus button) and `LogDrinkOpenIntent` (Control Center control).
+func logDrinkFromWidget() {
+    let defaults = UserDefaults(suiteName: "group.co.richardp.BottleCap")!
+    let weekStartDay = defaults.string(forKey: "widgetWeekStartDay") ?? "monday"
+
+    var current = defaults.double(forKey: "widgetDrinkCount")
+    let storedWeekStart = defaults.double(forKey: "widgetSyncedWeekStart")
+    if isWidgetCountStale(storedWeekStart: storedWeekStart, weekStartDay: weekStartDay) {
+        current = 0
+        let newWeekStart = currentWeekStart(weekStartDay: weekStartDay)
+        defaults.set(newWeekStart.timeIntervalSince1970, forKey: "widgetSyncedWeekStart")
+    }
+
+    defaults.set(current + 1, forKey: "widgetDrinkCount")
+
+    var pending = defaults.array(forKey: "pendingDrinkLogs") as? [Double] ?? []
+    pending.append(Date().timeIntervalSince1970)
+    defaults.set(pending, forKey: "pendingDrinkLogs")
+
+    WidgetCenter.shared.reloadAllTimelines()
+}
+
 // MARK: - Widget Configuration
 
 enum WidgetPlusAction: String, AppEnum {
@@ -76,28 +102,7 @@ struct LogDrinkOpenIntent: OpenIntent {
     }
 
     func perform() async throws -> some IntentResult {
-        let defaults = UserDefaults(suiteName: "group.co.richardp.BottleCap")!
-        let weekStartDay = defaults.string(forKey: "widgetWeekStartDay") ?? "monday"
-
-        // Reset count if the stored value belongs to a previous week
-        var current = defaults.double(forKey: "widgetDrinkCount")
-        let storedWeekStart = defaults.double(forKey: "widgetSyncedWeekStart")
-        if isWidgetCountStale(storedWeekStart: storedWeekStart, weekStartDay: weekStartDay) {
-            current = 0
-            let newWeekStart = currentWeekStart(weekStartDay: weekStartDay)
-            defaults.set(newWeekStart.timeIntervalSince1970, forKey: "widgetSyncedWeekStart")
-        }
-
-        // Optimistically increment displayed count
-        defaults.set(current + 1, forKey: "widgetDrinkCount")
-
-        // Queue pending log for main app to write to HealthKit
-        var pending = defaults.array(forKey: "pendingDrinkLogs") as? [Double] ?? []
-        pending.append(Date().timeIntervalSince1970)
-        defaults.set(pending, forKey: "pendingDrinkLogs")
-
-        WidgetCenter.shared.reloadAllTimelines()
-
+        logDrinkFromWidget()
         return .result()
     }
 }

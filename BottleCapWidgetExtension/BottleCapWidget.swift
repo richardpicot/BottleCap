@@ -40,7 +40,7 @@ struct DrinkEntry: TimelineEntry {
 
     var progress: Double {
         guard drinkLimit > 0 else { return 0 }
-        return min(drinkCount / drinkLimit, 1.0)
+        return max(0, min(drinkCount / drinkLimit, 1.0))
     }
 }
 

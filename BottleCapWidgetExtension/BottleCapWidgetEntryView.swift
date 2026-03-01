@@ -94,12 +94,16 @@ private struct SmallWidgetView: View {
                     + Text(entry.decimalPartString)
                         .font(.system(size: 26, weight: .medium, design: .rounded)))
                         .foregroundStyle(.textPrimary)
+                        .lineLimit(1)
+                        .minimumScaleFactor(0.6)
                         .contentTransition(.numericText(value: entry.drinkCount))
                         .invalidatableContent()
                 } else {
                     Text(entry.formattedCount)
                         .font(.system(size: 42, weight: .medium, design: .rounded))
                         .foregroundStyle(.textPrimary)
+                        .lineLimit(1)
+                        .minimumScaleFactor(0.6)
                         .contentTransition(.numericText(value: entry.drinkCount))
                         .invalidatableContent()
                 }

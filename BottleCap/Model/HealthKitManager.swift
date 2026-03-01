@@ -117,12 +117,21 @@ class HealthKitManager: ObservableObject {
         let defaults = UserDefaults(suiteName: AppSettings.suiteName)!
         guard let pending = defaults.array(forKey: "pendingDrinkLogs") as? [Double], !pending.isEmpty else { return }
 
+        var failed: [Double] = []
         for timestamp in pending {
             let date = Date(timeIntervalSince1970: timestamp)
-            try? await addAlcoholData(numberOfDrinks: 1, date: date)
+            do {
+                try await addAlcoholData(numberOfDrinks: 1, date: date)
+            } catch {
+                failed.append(timestamp)
+            }
         }
 
-        defaults.removeObject(forKey: "pendingDrinkLogs")
+        if failed.isEmpty {
+            defaults.removeObject(forKey: "pendingDrinkLogs")
+        } else {
+            defaults.set(failed, forKey: "pendingDrinkLogs")
+        }
     }
 
     func deleteAlcoholDataForDate(_ date: Date) async throws {
