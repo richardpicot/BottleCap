@@ -29,7 +29,22 @@ struct HealthAccessView: View {
             Image("HealthIllustration")
                 .resizable()
                 .scaledToFit()
-                .frame(maxWidth: UIScreen.main.bounds.width * 0.8)
+                .overlay(
+                    RoundedRectangle(cornerRadius: 34, style: .continuous)
+                        .stroke(Color.primary.opacity(0.08), lineWidth: 1)
+                )
+                .mask(
+                    LinearGradient(
+                        stops: [
+                            .init(color: .white, location: 0),
+                            .init(color: .white, location: 0.5),
+                            .init(color: .clear, location: 1)
+                        ],
+                        startPoint: .top,
+                        endPoint: .bottom
+                    )
+                    .clipShape(RoundedRectangle(cornerRadius: 34, style: .continuous))
+                )
         }
         .padding(.horizontal, 24)
         // Same inline bar metrics, visually empty principal item so we keep a consistent bar and get a back button.
