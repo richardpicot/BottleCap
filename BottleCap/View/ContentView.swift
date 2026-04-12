@@ -10,7 +10,10 @@ import SwiftUI
 import WidgetKit
 
 struct ContentView: View {
-    @State private var totalDrinks: Double = 0
+    @State private var totalDrinks: Double = {
+        let defaults = UserDefaults(suiteName: "group.co.richardp.BottleCap")
+        return defaults?.double(forKey: "widgetDrinkCount") ?? 0
+    }()
     @State private var triggerHapticFeedback = false
     @State private var showLogDrinksView = false
     @State private var showSettingsView = false
@@ -30,6 +33,7 @@ struct ContentView: View {
     @State private var showHealthAccessView = false
     @State private var showAlert = false
     @State private var isShowingMenu = false
+    @State private var showWhatsNew = false
 
     @Environment(\.colorScheme) var colorScheme
     @Environment(\.requestReview) private var requestReview
@@ -124,6 +128,13 @@ struct ContentView: View {
         case .denied:
             showAlert = true
         }
+    }
+
+    private func checkWhatsNewAnnouncement() {
+        guard !showWelcomeView else { return }
+        guard healthKitManager.checkHealthKitAuthorization() == .authorized else { return }
+        guard appSettings.lastSeenAnnouncementVersion < AppSettings.currentAnnouncementVersion else { return }
+        showWhatsNew = true
     }
 
     private func generateHapticFeedback() {
@@ -468,6 +479,9 @@ struct ContentView: View {
             .onAppear {
                 updateTotalDrinks()
                 checkHealthKitAuthorization()
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.8) {
+                    checkWhatsNewAnnouncement()
+                }
             }
             .onChange(of: triggerHapticFeedback) { _, _ in
                 generateHapticFeedback()
@@ -485,6 +499,11 @@ struct ContentView: View {
             }
             .onChange(of: showHealthAccessView) { _, isPresented in
                 if !isPresented { updateTotalDrinks() }
+            }
+            .sheet(isPresented: $showWhatsNew, onDismiss: {
+                appSettings.lastSeenAnnouncementVersion = AppSettings.currentAnnouncementVersion
+            }) {
+                WhatsNewView()
             }
             .alert(isPresented: $showAlert) {
                 Alert(

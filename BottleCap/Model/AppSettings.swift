@@ -25,6 +25,7 @@ enum Weekday: String, CaseIterable, Identifiable {
 
 class AppSettings: ObservableObject {
     static let suiteName = "group.co.richardp.BottleCap"
+    static let currentAnnouncementVersion = 1
 
     private let defaults: UserDefaults
 
@@ -48,6 +49,12 @@ class AppSettings: ObservableObject {
     @Published var hasShownLogDrinkForm: Bool {
         didSet {
             defaults.set(hasShownLogDrinkForm, forKey: "hasShownLogDrinkForm")
+        }
+    }
+
+    @Published var lastSeenAnnouncementVersion: Int {
+        didSet {
+            defaults.set(lastSeenAnnouncementVersion, forKey: "lastSeenAnnouncementVersion")
         }
     }
 
@@ -91,6 +98,9 @@ class AppSettings: ObservableObject {
 
         // Initializing hasShownLogDrinkForm from shared defaults
         self.hasShownLogDrinkForm = sharedDefaults.bool(forKey: "hasShownLogDrinkForm")
+
+        // Initializing lastSeenAnnouncementVersion from shared defaults (0 for existing users who've never seen it)
+        self.lastSeenAnnouncementVersion = sharedDefaults.integer(forKey: "lastSeenAnnouncementVersion")
     }
 
 }

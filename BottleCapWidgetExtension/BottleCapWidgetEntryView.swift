@@ -218,7 +218,8 @@ struct LogDrinkShortcutView: View {
     var body: some View {
         ZStack {
             AccessoryWidgetBackground()
-            Image(systemName: "plus")
+            Image("bottlecap.plus")
+                .symbolRenderingMode(.hierarchical)
                 .font(.system(size: 24, weight: .semibold))
         }
         .widgetURL(entry.plusAction == .logDrinks

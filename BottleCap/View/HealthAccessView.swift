@@ -10,6 +10,7 @@ import SwiftUI
 
 struct HealthAccessView: View {
     @EnvironmentObject var healthKitManager: HealthKitManager
+    @EnvironmentObject var appSettings: AppSettings
     @Binding var isPresented: Bool // Binding variable to control the presentation of HealthAccessView
     @State private var isRequestingPermission = false
 
@@ -118,6 +119,7 @@ struct HealthAccessView: View {
                 print("Failed to get HealthKit permission: \(error.localizedDescription)")
             }
             isRequestingPermission = false
+            appSettings.lastSeenAnnouncementVersion = AppSettings.currentAnnouncementVersion
             isPresented = false
         }
     }

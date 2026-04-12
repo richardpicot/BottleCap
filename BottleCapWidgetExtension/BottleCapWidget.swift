@@ -96,7 +96,8 @@ struct LogDrinkControl: ControlWidget {
     var body: some ControlWidgetConfiguration {
         StaticControlConfiguration(kind: "co.richardp.BottleCap.LogDrink") {
             ControlWidgetButton(action: LogDrinkOpenIntent()) {
-                Label("Log a Drink", systemImage: "plus")
+                Label("Log a Drink", image: "bottlecap.plus")
+                    .symbolRenderingMode(.hierarchical)
             }
         }
         .displayName("Log a Drink")
@@ -108,7 +109,8 @@ struct OpenLogFormControl: ControlWidget {
     var body: some ControlWidgetConfiguration {
         StaticControlConfiguration(kind: "co.richardp.BottleCap.OpenLogForm") {
             ControlWidgetButton(action: OpenLogFormIntent()) {
-                Label("Log Drinks...", systemImage: "plus.circle")
+                Label("Log Drinks...", image: "bottlecap.plus")
+                    .symbolRenderingMode(.hierarchical)
             }
         }
         .displayName("Log Drinks...")
@@ -120,7 +122,8 @@ struct OpenAppControl: ControlWidget {
     var body: some ControlWidgetConfiguration {
         StaticControlConfiguration(kind: "co.richardp.BottleCap.OpenApp") {
             ControlWidgetButton(action: OpenAppIntent()) {
-                Label("Open Bottle Cap", systemImage: "waterbottle")
+                Label("Open Bottle Cap", image: "bottlecap")
+                    .symbolRenderingMode(.monochrome)
             }
         }
         .displayName("Open Bottle Cap")

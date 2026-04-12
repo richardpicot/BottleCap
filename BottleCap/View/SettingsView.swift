@@ -11,7 +11,6 @@ struct SettingsView: View {
     @Environment(\.dismiss) var dismiss
     @Binding var isPresented: Bool
     @EnvironmentObject var appSettings: AppSettings
-
     var body: some View {
         NavigationView {
             Form {
@@ -73,6 +72,14 @@ struct SettingsView: View {
                     }
                     .foregroundStyle(.primary)
                 }
+
+                #if DEBUG
+                Section("Debug") {
+                    Button("Reset What's New") {
+                        appSettings.lastSeenAnnouncementVersion = 0
+                    }
+                }
+                #endif
 
                 Section {
                     NavigationLink(destination: TermsOfUseView()) {

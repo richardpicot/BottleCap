@@ -62,15 +62,15 @@ struct WelcomeView: View {
                             }
                             // feature 3
                             HStack(alignment: .top, spacing: 16.0) {
-                                Image(systemName: "chart.bar.fill")
+                                Image(systemName: "square.grid.2x2.fill")
                                     .font(.system(size: 28))
                                     .frame(width: 40, height: 40, alignment: .center)
                                     .foregroundStyle(.fillSecondary)
                                 VStack(alignment: .leading) {
-                                    Text("See your intake at a glance")
+                                    Text("Widgets and more")
                                         .font(.body.bold())
                                         .foregroundStyle(.primary)
-                                    Text("The number of drinks you've logged in a week are front and centre.")
+                                    Text("Log drinks and track progress right from your Home Screen or Lock Screen.")
                                         .font(.body)
                                         .foregroundStyle(.secondary)
                                 }
