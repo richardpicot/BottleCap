@@ -48,11 +48,14 @@ struct Provider: AppIntentTimelineProvider {
     private let suiteName = "group.co.richardp.BottleCap"
 
     func placeholder(in context: Context) -> DrinkEntry {
-        DrinkEntry(date: Date(), drinkCount: 0, drinkLimit: 14)
+        DrinkEntry(date: Date(), drinkCount: 4, drinkLimit: 14)
     }
 
     func snapshot(for configuration: BottleCapWidgetConfigIntent, in context: Context) async -> DrinkEntry {
-        readEntry(plusAction: configuration.plusAction)
+        guard !context.isPreview else {
+            return DrinkEntry(date: Date(), drinkCount: 4, drinkLimit: 7, plusAction: configuration.plusAction)
+        }
+        return readEntry(plusAction: configuration.plusAction)
     }
 
     func timeline(for configuration: BottleCapWidgetConfigIntent, in context: Context) async -> Timeline<DrinkEntry> {
@@ -97,7 +100,7 @@ struct LogDrinkControl: ControlWidget {
         StaticControlConfiguration(kind: "co.richardp.BottleCap.LogDrink") {
             ControlWidgetButton(action: LogDrinkOpenIntent()) {
                 Label("Log a Drink", image: "bottlecap.plus")
-                    .symbolRenderingMode(.hierarchical)
+                    .symbolRenderingMode(.monochrome)
             }
         }
         .displayName("Log a Drink")
@@ -110,7 +113,7 @@ struct OpenLogFormControl: ControlWidget {
         StaticControlConfiguration(kind: "co.richardp.BottleCap.OpenLogForm") {
             ControlWidgetButton(action: OpenLogFormIntent()) {
                 Label("Log Drinks...", image: "bottlecap.plus")
-                    .symbolRenderingMode(.hierarchical)
+                    .symbolRenderingMode(.monochrome)
             }
         }
         .displayName("Log Drinks...")

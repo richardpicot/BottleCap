@@ -12,9 +12,9 @@
 		9B2178B72F3760C9006E6DF1 /* BottleCapWidgetExtensionExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 9B2178A62F3760C8006E6DF1 /* BottleCapWidgetExtensionExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		9B2178C22F376211006E6DF1 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F82B68502AD04E5100892451 /* Assets.xcassets */; };
 		AA0000012F0700000000DD01 /* DrinkData.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000012F0700000000DD00 /* DrinkData.swift */; };
+		AA0000022F0700000000DD01 /* DrinkDataService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000022F0700000000DD00 /* DrinkDataService.swift */; };
 		BB0000012F0800000000EE01 /* LogDrinkOpenIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000012F0800000000EE00 /* LogDrinkOpenIntent.swift */; };
 		BB0000022F0800000000EE01 /* LogDrinkOpenIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000012F0800000000EE00 /* LogDrinkOpenIntent.swift */; };
-		AA0000022F0700000000DD01 /* DrinkDataService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000022F0700000000DD00 /* DrinkDataService.swift */; };
 		F80546202AE864020067C71D /* HealthAccessView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F805461F2AE864020067C71D /* HealthAccessView.swift */; };
 		F82B684D2AD04E5000892451 /* BottleCap.swift in Sources */ = {isa = PBXBuildFile; fileRef = F82B684C2AD04E5000892451 /* BottleCap.swift */; };
 		F82B684F2AD04E5000892451 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F82B684E2AD04E5000892451 /* ContentView.swift */; };
@@ -31,6 +31,7 @@
 		F874863B2B44BC95003B4A66 /* WelcomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F874863A2B44BC95003B4A66 /* WelcomeView.swift */; };
 		F87FB1A62B6419DB00E797A3 /* TermsOfUseView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F87FB1A52B6419DB00E797A3 /* TermsOfUseView.swift */; };
 		F88443E92CAEAB38000406D4 /* WeeklyDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F88443E82CAEAB38000406D4 /* WeeklyDetailView.swift */; };
+		F8A1B2C42F0E00000000FF01 /* WidgetEducationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8A1B2C32F0E00000000FF01 /* WidgetEducationView.swift */; };
 		F8AF366A2AFFF432005A1BC5 /* PrivacyPolicyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8AF36692AFFF432005A1BC5 /* PrivacyPolicyView.swift */; };
 		F8AF366C2B000189005A1BC5 /* AboutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8AF366B2B000189005A1BC5 /* AboutView.swift */; };
 		F8C058DF2B6D4B5700FFC0A4 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8C058DE2B6D4B5700FFC0A4 /* SceneDelegate.swift */; };
@@ -39,7 +40,6 @@
 		F8CF22032B88AE7D002A4BF0 /* NumberFormatterUtility.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8CF22022B88AE7D002A4BF0 /* NumberFormatterUtility.swift */; };
 		F8D8286A2B079099007DBAF0 /* BubbleEffectView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8D828692B079099007DBAF0 /* BubbleEffectView.swift */; };
 		F8E00D2D2C38946E0019D958 /* GradientView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8E00D2C2C38946E0019D958 /* GradientView.swift */; };
-		F8A1B2C42F0E00000000FF01 /* WidgetEducationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8A1B2C32F0E00000000FF01 /* WidgetEducationView.swift */; };
 		F8E00D312C38AA570019D958 /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F8E00D302C38AA560019D958 /* Launch Screen.storyboard */; };
 /* End PBXBuildFile section */
 
@@ -73,8 +73,8 @@
 		9B2178A62F3760C8006E6DF1 /* BottleCapWidgetExtensionExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = BottleCapWidgetExtensionExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		9B2178C32F376284006E6DF1 /* BottleCapWidgetExtensionExtension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = BottleCapWidgetExtensionExtension.entitlements; sourceTree = "<group>"; };
 		AA0000012F0700000000DD00 /* DrinkData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DrinkData.swift; sourceTree = "<group>"; };
-		BB0000012F0800000000EE00 /* LogDrinkOpenIntent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogDrinkOpenIntent.swift; sourceTree = "<group>"; };
 		AA0000022F0700000000DD00 /* DrinkDataService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DrinkDataService.swift; sourceTree = "<group>"; };
+		BB0000012F0800000000EE00 /* LogDrinkOpenIntent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogDrinkOpenIntent.swift; sourceTree = "<group>"; };
 		F805461F2AE864020067C71D /* HealthAccessView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthAccessView.swift; sourceTree = "<group>"; };
 		F82B68492AD04E5000892451 /* Bottle Cap.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Bottle Cap.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		F82B684C2AD04E5000892451 /* BottleCap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottleCap.swift; sourceTree = "<group>"; };
@@ -95,6 +95,7 @@
 		F874863A2B44BC95003B4A66 /* WelcomeView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WelcomeView.swift; sourceTree = "<group>"; };
 		F87FB1A52B6419DB00E797A3 /* TermsOfUseView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TermsOfUseView.swift; sourceTree = "<group>"; };
 		F88443E82CAEAB38000406D4 /* WeeklyDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeeklyDetailView.swift; sourceTree = "<group>"; };
+		F8A1B2C32F0E00000000FF01 /* WidgetEducationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WidgetEducationView.swift; sourceTree = "<group>"; };
 		F8AF36692AFFF432005A1BC5 /* PrivacyPolicyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrivacyPolicyView.swift; sourceTree = "<group>"; };
 		F8AF366B2B000189005A1BC5 /* AboutView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutView.swift; sourceTree = "<group>"; };
 		F8C058DE2B6D4B5700FFC0A4 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -103,7 +104,6 @@
 		F8CF22022B88AE7D002A4BF0 /* NumberFormatterUtility.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NumberFormatterUtility.swift; sourceTree = "<group>"; };
 		F8D828692B079099007DBAF0 /* BubbleEffectView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BubbleEffectView.swift; sourceTree = "<group>"; };
 		F8E00D2C2C38946E0019D958 /* GradientView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GradientView.swift; sourceTree = "<group>"; };
-		F8A1B2C32F0E00000000FF01 /* WidgetEducationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WidgetEducationView.swift; sourceTree = "<group>"; };
 		F8E00D302C38AA560019D958 /* Launch Screen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = "Launch Screen.storyboard"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 

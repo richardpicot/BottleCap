@@ -125,7 +125,7 @@ private struct SmallWidgetView: View {
                         }
                     case 0:
                         VStack(alignment: .leading, spacing: 0) {
-                            Text("You've reached")
+                            Text("You've hit")
                             Text("your limit")
                         }
                     default:
@@ -186,9 +186,12 @@ private struct InlineWidgetView: View {
 
     var body: some View {
         if entry.drinkCount == 0 {
-            Text("No drinks this week 🍺")
+            Label("No drinks", image: "bottlecap")
         } else {
-            Text("\(entry.formattedCount) \(entry.drinkCount == 1 ? "drink" : "drinks") this week")
+            Label(
+                "\(entry.formattedCount) \(entry.drinkCount == 1 ? "drink" : "drinks")",
+                image: "bottlecap"
+            )
         }
     }
 }
@@ -202,8 +205,8 @@ private struct CircularWidgetView: View {
         Gauge(value: entry.progress) {
             Text("Drinks")
         } currentValueLabel: {
-            Text(entry.formattedCount)
-                .font(.system(.title3, weight: .semibold))
+            Image("bottlecap")
+                .symbolRenderingMode(.monochrome)
         }
         .gaugeStyle(.accessoryCircularCapacity)
         .containerBackground(.clear, for: .widget)
@@ -219,7 +222,7 @@ struct LogDrinkShortcutView: View {
         ZStack {
             AccessoryWidgetBackground()
             Image("bottlecap.plus")
-                .symbolRenderingMode(.hierarchical)
+                .symbolRenderingMode(.monochrome)
                 .font(.system(size: 24, weight: .semibold))
         }
         .widgetURL(entry.plusAction == .logDrinks
@@ -234,20 +237,48 @@ struct LogDrinkShortcutView: View {
 private struct RectangularWidgetView: View {
     var entry: DrinkEntry
 
+    private var remaining: Double {
+        entry.drinkLimit - entry.drinkCount
+    }
+
+    private var subtitleText: String {
+        guard entry.drinkLimit > 0 else { return "" }
+        let format: (Double) -> String = { v in
+            let r = (v * 10).rounded() / 10
+            return r.truncatingRemainder(dividingBy: 1) == 0
+                ? String(format: "%.0f", r)
+                : String(format: "%.1f", r)
+        }
+        if remaining > 0 {
+            return "\(format(remaining)) until your limit"
+        } else if remaining == 0 {
+            return "You've hit your limit"
+        } else {
+            return "\(format(-remaining)) over your limit"
+        }
+    }
+
     var body: some View {
         VStack(alignment: .leading, spacing: 4) {
-            if entry.drinkCount == 0 {
-                Text("No drinks logged this week 🍺")
-                    .font(.headline)
+            HStack(spacing: 5) {
+                Image("bottlecap")
+                    .symbolRenderingMode(.monochrome)
+                Text(entry.drinkCount == 0 ? "No drinks" : "\(entry.formattedCount) \(entry.drinkCount == 1 ? "drink" : "drinks")")
                     .widgetAccentable()
-            } else {
-                Text("\(entry.formattedCount) \(entry.drinkCount == 1 ? "drink" : "drinks") this week")
-                    .font(.headline)
-                    .widgetAccentable()
+            }
+            .font(.system(size: 15, weight: .semibold))
 
-                ProgressView(value: entry.progress)
+            if entry.drinkCount == 0 {
+                Text("Tap to log a drink...")
+                    .font(.system(size: 15, weight: .medium))
+            } else if entry.drinkLimit > 0 {
+                Text(subtitleText)
+                    .font(.system(size: 15, weight: .medium))
+                Gauge(value: entry.progress) { }
+                    .gaugeStyle(.accessoryLinearCapacity)
             }
         }
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
         .containerBackground(.clear, for: .widget)
     }
 }
