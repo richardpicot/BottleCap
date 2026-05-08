@@ -7,9 +7,13 @@
 
 import StoreKit
 import SwiftUI
+import WidgetKit
 
 struct ContentView: View {
-    @State private var totalDrinks: Double = 0
+    @State private var totalDrinks: Double = {
+        let defaults = UserDefaults(suiteName: "group.co.richardp.BottleCap")
+        return defaults?.double(forKey: "widgetDrinkCount") ?? 0
+    }()
     @State private var triggerHapticFeedback = false
     @State private var showLogDrinksView = false
     @State private var showSettingsView = false
@@ -21,14 +25,15 @@ struct ContentView: View {
     @AppStorage("processCompletedCount") var processCompletedCount = 0
     @AppStorage("lastVersionPromptedForReview") var lastVersionPromptedForReview = ""
 
-    @ObservedObject var appSettings = AppSettings.shared
-    @ObservedObject var healthKitManager = HealthKitManager()
+    @EnvironmentObject var appSettings: AppSettings
+    @EnvironmentObject var healthKitManager: HealthKitManager
 
     // Onboarding
     @State private var showWelcomeView = false
     @State private var showHealthAccessView = false
     @State private var showAlert = false
     @State private var isShowingMenu = false
+    @State private var showWhatsNew = false
 
     @Environment(\.colorScheme) var colorScheme
     @Environment(\.requestReview) private var requestReview
@@ -69,25 +74,34 @@ struct ContentView: View {
     }
 
     private func logDrink() {
-        healthKitManager.addAlcoholData(numberOfDrinks: 1, date: Date()) {
-            DispatchQueue.main.async {
-                updateTotalDrinks()
-                processCompletedCount += 1
-                checkAndPresentReviewRequest()
-                triggerHapticFeedback.toggle()
-            }
+        Task {
+            try await healthKitManager.addAlcoholData(numberOfDrinks: 1, date: Date())
+            updateTotalDrinks()
+            processCompletedCount += 1
+            checkAndPresentReviewRequest()
+            triggerHapticFeedback.toggle()
         }
     }
 
     private func updateTotalDrinks() {
-        withAnimation {
-            healthKitManager.readAlcoholData(startWeekDay: appSettings.weekStartDay) { newTotal in
-                DispatchQueue.main.async {
-                    self.totalDrinks = newTotal
-                    self.animationTrigger.toggle()
-                }
+        Task {
+            let newTotal = await healthKitManager.readAlcoholData(startWeekDay: appSettings.weekStartDay)
+            withAnimation {
+                totalDrinks = newTotal
+                animationTrigger.toggle()
             }
+            syncToWidget(total: newTotal)
         }
+    }
+
+    private func syncToWidget(total: Double) {
+        let defaults = UserDefaults(suiteName: AppSettings.suiteName)
+        defaults?.set(total, forKey: "widgetDrinkCount")
+        defaults?.set(appSettings.drinkLimit, forKey: "widgetDrinkLimit")
+        defaults?.set(appSettings.weekStartDay.rawValue, forKey: "widgetWeekStartDay")
+        let weekStart = currentWeekStart(weekStartDay: appSettings.weekStartDay.rawValue)
+        defaults?.set(weekStart.timeIntervalSince1970, forKey: "widgetSyncedWeekStart")
+        WidgetCenter.shared.reloadAllTimelines()
     }
 
     private func checkAndPresentReviewRequest() {
@@ -106,15 +120,21 @@ struct ContentView: View {
     }
 
     private func checkHealthKitAuthorization() {
-        healthKitManager.checkHealthKitAuthorization { status in
-            switch status {
-            case .authorized: break
-            case .notDetermined:
-                showWelcomeView = true
-            case .denied:
-                showAlert = true
-            }
+        let status = healthKitManager.checkHealthKitAuthorization()
+        switch status {
+        case .authorized: break
+        case .notDetermined:
+            showWelcomeView = true
+        case .denied:
+            showAlert = true
         }
+    }
+
+    private func checkWhatsNewAnnouncement() {
+        guard !showWelcomeView else { return }
+        guard healthKitManager.checkHealthKitAuthorization() == .authorized else { return }
+        guard appSettings.lastSeenAnnouncementVersion < AppSettings.currentAnnouncementVersion else { return }
+        showWhatsNew = true
     }
 
     private func generateHapticFeedback() {
@@ -129,18 +149,22 @@ struct ContentView: View {
         }
     }
 
+    private func checkPendingLogForm() {
+        let defaults = UserDefaults(suiteName: AppSettings.suiteName)
+        guard defaults?.bool(forKey: "pendingShowLogForm") == true else { return }
+        defaults?.removeObject(forKey: "pendingShowLogForm")
+        handleLogMultipleDrinksAction()
+    }
+
     private func handleLogMultipleDrinksAction() {
-        healthKitManager.checkHealthKitAuthorization { status in
-            DispatchQueue.main.async {
-                switch status {
-                case .authorized:
-                    self.showLogDrinksView = true
-                case .notDetermined:
-                    self.showHealthAccessView = true
-                case .denied:
-                    self.showAlert = true
-                }
-            }
+        let status = healthKitManager.checkHealthKitAuthorization()
+        switch status {
+        case .authorized:
+            showLogDrinksView = true
+        case .notDetermined:
+            showHealthAccessView = true
+        case .denied:
+            showAlert = true
         }
     }
 
@@ -157,43 +181,43 @@ struct ContentView: View {
 
                         HStack(alignment: .firstTextBaseline, spacing: -4) {
                             Text(integerPart)
-                                .font(.system(size: 200, weight: .regular, design: .default))
+                                .font(.system(size: 160, weight: .medium, design: .rounded))
                                 .foregroundStyle(.textPrimary)
                                 .animation(.default, value: animationTrigger)
                                 .contentTransition(.numericText(value: totalDrinks))
-                                .fontWidth(.condensed)
-                                .tracking(-1)
 
                             if !decimalPart.isEmpty {
                                 Text(".\(decimalPart)")
-                                    .font(.system(size: 128, weight: .regular, design: .default))
+                                    .font(.system(size: 102, weight: .medium, design: .rounded))
                                     .foregroundStyle(.textPrimary)
                                     .animation(.default, value: animationTrigger)
                                     .contentTransition(.numericText(value: totalDrinks))
-                                    .fontWidth(.condensed)
-                                    .tracking(-1)
                             }
                         }
                         .lineLimit(1)
                         .minimumScaleFactor(0.8)
 
-                        VStack {
-                            Text(NumberFormatterUtility.roundedValue(totalDrinks) == 1 ? "Drink this week." : "Drinks this week.")
+                        VStack(spacing: 8) {
+                            Text(NumberFormatterUtility.roundedValue(totalDrinks) == 1 ? "Drink this week" : "Drinks this week")
+                                .fontWeight(.semibold)
                             if drinksRemaining > 0 {
-                                Text("\(formattedDrinksRemaining) more until you reach your limit.")
+                                Text("\(formattedDrinksRemaining) more until your limit")
+                                    .fontWeight(.regular)
                             } else if
                                 NumberFormatterUtility.roundedValue(totalDrinks) == appSettings.drinkLimit
                             {
-                                Text("You've reached your limit.")
+                                Text("You've reached your limit")
+                                    .fontWeight(.regular)
                             } else {
-                                Text("You're \(formattedDrinksOverLimit) over your weekly limit.")
+                                Text("You're \(formattedDrinksOverLimit) over your weekly limit")
+                                    .fontWeight(.regular)
                             }
                         }
                         .font(.title3)
-                        .fontWeight(.semibold)
                         .foregroundStyle(.textPrimary)
-                        .opacity(colorScheme == .dark ? 0.8 : 0.9)
                         .multilineTextAlignment(.center)
+                        .contentTransition(.numericText(value: totalDrinks))
+                        .animation(.default, value: animationTrigger)
 
                         Spacer()
 
@@ -235,7 +259,7 @@ struct ContentView: View {
                                 }
                             }
                             .sheet(isPresented: $showSettingsView) {
-                                SettingsView(isPresented: $showSettingsView, appSettings: appSettings)
+                                SettingsView(isPresented: $showSettingsView)
                             }
 
                             Spacer()
@@ -281,12 +305,11 @@ struct ContentView: View {
                                                 LogDrinksView(
                                                     isPresented: $showLogDrinksView,
                                                     logDrinkClosure: { numberOfDrinks, date in
-                                                        healthKitManager.addAlcoholData(numberOfDrinks: numberOfDrinks, date: date) {
-                                                            DispatchQueue.main.async {
-                                                                updateTotalDrinks()
-                                                                processCompletedCount += 1
-                                                                checkAndPresentReviewRequest()
-                                                            }
+                                                        Task {
+                                                            try await healthKitManager.addAlcoholData(numberOfDrinks: numberOfDrinks, date: date)
+                                                            updateTotalDrinks()
+                                                            processCompletedCount += 1
+                                                            checkAndPresentReviewRequest()
                                                         }
                                                     },
                                                     totalDrinks: totalDrinks,
@@ -294,10 +317,6 @@ struct ContentView: View {
                                                 )
                                             }
                                     }
-//                                    .shadow(color: Color.black.opacity(0.15), radius: 20, x: 0, y: 6)
-//                                    .shadow(color: .fillPrimary.opacity(0.15), radius: 20, x: 0, y: 6)
-//                                    .scaleEffect(isPressed ? 0.85 : 1)
-//                                    .animation(.spring(response: 0.5, dampingFraction: 0.8, blendDuration: 0), value: isPressed)
                                 }
                             }
 
@@ -423,12 +442,11 @@ struct ContentView: View {
                                         LogDrinksView(
                                             isPresented: $showLogDrinksView,
                                             logDrinkClosure: { numberOfDrinks, date in
-                                                healthKitManager.addAlcoholData(numberOfDrinks: numberOfDrinks, date: date) {
-                                                    DispatchQueue.main.async {
-                                                        updateTotalDrinks()
-                                                        processCompletedCount += 1
-                                                        checkAndPresentReviewRequest()
-                                                    }
+                                                Task {
+                                                    try await healthKitManager.addAlcoholData(numberOfDrinks: numberOfDrinks, date: date)
+                                                    updateTotalDrinks()
+                                                    processCompletedCount += 1
+                                                    checkAndPresentReviewRequest()
                                                 }
                                             },
                                             totalDrinks: totalDrinks,
@@ -461,6 +479,9 @@ struct ContentView: View {
             .onAppear {
                 updateTotalDrinks()
                 checkHealthKitAuthorization()
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.8) {
+                    checkWhatsNewAnnouncement()
+                }
             }
             .onChange(of: triggerHapticFeedback) { _, _ in
                 generateHapticFeedback()
@@ -469,9 +490,20 @@ struct ContentView: View {
                 WelcomeView(isPresented: $showWelcomeView)
                     .interactiveDismissDisabled()
             }
+            .onChange(of: showWelcomeView) { _, isPresented in
+                if !isPresented { updateTotalDrinks() }
+            }
             .sheet(isPresented: $showHealthAccessView) {
-                HealthAccessView(healthKitManager: healthKitManager, isPresented: $showHealthAccessView)
+                HealthAccessView(isPresented: $showHealthAccessView)
                     .interactiveDismissDisabled()
+            }
+            .onChange(of: showHealthAccessView) { _, isPresented in
+                if !isPresented { updateTotalDrinks() }
+            }
+            .sheet(isPresented: $showWhatsNew, onDismiss: {
+                appSettings.lastSeenAnnouncementVersion = AppSettings.currentAnnouncementVersion
+            }) {
+                WhatsNewView()
             }
             .alert(isPresented: $showAlert) {
                 Alert(
@@ -491,12 +523,21 @@ struct ContentView: View {
                 }
             }
             .onReceive(NotificationCenter.default.publisher(for: UIApplication.willEnterForegroundNotification)) { _ in
-                updateTotalDrinks()
+                checkPendingLogForm()
+                Task {
+                    await healthKitManager.processPendingWidgetLogs()
+                    updateTotalDrinks()
+                }
             }
         }
         .onChange(of: scenePhase) {
             if scenePhase == .active {
                 performAction()
+                checkPendingLogForm()
+                Task {
+                    await healthKitManager.processPendingWidgetLogs()
+                    updateTotalDrinks()
+                }
             }
         }
     }
@@ -521,4 +562,7 @@ struct ContentView: View {
 
 #Preview {
     ContentView()
+        .environmentObject(HealthKitManager())
+        .environmentObject(AppSettings.shared)
+        .environmentObject(QAService.shared)
 }

@@ -11,27 +11,23 @@ import SwiftUI
 
 struct WeeklyDetailView: View {
     let weekStart: Date
-    let drinks: [Date: Double]
-    let appSettings: AppSettings
     let onDrinksUpdated: (() -> Void)?
 
     @Environment(\.editMode) private var editMode
-    @ObservedObject private var healthKitManager = HealthKitManager()
-    @State private var localDrinks: [Date: Double]
+    @EnvironmentObject var healthKitManager: HealthKitManager
+    @State private var localDailyTotals: [DailyDrinkTotal]
 
-    init(weekStart: Date, drinks: [Date: Double], appSettings: AppSettings, onDrinksUpdated: (() -> Void)? = nil) {
+    init(weekStart: Date, dailyTotals: [DailyDrinkTotal], onDrinksUpdated: (() -> Void)? = nil) {
         self.weekStart = weekStart
-        self.drinks = drinks
-        self.appSettings = appSettings
         self.onDrinksUpdated = onDrinksUpdated
-        _localDrinks = State(initialValue: drinks)
+        _localDailyTotals = State(initialValue: dailyTotals)
     }
 
     var body: some View {
         List {
             ForEach(daysInWeek, id: \.self) { date in
-                if let count = localDrinks[date.startOfDay] {
-                    drinkRow(date: date, count: count)
+                if let daily = localDailyTotals.first(where: { $0.date == date.startOfDay }) {
+                    drinkRow(date: date, count: daily.totalDrinks)
                         .swipeActions(edge: .trailing, allowsFullSwipe: true) {
                             if editMode?.wrappedValue == .inactive {
                                 Button(role: .destructive) {
@@ -46,7 +42,7 @@ struct WeeklyDetailView: View {
             .onDelete { indexSet in
                 for index in indexSet {
                     let date = daysInWeek[index]
-                    if localDrinks[date.startOfDay] != nil {
+                    if localDailyTotals.contains(where: { $0.date == date.startOfDay }) {
                         deleteDrinksForDate(date)
                     }
                 }
@@ -58,7 +54,7 @@ struct WeeklyDetailView: View {
             ToolbarItem(placement: .navigationBarTrailing) {
                 EditButton()
                     .fontWeight(.medium)
-                    .disabled(localDrinks.isEmpty)
+                    .disabled(localDailyTotals.isEmpty)
             }
         }
         .environment(\.editMode, editMode)
@@ -88,14 +84,13 @@ struct WeeklyDetailView: View {
     }
 
     private func deleteDrinksForDate(_ date: Date) {
-        healthKitManager.deleteAlcoholDataForDate(date) { success, error in
-            if success {
-                // Update the local data
-                localDrinks.removeValue(forKey: date.startOfDay)
-                // Notify parent view to refresh
+        Task {
+            do {
+                try await healthKitManager.deleteAlcoholDataForDate(date)
+                localDailyTotals.removeAll { $0.date == date.startOfDay }
                 onDrinksUpdated?()
-            } else {
-                print("Failed to delete drinks: \(String(describing: error?.localizedDescription))")
+            } catch {
+                print("Failed to delete drinks: \(error.localizedDescription)")
             }
         }
     }

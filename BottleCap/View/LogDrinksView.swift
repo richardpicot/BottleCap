@@ -18,8 +18,6 @@ struct LogDrinksView: View {
     @State private var date: Date = .init()
     @FocusState private var drinksFocus: Bool
 
-    @ObservedObject var healthKitManager = HealthKitManager()
-
     private func triggerHapticFeedback(totalDrinks: Double, drinkLimit: Double) {
         let feedbackGenerator = UINotificationFeedbackGenerator()
 

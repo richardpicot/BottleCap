@@ -6,7 +6,9 @@
 //
 
 import HealthKit
+import WidgetKit
 
+@MainActor
 class HealthKitManager: ObservableObject {
     let healthStore = HKHealthStore()
 
@@ -19,136 +21,120 @@ class HealthKitManager: ObservableObject {
     }
 
     // Checks the authorization status of HealthKit
-    func checkHealthKitAuthorization(completion: @escaping (HealthKitAuthorizationStatus) -> Void) {
+    func checkHealthKitAuthorization() -> HealthKitAuthorizationStatus {
         let drinkType = HKObjectType.quantityType(forIdentifier: .numberOfAlcoholicBeverages)!
-
-        // Check the current authorization status
         let status = healthStore.authorizationStatus(for: drinkType)
 
-        DispatchQueue.main.async {
-            switch status {
-            case .notDetermined:
-                // User has not yet made a choice regarding whether this app can access HealthKit data
-                completion(.notDetermined)
-            case .sharingDenied:
-                // User has explicitly denied this app access to HealthKit data
-                completion(.denied)
-            case .sharingAuthorized:
-                // User has authorized this app to access HealthKit data
-                completion(.authorized)
-            @unknown default:
-                // Handle any future cases
-                completion(.denied)
-            }
+        switch status {
+        case .notDetermined:
+            return .notDetermined
+        case .sharingDenied:
+            return .denied
+        case .sharingAuthorized:
+            return .authorized
+        @unknown default:
+            return .denied
         }
     }
 
     // Requests permissions for HealthKit
-    func requestHealthKitPermission(completion: @escaping (Bool, Error?) -> Void) {
+    func requestHealthKitPermission() async throws {
         let readTypes: Set<HKObjectType> = [HKObjectType.quantityType(forIdentifier: .numberOfAlcoholicBeverages)!]
         let writeTypes: Set<HKSampleType> = [HKObjectType.quantityType(forIdentifier: .numberOfAlcoholicBeverages)!]
 
-        healthStore.requestAuthorization(toShare: writeTypes, read: readTypes) { success, error in
-            DispatchQueue.main.async { // Ensure UI updates are on main thread
-                if success {
-                    self.isHealthDataAvailable = true
-                    print("Permission granted")
-                } else {
-                    self.isHealthDataAvailable = false
-                    print("Permission denied \(String(describing: error?.localizedDescription))")
-                }
-                completion(success, error)
-            }
-        }
+        try await healthStore.requestAuthorization(toShare: writeTypes, read: readTypes)
+        self.isHealthDataAvailable = true
+        print("Permission granted")
     }
 
-    func readAlcoholData(startWeekDay: Weekday, completion: @escaping (Double) -> Void) {
+    func readAlcoholData(startWeekDay: Weekday) async -> Double {
         let calendar = Calendar.current
         let now = Date()
 
         guard let closestPastWeekday = calendar.date(toNearestOrLastWeekday: startWeekDay, matching: now) else {
-            completion(0)
-            return
+            return 0
         }
 
-        // Ensure the start of the week is at the beginning of the day
         let startOfWeek = calendar.startOfDay(for: closestPastWeekday)
 
         print("Updated startOfWeek: \(startOfWeek), closestPastWeekday: \(closestPastWeekday)")
 
-        // Create a predicate based on the adjusted start of the week
         let predicate = HKQuery.predicateForSamples(withStart: startOfWeek, end: now, options: .strictStartDate)
-
-        // Specify the sample type
         let sampleType = HKObjectType.quantityType(forIdentifier: .numberOfAlcoholicBeverages)!
 
-        // Create the query with predicate
-        let query = HKSampleQuery(sampleType: sampleType, predicate: predicate, limit: HKObjectQueryNoLimit, sortDescriptors: nil) { _, results, _ in
-            var totalDrinks = 0.0
-            if let results = results as? [HKQuantitySample] {
-                for sample in results {
-                    totalDrinks += sample.quantity.doubleValue(for: HKUnit.count())
+        return await withCheckedContinuation { continuation in
+            let query = HKSampleQuery(sampleType: sampleType, predicate: predicate, limit: HKObjectQueryNoLimit, sortDescriptors: nil) { _, results, _ in
+                var totalDrinks = 0.0
+                if let results = results as? [HKQuantitySample] {
+                    for sample in results {
+                        totalDrinks += sample.quantity.doubleValue(for: HKUnit.count())
+                    }
                 }
+                continuation.resume(returning: totalDrinks)
             }
-            completion(totalDrinks)
+
+            print("Calculated startOfWeek: \(startOfWeek), closestPastWeekday: \(closestPastWeekday)")
+            healthStore.execute(query)
         }
-
-        print("Calculated startOfWeek: \(startOfWeek), closestPastWeekday: \(closestPastWeekday)")
-
-        // Execute the query
-        healthStore.execute(query)
     }
 
-    func addAlcoholData(numberOfDrinks: Double, date: Date, completion: (() -> Void)? = nil) {
-        // Create the quantity and the sample
+    func addAlcoholData(numberOfDrinks: Double, date: Date) async throws {
         let quantity = HKQuantity(unit: HKUnit.count(), doubleValue: numberOfDrinks)
         let sampleType = HKQuantityType.quantityType(forIdentifier: .numberOfAlcoholicBeverages)!
         let sample = HKQuantitySample(type: sampleType, quantity: quantity, start: date, end: date)
 
-        // Save the sample to the health store
-        healthStore.save(sample) { success, error in
-            if success {
-                print("Successfully saved data")
-                DispatchQueue.main.async {
-                    completion?()
-                }
-            } else {
-                if let error = error {
-                    print("Error Saving Data: \(error)")
-                }
-            }
-        }
+        try await healthStore.save(sample)
+        print("Successfully saved data")
     }
 
-    func readAllAlcoholEntries(completion: @escaping ([HKQuantitySample]) -> Void) {
+    func readAllAlcoholEntries() async -> [HKQuantitySample] {
         guard let quantityType = HKObjectType.quantityType(forIdentifier: HKQuantityTypeIdentifier.numberOfAlcoholicBeverages) else {
             print("The numberOfAlcoholicBeverages type is not available")
-            return
+            return []
         }
 
-        let query = HKSampleQuery(sampleType: quantityType, predicate: nil, limit: HKObjectQueryNoLimit, sortDescriptors: [NSSortDescriptor(key: HKSampleSortIdentifierEndDate, ascending: false)]) { _, results, _ in
-            if let results = results as? [HKQuantitySample] {
-                completion(results)
-            }
-        }
-
-        HKHealthStore().execute(query)
-    }
-
-    func deleteAlcoholData(sample: HKQuantitySample, completion: @escaping (Bool, Error?) -> Void) {
-        healthStore.delete(sample) { success, error in
-            DispatchQueue.main.async {
-                if success {
-                    print("Successfully deleted alcohol data")
+        return await withCheckedContinuation { continuation in
+            let query = HKSampleQuery(sampleType: quantityType, predicate: nil, limit: HKObjectQueryNoLimit, sortDescriptors: [NSSortDescriptor(key: HKSampleSortIdentifierEndDate, ascending: false)]) { _, results, _ in
+                if let results = results as? [HKQuantitySample] {
+                    continuation.resume(returning: results)
                 } else {
-                    print("Error deleting data: \(String(describing: error?.localizedDescription))")
+                    continuation.resume(returning: [])
                 }
-                completion(success, error)
             }
+
+            healthStore.execute(query)
         }
     }
 
-    func deleteAlcoholDataForDate(_ date: Date, completion: @escaping (Bool, Error?) -> Void) {
+    func deleteAlcoholData(sample: HKQuantitySample) async throws {
+        try await healthStore.delete(sample)
+        print("Successfully deleted alcohol data")
+    }
+
+    // MARK: - Widget Support
+
+    func processPendingWidgetLogs() async {
+        let defaults = UserDefaults(suiteName: AppSettings.suiteName)!
+        guard let pending = defaults.array(forKey: "pendingDrinkLogs") as? [Double], !pending.isEmpty else { return }
+
+        var failed: [Double] = []
+        for timestamp in pending {
+            let date = Date(timeIntervalSince1970: timestamp)
+            do {
+                try await addAlcoholData(numberOfDrinks: 1, date: date)
+            } catch {
+                failed.append(timestamp)
+            }
+        }
+
+        if failed.isEmpty {
+            defaults.removeObject(forKey: "pendingDrinkLogs")
+        } else {
+            defaults.set(failed, forKey: "pendingDrinkLogs")
+        }
+    }
+
+    func deleteAlcoholDataForDate(_ date: Date) async throws {
         let calendar = Calendar.current
         let startOfDay = calendar.startOfDay(for: date)
         let endOfDay = calendar.date(byAdding: .day, value: 1, to: startOfDay)!
@@ -156,26 +142,35 @@ class HealthKitManager: ObservableObject {
         let predicate = HKQuery.predicateForSamples(withStart: startOfDay, end: endOfDay, options: .strictStartDate)
         let sampleType = HKObjectType.quantityType(forIdentifier: .numberOfAlcoholicBeverages)!
 
-        let query = HKSampleQuery(sampleType: sampleType, predicate: predicate, limit: HKObjectQueryNoLimit, sortDescriptors: nil) { _, results, error in
-            if let results = results as? [HKQuantitySample], !results.isEmpty {
-                // Delete all samples for this date
-                self.healthStore.delete(results) { success, error in
-                    DispatchQueue.main.async {
-                        if success {
-                            print("Successfully deleted alcohol data for date: \(date)")
-                        } else {
-                            print("Error deleting data for date: \(String(describing: error?.localizedDescription))")
-                        }
-                        completion(success, error)
-                    }
-                }
-            } else {
-                DispatchQueue.main.async {
-                    completion(false, error)
+        let samples: [HKQuantitySample] = await withCheckedContinuation { continuation in
+            let query = HKSampleQuery(sampleType: sampleType, predicate: predicate, limit: HKObjectQueryNoLimit, sortDescriptors: nil) { _, results, _ in
+                if let results = results as? [HKQuantitySample] {
+                    continuation.resume(returning: results)
+                } else {
+                    continuation.resume(returning: [])
                 }
             }
+            healthStore.execute(query)
         }
 
-        healthStore.execute(query)
+        guard !samples.isEmpty else {
+            print("No samples found for date: \(date)")
+            return
+        }
+
+        try await healthStore.delete(samples)
+        print("Successfully deleted alcohol data for date: \(date)")
+        await syncWidgetData()
+    }
+
+    func syncWidgetData() async {
+        let defaults = UserDefaults(suiteName: AppSettings.suiteName)
+        let weekStartRaw = defaults?.string(forKey: "widgetWeekStartDay") ?? "monday"
+        let weekday = Weekday(rawValue: weekStartRaw) ?? .monday
+        let total = await readAlcoholData(startWeekDay: weekday)
+        defaults?.set(total, forKey: "widgetDrinkCount")
+        let weekStart = currentWeekStart(weekStartDay: weekStartRaw)
+        defaults?.set(weekStart.timeIntervalSince1970, forKey: "widgetSyncedWeekStart")
+        WidgetCenter.shared.reloadAllTimelines()
     }
 }
