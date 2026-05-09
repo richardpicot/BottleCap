@@ -12,7 +12,6 @@ struct HistoryView: View {
     @State private var dailyTotals: [DailyDrinkTotal] = []
     @State private var allDrinkSamples: [Date: [HKQuantitySample]] = [:]
     @State private var isLoading = true
-    @State private var showExternalSourceAlert = false
     @Environment(\.editMode) private var editMode
     @EnvironmentObject var healthKitManager: HealthKitManager
     @Environment(\.dismiss) var dismiss
@@ -147,11 +146,6 @@ struct HistoryView: View {
                 updateDrinks()
             }
         }
-        .alert("Can't Delete from Bottle Cap", isPresented: $showExternalSourceAlert) {
-            Button("OK", role: .cancel) {}
-        } message: {
-            Text("This drink was logged by Apple Health. Open the Health app to remove it.")
-        }
     }
 
     private func weekTitle(for date: Date) -> String {
@@ -202,8 +196,6 @@ struct HistoryView: View {
                 try await healthKitManager.deleteAlcoholDataForDate(date)
                 dailyTotals.removeAll { $0.date == date }
                 allDrinkSamples.removeValue(forKey: date)
-            } catch HealthKitDeleteError.externalSource {
-                showExternalSourceAlert = true
             } catch {
                 print("Failed to delete drinks: \(error.localizedDescription)")
             }
@@ -214,6 +206,7 @@ struct HistoryView: View {
         let calendar = Calendar.current
         let endOfWeek = calendar.date(byAdding: .day, value: 6, to: weekStart)!
 
+        // Get all dates in this week that have drinks
         let datesInWeek = dailyTotals
             .map(\.date)
             .filter { $0 >= weekStart.startOfDay && $0 <= endOfWeek.startOfDay }
@@ -223,14 +216,12 @@ struct HistoryView: View {
                 for date in datesInWeek {
                     try await healthKitManager.deleteAlcoholDataForDate(date)
                 }
+                // Update the local data
                 let dateSet = Set(datesInWeek)
                 dailyTotals.removeAll { dateSet.contains($0.date) }
                 for date in datesInWeek {
                     allDrinkSamples.removeValue(forKey: date)
                 }
-            } catch HealthKitDeleteError.externalSource {
-                updateDrinks()
-                showExternalSourceAlert = true
             } catch {
                 print("Failed to delete drinks for week: \(error.localizedDescription)")
             }

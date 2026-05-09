@@ -8,13 +8,6 @@
 import HealthKit
 import WidgetKit
 
-enum HealthKitDeleteError: LocalizedError {
-    case externalSource
-    var errorDescription: String? {
-        "This drink was logged by Apple Health. Open the Health app to remove it."
-    }
-}
-
 @MainActor
 class HealthKitManager: ObservableObject {
     let healthStore = HKHealthStore()
@@ -146,23 +139,17 @@ class HealthKitManager: ObservableObject {
         let startOfDay = calendar.startOfDay(for: date)
         let endOfDay = calendar.date(byAdding: .day, value: 1, to: startOfDay)!
 
-        // Use overlap-based matching (no strict option) so we catch samples from
-        // any source regardless of how their startDate/endDate are stored.
-        let predicate = HKQuery.predicateForSamples(withStart: startOfDay, end: endOfDay, options: [])
+        let predicate = HKQuery.predicateForSamples(withStart: startOfDay, end: endOfDay, options: .strictStartDate)
         let sampleType = HKObjectType.quantityType(forIdentifier: .numberOfAlcoholicBeverages)!
 
-        let deletedCount: Int = try await withCheckedThrowingContinuation { continuation in
-            healthStore.deleteObjects(of: sampleType, predicate: predicate) { _, deletedObjectCount, error in
+        try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Error>) in
+            healthStore.deleteObjects(of: sampleType, predicate: predicate) { _, _, error in
                 if let error = error {
                     continuation.resume(throwing: error)
                 } else {
-                    continuation.resume(returning: deletedObjectCount)
+                    continuation.resume()
                 }
             }
-        }
-
-        guard deletedCount > 0 else {
-            throw HealthKitDeleteError.externalSource
         }
 
         await syncWidgetData()
