@@ -16,6 +16,7 @@ struct WeeklyDetailView: View {
     @Environment(\.editMode) private var editMode
     @EnvironmentObject var healthKitManager: HealthKitManager
     @State private var localDailyTotals: [DailyDrinkTotal]
+    @State private var showExternalSourceAlert = false
 
     init(weekStart: Date, dailyTotals: [DailyDrinkTotal], onDrinksUpdated: (() -> Void)? = nil) {
         self.weekStart = weekStart
@@ -58,6 +59,11 @@ struct WeeklyDetailView: View {
             }
         }
         .environment(\.editMode, editMode)
+        .alert("Can't Delete from Bottle Cap", isPresented: $showExternalSourceAlert) {
+            Button("OK", role: .cancel) {}
+        } message: {
+            Text("This drink was logged by Apple Health. Open the Health app to remove it.")
+        }
     }
 
     private var weekTitle: String {
@@ -89,6 +95,8 @@ struct WeeklyDetailView: View {
                 try await healthKitManager.deleteAlcoholDataForDate(date)
                 localDailyTotals.removeAll { $0.date == date.startOfDay }
                 onDrinksUpdated?()
+            } catch HealthKitDeleteError.externalSource {
+                showExternalSourceAlert = true
             } catch {
                 print("Failed to delete drinks: \(error.localizedDescription)")
             }
