@@ -142,16 +142,24 @@ class HealthKitManager: ObservableObject {
         let predicate = HKQuery.predicateForSamples(withStart: startOfDay, end: endOfDay, options: .strictStartDate)
         let sampleType = HKObjectType.quantityType(forIdentifier: .numberOfAlcoholicBeverages)!
 
-        try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Error>) in
-            healthStore.deleteObjects(of: sampleType, predicate: predicate) { _, _, error in
-                if let error = error {
-                    continuation.resume(throwing: error)
+        let samples: [HKQuantitySample] = await withCheckedContinuation { continuation in
+            let query = HKSampleQuery(sampleType: sampleType, predicate: predicate, limit: HKObjectQueryNoLimit, sortDescriptors: nil) { _, results, _ in
+                if let results = results as? [HKQuantitySample] {
+                    continuation.resume(returning: results)
                 } else {
-                    continuation.resume()
+                    continuation.resume(returning: [])
                 }
             }
+            healthStore.execute(query)
         }
 
+        guard !samples.isEmpty else {
+            print("No samples found for date: \(date)")
+            return
+        }
+
+        try await healthStore.delete(samples)
+        print("Successfully deleted alcohol data for date: \(date)")
         await syncWidgetData()
     }
 
